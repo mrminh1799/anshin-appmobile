@@ -1,0 +1,1 @@
+../../../../../node_modules/@react-native-firebase/app-distribution/ios/RNFBAppDistribution/RNFBAppDistributionModule.h

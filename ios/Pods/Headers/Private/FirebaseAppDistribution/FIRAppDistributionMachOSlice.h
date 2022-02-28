@@ -1,0 +1,1 @@
+../../../FirebaseAppDistribution/FirebaseAppDistribution/Sources/FIRAppDistributionMachOSlice.h

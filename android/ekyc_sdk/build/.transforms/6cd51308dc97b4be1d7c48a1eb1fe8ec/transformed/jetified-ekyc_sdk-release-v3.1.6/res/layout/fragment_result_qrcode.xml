@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--Result Layout-->
+    <RelativeLayout
+        android:id="@+id/resultLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/md_white"
+        android:visibility="visible">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingLeft="@dimen/_16sdp"
+                android:paddingRight="@dimen/_16sdp"
+                android:paddingTop="@dimen/_4sdp"
+                android:paddingBottom="@dimen/_4sdp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_marginTop="@dimen/_10sdp"
+                    style="@style/ResultTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ekyc_result_qr_code"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@color/md_black" />
+
+                <TextView
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginBottom="@dimen/_8sdp"
+                    android:id="@+id/tv_result_qr"
+                    style="@style/ResultTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/rounded_background_green"
+                    android:textSize="@dimen/_10sdp"
+                    android:text="012345678999 I Nguyễn Thị Vân I 15031980 I Nữ I
+97 Nguyễn Chí Thanh, Đống Đa, Hà Nội I 08022021 "
+                    android:gravity="center"
+                    android:padding="@dimen/_5sdp"
+                    android:textAlignment="center"
+                    android:textColor="@color/md_black"/>
+
+                <TextView
+                    style="@style/ResultTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ekyc_title_compare_qrcode_n_ocr"
+                    android:textSize="@dimen/_12sdp"
+                    android:textColor="@color/md_black" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp">
+
+                    <TextView
+                        style="@style/ResultTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|start"
+                        android:text="@string/ekyc_id"
+                        android:textColor="@color/md_grey_500" />
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2">
+
+                        <TextView
+                            android:id="@+id/tv_id"
+                            style="@style/ResultTextStyle"
+                            android:layout_width="match_parent"
+                            android:text="@string/str_errorCode"
+                            android:textColor="@color/md_red_600"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="30dp"
+                            android:layout_marginRight="30dp" />
+
+                        <ImageView
+                            android:id="@+id/img_id_prob"
+                            android:layout_width="20dp"
+                            android:src="@mipmap/ic_not_correct"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="end|center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp" />
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp">
+
+                    <TextView
+                        style="@style/ResultTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|start"
+                        android:text="@string/ekyc_name"
+                        android:textColor="@color/md_grey_500" />
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2">
+
+                        <TextView
+                            android:id="@+id/tv_name"
+                            style="@style/ResultTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/str_errorCode"
+                            android:textColor="@color/md_red_600"
+                            android:layout_marginEnd="30dp"
+                            android:layout_marginRight="30dp"
+                            android:maxLines="2"
+                            android:ellipsize="end"/>
+
+                        <ImageView
+                            android:id="@+id/img_name_prob"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="end|center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:src="@mipmap/ic_not_correct" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_40sdp">
+
+                    <TextView
+                        style="@style/ResultTextStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|start"
+                        android:text="@string/ekyc_birth_day"
+                        android:textColor="@color/md_grey_500" />
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2">
+
+                        <TextView
+                            android:id="@+id/tv_birth_day"
+                            style="@style/ResultTextStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="@string/str_errorCode"
+                            android:textColor="@color/md_red_600"
+                            android:layout_marginEnd="30dp"
+                            android:layout_marginRight="30dp" />
+
+                        <ImageView
+                            android:id="@+id/img_birth_day_prob"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_gravity="end|center_vertical"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:src="@mipmap/ic_not_correct" />
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:visibility="visible"
+                    android:orientation="horizontal"
+                    android:id="@+id/llTradeMark"
+                    android:layout_width="120dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="@dimen/_6sdp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
+                    android:background="@drawable/ic_vnpt_gray" />
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</FrameLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="default_web_client_id" translatable="false">653240281859-r7nl1gq1uqqflos4vqvibe0rukd24v89.apps.googleusercontent.com</string>
+    <string name="gcm_defaultSenderId" translatable="false">653240281859</string>
+    <string name="google_api_key" translatable="false">AIzaSyBRRe4nbHnj2DnOEseKz4UydNP03NQ_zk0</string>
+    <string name="google_app_id" translatable="false">1:653240281859:android:0f5091fc17cb901e755736</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyBRRe4nbHnj2DnOEseKz4UydNP03NQ_zk0</string>
+    <string name="google_storage_bucket" translatable="false">myitel-716be.appspot.com</string>
+    <string name="project_id" translatable="false">myitel-716be</string>
+</resources>

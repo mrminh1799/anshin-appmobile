@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_black">
+    <View
+        android:id="@+id/viewCenter"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"/>
+    <LinearLayout
+        android:id="@+id/llSkipVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/_55sdp"
+        android:gravity="center_vertical"
+        android:background="@drawable/ekyc_bg_skip_help"
+        android:padding="@dimen/_8sdp"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/viewCenter"
+        android:layout_marginTop="@dimen/_180sdp"
+        android:visibility="visible"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/ekyc_str_skip_guide_video"
+            android:textAllCaps="true"
+            android:lineSpacingMultiplier="1.1"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/colorEkycTextButtonSkipVideo"
+            android:paddingLeft="@dimen/_5sdp"
+            android:textSize="@dimen/_14sdp"
+            android:gravity="left|center_vertical"/>
+        <ImageView
+            android:layout_width="@dimen/_24sdp"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_skip_help"
+            android:adjustViewBounds="true"
+            android:scaleType="centerInside"/>
+    </LinearLayout>
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+
+    <LinearLayout
+        android:id="@+id/llTradeMarkStop"
+        android:layout_width="wrap_content"
+        android:layout_height="15dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/ic_vnpt"
+        android:orientation="horizontal"
+        android:visibility="gone" />
+
+</RelativeLayout>

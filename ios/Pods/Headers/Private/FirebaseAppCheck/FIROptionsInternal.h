@@ -1,0 +1,1 @@
+../../../FirebaseAppCheck/FirebaseCore/Sources/Private/FIROptionsInternal.h

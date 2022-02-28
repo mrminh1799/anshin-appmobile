@@ -1,0 +1,98 @@
+[
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-hdpi_itel_logo.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-hdpi/itel_logo.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_itel_logo.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-xxxhdpi/itel_logo.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-hdpi_launch_screen.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-hdpi/launch_screen.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-ldpi_ic_launcher.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-ldpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-xhdpi_itel_logo.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-xhdpi/itel_logo.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_launch_screen.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-xxxhdpi/launch_screen.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-mdpi_launch_screen.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-mdpi/launch_screen.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/xml_network_security_config.xml.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/xml/network_security_config.xml"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_ic_launcher.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-xxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-xhdpi_launch_screen.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-xhdpi/launch_screen.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/raw_itel.crt.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/raw/itel.crt"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-xhdpi_ic_launcher.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-xhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-ldpi_launch_screen.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-ldpi/launch_screen.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-mdpi_ic_launcher.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-mdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-ldpi_itel_logo.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-ldpi/itel_logo.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/raw_full_3d.json.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/raw/full_3d.json"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-hdpi_ic_launcher.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-hdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/layout_launch_screen.xml.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/layout/launch_screen.xml"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/raw_ekyc_success_document.json.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/raw/ekyc_success_document.json"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_itel_logo.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-xxhdpi/itel_logo.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/raw_feedback.json.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/raw/feedback.json"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-xxxhdpi_ic_launcher.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-mdpi_itel_logo.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-mdpi/itel_logo.png"
+    },
+    {
+        "merged": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/build/intermediates/res/merged/debug/mipmap-xxhdpi_launch_screen.png.flat",
+        "source": "/Users/m1/Documents/FIS/ITEL/itel_mobile/android/app/src/main/res/mipmap-xxhdpi/launch_screen.png"
+    }
+]

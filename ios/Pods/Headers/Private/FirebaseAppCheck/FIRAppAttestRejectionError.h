@@ -1,0 +1,1 @@
+../../../FirebaseAppCheck/FirebaseAppCheck/Sources/AppAttestProvider/Errors/FIRAppAttestRejectionError.h

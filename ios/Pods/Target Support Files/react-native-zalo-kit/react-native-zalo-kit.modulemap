@@ -1,0 +1,6 @@
+module react_native_zalo_kit {
+  umbrella header "react-native-zalo-kit-umbrella.h"
+
+  export *
+  module * { export * }
+}

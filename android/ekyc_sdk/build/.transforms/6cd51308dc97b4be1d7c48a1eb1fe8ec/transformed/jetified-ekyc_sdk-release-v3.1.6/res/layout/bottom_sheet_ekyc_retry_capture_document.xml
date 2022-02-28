@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/_120sdp"
+    android:background="@color/colorEkycBackgroundDialog"
+    android:orientation="horizontal">
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="@string/ekyc_str_retry_capture"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/_16sdp"
+        android:padding="@dimen/_14sdp"
+        android:textColor="@color/colorEkycTextMainDialog"
+        android:fontFamily="sans-serif-medium"
+        />
+
+    <TextView
+        android:id="@+id/tvRetry"
+        android:layout_width="@dimen/_80sdp"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_ekyc_retry_capture"
+        android:gravity="center"
+        android:text="@string/ekyc_str_retry"
+        android:layout_marginRight="@dimen/_14sdp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:layout_marginBottom="@dimen/_30sdp"
+        android:textColor="@color/colorEkycTextButtonConfirm"
+        android:textStyle="bold"
+        android:textAllCaps="true"
+        android:textSize="@dimen/_13sdp" />
+</LinearLayout>

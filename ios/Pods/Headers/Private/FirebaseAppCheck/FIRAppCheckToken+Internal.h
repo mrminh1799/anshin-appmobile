@@ -1,0 +1,1 @@
+../../../FirebaseAppCheck/FirebaseAppCheck/Sources/Core/FIRAppCheckToken+Internal.h
