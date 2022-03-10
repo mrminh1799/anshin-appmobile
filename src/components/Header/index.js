@@ -23,7 +23,7 @@ const HeaderComponent = ({
             py={4}
             style={{paddingTop: isIphoneX() ? insets.top : 10}}
             w={'100%'}
-            bg={check ? 'white' : 'redBase'}
+            bg={"#222428"}
             alignItems={'center'}
             justifyContent={'center'}
         >

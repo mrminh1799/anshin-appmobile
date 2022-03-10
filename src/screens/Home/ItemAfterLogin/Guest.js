@@ -20,11 +20,7 @@ const Guest =()=>{
     return(
         <Box>
             <Box alignItems={'center'} >
-                <Box>
-                    <Logo width={150} height={50}/>
-                </Box>
-
-                <Box alignItems={'center'}  my={'26px'}>
+                <Box alignItems={'center'}  mb={'16px'}>
                     <Button
                             borderRadius={26}
                             height={48}

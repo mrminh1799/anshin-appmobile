@@ -17,7 +17,7 @@ import {FCMToken} from '@/screens/Login/SetFCMToken';
 
 const token = FCMToken()
 const client = axios.create({
-    baseURL: '',
+    baseURL: 'http://localhost:8080',
 
     headers: {
         'Content-Type': 'application/json',
@@ -114,6 +114,8 @@ const buildGetRequest = (_url, _params) => {
  */
 
 const _get = (_url) => {
+    console.log('get----', _url)
+
     return client.get(_url)
         .then(
             response => response.data,
