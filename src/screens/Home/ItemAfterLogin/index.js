@@ -41,16 +41,17 @@ const ItemAfterLogin = ({currentPackage, getUserInfor, getSubscriberAccount, ope
                     </TouchableOpacity>
                 </Box>
             </HStack>
-            {
-                (userInfo?.userData?.groupAppCode === 'NON087' && userInfo?.userData?.current?.userType !== 'NON_ITEL') ?
-                    <SocialNetwork
-                        userInfo={userInfo}/> : (userInfo?.userData?.groupAppCode === '087' || userInfo?.userData?.groupAppCode === 'LK087' ?
-                        <Subcriber087 getUserInfor={getUserInfor}
-                                      currentPackage={currentPackage}
-                                      getSubscriberAccount={getSubscriberAccount}/> : (userInfo?.userData?.current?.userType === 'NON_ITEL' ?
-                            <Non087/> : <Guest/>)
-                    )
-            }
+            <Guest/>
+            {/*{*/}
+            {/*    (userInfo?.userData?.groupAppCode === 'NON087' && userInfo?.userData?.current?.userType !== 'NON_ITEL') ?*/}
+            {/*        <SocialNetwork*/}
+            {/*            userInfo={userInfo}/> : (userInfo?.userData?.groupAppCode === '087' || userInfo?.userData?.groupAppCode === 'LK087' ?*/}
+            {/*            <Subcriber087 getUserInfor={getUserInfor}*/}
+            {/*                          currentPackage={currentPackage}*/}
+            {/*                          getSubscriberAccount={getSubscriberAccount}/> : (userInfo?.userData?.current?.userType === 'NON_ITEL' ?*/}
+            {/*                <Non087/> : <Guest/>)*/}
+            {/*        )*/}
+            {/*}*/}
         </Box>
 
     )

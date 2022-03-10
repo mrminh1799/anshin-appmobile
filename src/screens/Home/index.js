@@ -1,30 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Box, HStack, Text, useTheme, Image} from "native-base";
-import {useWindowDimensions, ScrollView, TouchableOpacity, Platform, RefreshControl} from "react-native";
+import {useWindowDimensions, ScrollView, TouchableOpacity, Platform, RefreshControl, FlatList} from "react-native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 /*Import component*/
 import {navigate, registerScreen, tabBarRef} from '@/navigators/utils';
-import {
-    useGetBlacklist,
-    useGetCurrentPackage,
-    useGetSubscriberBalance, useGetUserInfor,
-} from '@/services/Test';
 import ItemAfterLogin from "@/screens/Home/ItemAfterLogin/index";
-import BannerDashboard from "@/screens/Home/BannerDashboard";
-
 import {useAuth} from "@/contexts";
 import PropTypes from "prop-types";
-import {DialogBoxService} from "@/components";
-import {useGetAllChargePackages} from "@/services/PackageTel";
-import IconSim from "../../assets/icons/iconSVG/simso.svg"
-import IconCNTTB from "../../assets/icons/iconSVG/cnttb.svg"
-import IconGame from "../../assets/icons/iconSVG/itel-game.svg"
-import IconCinema from "../../assets/icons/iconSVG/cinema.svg"
-import IconUlitity from "../../assets/icons/iconSVG/simso.svg"
-import IconShopping from "../../assets/icons/iconSVG/muasam.svg"
-import IconBank from "../../assets/icons/iconSVG/nganhang.svg"
-import IconTienIch from "../../assets/icons/iconSVG/tienichkhac.svg"
+import ProductCard from "@/screens/Home/Product/ProductCard";
+import {useGetAllProducts} from "@/services/Product";
 
 
 const Name = 'CoopHome';
@@ -45,7 +30,11 @@ const CoopHome = ({navigation}) => {
     const [maxOldOffset, setMaxOldOffset] = useState(null)
     //refresh api when scroll down
     const [refreshing, setRefreshing] = React.useState(false);
+    const allProducts = useGetAllProducts({
+        currenPage: 1,
+        sizePage: 10
 
+    })
 
     //callback when reload success
     const onRefresh = React.useCallback(() => {
@@ -95,10 +84,21 @@ const CoopHome = ({navigation}) => {
             >
                 <Box flex={1} bg={'white'}>
                     <Box mb={insets.bottom}>
-                        {/*renderBanner*/}
-                        <BannerDashboard language={i18n?.language}/>
-                        {/*renderOption*/}
+                        <Image style={{height:150}} source={{uri:"https://firebasestorage.googleapis.com/v0/b/anshin-b910b.appspot.com/o/sale50%25.jpg?alt=media&token=e5503710-23f7-472c-b530-5b017bd0f93f"}}/>
+                     <Box alignItems={'center'} >
+                         <FlatList
+                             scrollEnabled={false}
+                             nestedScrollEnabled={false}
+                             numColumns={2}
+                             showsVerticalScrollIndicator={false}
+                             showsHorizontalScrollIndicator={false}
+                             keyExtractor={(item, index) => index}
+                             data={allProducts?.data}
+                             renderItem={(item) => <ProductCard
+                                 item={item?.item}
+                             />}/>
 
+                     </Box>
 
                     </Box>
                 </Box>
