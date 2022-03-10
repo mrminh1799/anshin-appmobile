@@ -13,19 +13,19 @@ const AuthContext = createContext(
 
 export const AuthProvider = ({children}) => {
     //lấy ra banner boarding
-    const dataBanner = useGetAllBanners({
-        "positionCode": CONFIG.ONBOARDING.POSITION,
-        "screenCode": CONFIG.ONBOARDING.SCREEN
-    });
-
-    const checkOnBoarding = async () => {
-        const status = await Storage.get(COMMON.STATUS_ON_BOARDING);
-        if (status === false) {
-            setBoarding(status);
-        } else if (dataBanner?.value?.length > 0) {
-            setBoarding(true);
-        }
-    }
+    // const dataBanner = useGetAllBanners({
+    //     "positionCode": CONFIG.ONBOARDING.POSITION,
+    //     "screenCode": CONFIG.ONBOARDING.SCREEN
+    // });
+    //
+    // const checkOnBoarding = async () => {
+    //     const status = await Storage.get(COMMON.STATUS_ON_BOARDING);
+    //     if (status === false) {
+    //         setBoarding(status);
+    //     } else if (dataBanner?.value?.length > 0) {
+    //         setBoarding(true);
+    //     }
+    // }
 
     const loginWhenTokenNotExpired = async () => {
         if (!userInfo) {
@@ -44,9 +44,9 @@ export const AuthProvider = ({children}) => {
         loginWhenTokenNotExpired();
     }, [])
 
-    useEffect(() => {
-        checkOnBoarding();
-    }, [dataBanner])
+    // useEffect(() => {
+    //     checkOnBoarding();
+    // }, [dataBanner])
 
     const value = {
         splash,
