@@ -1,1 +1,0 @@
-../../../../../node_modules/react-native-zalo-kit/ios/ZaloKit-Bridging-Header.h
