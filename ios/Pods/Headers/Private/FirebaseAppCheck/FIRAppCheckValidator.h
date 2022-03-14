@@ -1,1 +1,0 @@
-../../../FirebaseAppCheck/FirebaseAppCheck/Sources/Core/FIRAppCheckValidator.h
