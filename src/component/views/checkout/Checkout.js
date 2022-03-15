@@ -1,9 +1,21 @@
 import { Button, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Link, NavLink, BrowserRouter, Switch, useParams } from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Route,
+    Link,
+    NavLink,
+    BrowserRouter,
+    Switch,
+    useParams,
+    useLocation
+} from "react-router-dom";
 import callApi from "../../callAPI/apiCaller";
 
 function Checkout() {
+    const location = useLocation()
+    const {item} = location.state
+    console.log('itemsss',item)
     const formDataInItValue = {
         id: "",
         firstname: "",
@@ -18,24 +30,7 @@ function Checkout() {
     const [product, setProduct] = useState([])
     const [formData, setFormData] = useState(formDataInItValue);
     const array = [];
-    useEffect(() => {
-        callApi(`categories/1/products/`, "GET", null)
-            .then((response) => {
-                const { data } = response
-                for (var i = 0; i < localStorage.length; i++) {
-                    data.map((value, index) => {
-                        if (value.id == localStorage.key(i)) {
-                            value = {
-                                ...value,
-                                quantity: localStorage.getItem(localStorage.key(i)),
-                            };
-                            array.push(value);
-                        }
-                    });
-                }
-                setProduct(array)
-            })
-    }, [])
+
     const onChangeHandler = (event) => {
         const { name, value } = event.target;
         setFormData({
@@ -43,8 +38,8 @@ function Checkout() {
             [name]: value,
         });
     };
-    let total = product.reduce((total, product) => {
-        return total += product.quantity * product.price;
+    let total = item.reduce((total, item) => {
+        return total +=Number(item.quantity) * Number(item.price);
     }, 0)
     const onSubmitHandler = () => {
         callApi("customer","POST",formData)
@@ -175,10 +170,10 @@ function Checkout() {
                                             <span>Total</span>
                                             </Link>
                                         </li>
-                                        {product.map((value, index) => {
+                                        {item.map((value, index) => {
                                             return (
                                                 <li key={index}>
-                                                    <Link >{value.name}
+                                                    <Link >{value.productName}
                                                         <span className="middle">x {value.quantity}</span>
                                                         <span className="last">${value.price}</span>
                                                     </Link>
