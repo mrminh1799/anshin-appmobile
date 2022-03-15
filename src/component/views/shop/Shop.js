@@ -2,7 +2,6 @@ import { InputLabel, MenuItem, Select } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
 import {BrowserRouter as Router, Route, Link, NavLink, BrowserRouter, Switch, useHistory} from "react-router-dom";
-import callApi from "../../callAPI/apiCaller";
 import {useGetAllProduct, useGetAllProducts, useGetDetailProduct} from "../../../service/product";
 
 function Shop() {
@@ -20,7 +19,7 @@ function Shop() {
     const detailProduct = useGetDetailProduct({
         id:idProduct
     })
-    console.log('22',idProduct)
+
     const toDetailProduct =(item)=>{
         console.log('item',item.id)
         setIdProduct(item?.id)

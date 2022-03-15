@@ -5,16 +5,19 @@ import styles from '../../../style/productStyle.module.css'
 import {
     Link,
     useParams,
-    useLocation
+    useLocation, useHistory
 } from "react-router-dom";
 import {useGetCheckProduct, useGetColorProduct, useGetSizeProduct} from "../../../service/product";
 import Storage from "../../../utils/Storage";
+import axios from "axios";
 
 
 const Detail = () => {
     const location = useLocation()
     const {item} = location.state
-
+    const checkout = useHistory()
+    const [cart, setCart] = useState([])
+    console.log('item=-=',item)
     const [product, setProduct] = useState({
         productId: item?.id,
         colorId: "",
@@ -22,7 +25,8 @@ const Detail = () => {
         color: "",
         size: "",
         quantity: 1,
-        image: item?.image
+        image: item?.image,
+        name:""
     });
 
     const checkProduct = useGetCheckProduct({
@@ -63,6 +67,31 @@ const Detail = () => {
             color: item?.color_name
         }))
     }
+
+    const toCheckout=()=>{
+        axios.get(`http://localhost:8080/product/findById/${product?.productId}`)
+            .then(res => {
+                const data = res.data;
+                setCart(prev => {
+                    return [
+                        ...prev,
+                        {
+                            quantity: product?.quantity,
+                            productName: product?.name,
+                            image: product?.image,
+                            price: product?.price,
+                            productId: product?.productId
+                        }
+                    ]
+
+                })
+            })
+            .catch(error => console.log(error));
+        checkout.push('/checkout',{
+
+        })
+    }
+
     const addToCart = () => {
         if (product?.colorId === '') {
             alert("Vui lòng chọn màu sắc");
@@ -90,7 +119,6 @@ const Detail = () => {
         //     localStorage.setItem(item.id, Number(localStorage.getItem(item.id)) + Number(product?.quantity), product?.productId, product?.colorId, product?.sizeId)
         // }
         if (!!Storage.get('cart')) {
-            console.log('vaotren')
             let check = true
             let cart = Storage.get('cart')?.map((item, i) => {
                 if (item.id == product.productId) {
@@ -107,13 +135,12 @@ const Detail = () => {
                 Storage.save('cart',cart)
             }
         } else {
-            console.log('vaoday')
             Storage.save('cart', [product])
         }
         // Storage.delete('cart')
         alert("Sản phầm đã thêm vào giỏ hàng");
     }
-    console.log('getcart', Storage.get('cart'))
+
     return (
         <div>
             <div className="slider-area ">
@@ -196,7 +223,7 @@ const Detail = () => {
                                     </div>
                                     <br/>
                                     <div>
-                                        <button className="btn btn-primary ml-1" type="button">Mua ngay</button>
+                                        <button className="btn btn-primary ml-1" onClick={toCheckout} type="button">Mua ngay</button>
                                         <button onClick={addToCart} className="btn btn-primary ml-1" type="button">Thêm
                                             vào giỏ hàng
                                         </button>

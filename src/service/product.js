@@ -78,3 +78,16 @@ export const useGetCheckProduct = (params) => {
         status, error, data, refetch
     }
 }
+
+//dat hang
+export const useOrder = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_order_product', params], () => _post('Order/newOrder' ,params),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}

@@ -16,6 +16,7 @@ import Login from "./component/views/login/Login";
 import {QueryClient, QueryClientProvider, useQuery} from 'react-query'
 import {useAuth} from "./context";
 import Storage from "./utils/Storage";
+import Order from "./component/views/Order";
 
 const queryClient = new QueryClient()
 
@@ -41,7 +42,7 @@ function App() {
                 <Switch>
                     <Route path="/admin">
                         {
-                            !!userData && userData.roles.includes('Admin')
+                            !!userData && userData?.roles.includes('Admin')
                                 ?
                                 <div className="App d-flex h-100">
                                     <SideBar
@@ -95,6 +96,9 @@ function App() {
                             </Route>
                             <Route path="/cart" exact>
                                 <Cart/>
+                            </Route>
+                            <Route path="/order" exact>
+                                <Order/>
                             </Route>
                             <Route path="/checkout" exact>
                                 <Checkout/>
