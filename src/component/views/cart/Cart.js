@@ -3,30 +3,45 @@ import { Button, TextField } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Link, NavLink, BrowserRouter, Switch, useParams } from "react-router-dom";
 import callApi from "../../callAPI/apiCaller";
+import {useGetDetailProduct} from "../../../service/product";
 
 
 function Cart() {
     const array = [];
     const [product, setProduct] = useState([])
-    useEffect(() => {
-        callApi(`categories/1/products/`, "GET", null)
-            .then((response) => {
-                const { data } = response
-                for (var i = 0; i < localStorage.length; i++) {
-                    data.map((value, index) => {
-                        if (value.id == localStorage.key(i)) {
-                            value = {
-                                ...value,
-                                quantity: localStorage.getItem(localStorage.key(i)),
-                            };
-                            array.push(value);
-                        }
-                    });
-                }
-                setProduct(array)
-            })
-    }, [])
+    const [listCart, setListCart]= useState({
+        idProduct:"",
+        quantity:""
+    })
+    const cart = ()=>{
 
+    }
+    console.log('222333',localStorage.getItem(10))
+    // useEffect(() => {
+    //
+    // })
+    // useEffect(() => {
+    //     callApi(`categories/1/products/`, "GET", null)
+    //         .then((response) => {
+    //             const { data } = response
+    //             for (var i = 0; i < localStorage.length; i++) {
+    //                 data.map((value, index) => {
+    //                     if (value.id == localStorage.key(i)) {
+    //                         value = {
+    //                             ...value,
+    //                             quantity: localStorage.getItem(localStorage.key(i)),
+    //                         };
+    //                         array.push(value);
+    //                     }
+    //                 });
+    //             }
+    //             setProduct(array)
+    //         })
+    // }, [])
+    // const detailProduct =useGetDetailProduct({
+    //
+    // })
+    // console.log('2222111',localStorage.getItem(localStorage.key()))
     const onHandleDelete = (id) => {
         setProduct(product.filter((value, index) => { return value.id != id }))
         localStorage.removeItem(id)

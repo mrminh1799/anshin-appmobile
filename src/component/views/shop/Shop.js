@@ -33,10 +33,9 @@ function Shop() {
                }
            })
        }
-        console.log('123',item)
 
     }
-    console.log(detailProduct)
+
     // useEffect(() => {
     //     callApi(`product`, "GET", null)
     //         .then((response) => {

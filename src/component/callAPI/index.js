@@ -92,6 +92,8 @@ client.interceptors.response.use(
  */
 
 const _get = (_url) => {
+    console.log('get----', _url)
+
     return client.get(_url)
         .then(
             response => response.data,
