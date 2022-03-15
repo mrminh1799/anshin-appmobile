@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {STATUS} from '../../constants';
 /**
  * @author AnhVTN11
  * @type {AxiosInstance}
@@ -10,7 +11,7 @@ import axios from 'axios';
  */
 
 const client = axios.create({
-        baseURL: 'http://123.30.50.94/api',
+        baseURL: 'http://localhost:8080/',
         // baseURL: 'https://app.itel.vn/api/',
         //baseURL: 'http://10.14.121.6/api/',
         headers: {
@@ -174,21 +175,7 @@ const _custom = (_url, _params, _method, _host) => {
             return Promise.reject(apiCallErrorMessage);
         });
 }
-const _customSoapApi = (_url, _params, _method, _host) => {
-    return client({
-        baseURL: _host,
-        url: _url,
-        data: _method === 'GET' ? null : _params,
-        method: _method,
-        headers: {'Content-Type': 'text/xml; charset=utf-8'},
-    }).then(
-        response => {
-            let xmlResponse = response.data;
-            // let parseString = require('xml2js').parseString;
-            let parseString = require('xml2js').parseString;
-        }
-    )
-}
+
 /**
  *
  * @param token

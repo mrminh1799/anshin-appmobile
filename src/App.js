@@ -13,7 +13,8 @@ import Checkout from "./component/views/checkout/Checkout";
 import callApi from "./component/callAPI/apiCaller";
 import Users from "./component/users/Users";
 import Login from "./component/views/login/Login";
-
+import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+const queryClient = new QueryClient()
 function App() {
   const [product, setProduct] = useState([]);
   const [category, setCategory] = useState([]);
@@ -21,6 +22,7 @@ function App() {
   const [role, setRole] = useState([]);
   const [loading, setLoading] = useState(false);
   return (
+      <QueryClientProvider client={queryClient}>
     <BrowserRouter>
       <Switch>
         <Route path="/admin">
@@ -82,6 +84,7 @@ function App() {
         </Route>
       </Switch>
     </BrowserRouter>
+      </QueryClientProvider>
   )
 }
 export default App;

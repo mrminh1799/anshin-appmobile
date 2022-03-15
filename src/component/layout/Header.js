@@ -10,7 +10,7 @@ function Header() {
                         <div className="logo">
                             <Link to="/">
                                 <span style={{ fontSize: 28, fontWeight: "bold", color: "black" }} >
-                                    Mlem <span style={{ color: "red" }}>Zone</span>
+                                    Anshin <span style={{ color: "red" }}>Zone</span>
                                 </span>
                             </Link>
                         </div>
