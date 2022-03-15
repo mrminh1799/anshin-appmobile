@@ -15,6 +15,18 @@ export const useGetAllProducts = (params) => {
         status, error, data, refetch
     }
 }
+//lay danh sp phan trang
+export const useGetProducts = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_product', params], () => _get('http://localhost:8080/product/findAll'));
+    return {
+        status, error, data, refetch
+    }
+}
 //chitiet sp
 export const useGetDetailProduct = (params) => {
     const {

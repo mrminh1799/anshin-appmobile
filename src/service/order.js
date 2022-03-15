@@ -8,7 +8,7 @@ import {_get} from "../component/callAPI";
             data,
             error,
             refetch
-        } = useQuery(['get_order', params], () => _get('admin/order/findAll'));
+        } = useQuery(['get_order', params], () => _get('admin/order/findAll'),{enabled:false});
         return {
             status, error, data, refetch
         }
