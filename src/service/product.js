@@ -27,3 +27,42 @@ export const useGetDetailProduct = (params) => {
         status, error, data, refetch
     }
 }
+
+//tim size theo id
+export const useGetSizeProduct = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_size_product', params], () => _get('size/findByProductId/' + params?.id));
+    return {
+        status, error, data, refetch
+    }
+}
+
+//tim color theo id
+export const useGetColorProduct = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_color_product', params], () => _get('color/findByProductId/' + params?.id));
+    return {
+        status, error, data, refetch
+    }
+}
+
+//check xem sp con size mau so luong khong
+export const useGetCheckProduct = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_check_product', params], () => _get('productDetail/finByColorSizeProduct/' + params?.idColor +'/'+ params?.idSize + '/' +params?.idProduct),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
