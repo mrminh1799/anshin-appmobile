@@ -15,13 +15,12 @@ const client = axios.create({
         baseURL: 'http://localhost:8080/',
         // baseURL: 'https://app.itel.vn/api/',
         //baseURL: 'http://10.14.121.6/api/',
-        mode: 'no-cors',
+
         headers: {
             'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
         },
-        withCredentials: true,
-        credentials: 'same-origin',
+
         timeout: 5000
     }
 );

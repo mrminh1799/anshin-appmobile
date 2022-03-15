@@ -19,9 +19,8 @@ import axios from "axios";
 function Cart() {
     const checkout = useHistory()
     const [cart, setCart] = useState([])
-    console.log('cart', cart)
+
     const onChangeHandler = (event) => {
-        console.log('event', event.target.value)
         // if (event.target.value < 1) {
         //
         // } else {

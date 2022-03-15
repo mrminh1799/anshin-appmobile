@@ -46,6 +46,7 @@ function Header() {
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="/shop">Shop</Link></li>
                                     <li><Link to="/cart">Cart</Link></li>
+                                    <li><Link to="/order">My Order</Link></li>
                                 </ul>
                             </nav>
                         </div>
@@ -83,7 +84,7 @@ function Header() {
                 }}
             >
                 {
-                    userInfo.roles.includes('Admin') &&
+                    userInfo?.roles?.includes('Admin') &&
                     <MenuItem onClick={() => {
                         history.push('/admin')
                     }}>
