@@ -8,19 +8,21 @@ import {
     useLocation
 } from "react-router-dom";
 import {useGetCheckProduct, useGetColorProduct, useGetSizeProduct} from "../../../service/product";
+import Storage from "../../../utils/Storage";
 
 
 const Detail = () => {
     const location = useLocation()
     const {item} = location.state
-    console.log('item', item);
+
     const [product, setProduct] = useState({
         productId: item?.id,
         colorId: "",
         sizeId: "",
         color: "",
         size: "",
-        quantity: 1
+        quantity: 1,
+        image: item?.image
     });
 
     const checkProduct = useGetCheckProduct({
@@ -82,13 +84,36 @@ const Detail = () => {
         //         alert("Sản phầm này đã hết");
         //     }
         // })
-        if (localStorage.getItem(item.id) == null) localStorage.setItem(item.id, product?.quantity, product?.productId, product?.colorId, product?.sizeId);
-        else {
-            localStorage.setItem(item.id, 0)
-            localStorage.setItem(item.id, Number(localStorage.getItem(item.id)) + Number(product?.quantity), product?.productId, product?.colorId, product?.sizeId)
+        // if (localStorage.getItem(item.id) == null) localStorage.setItem(item.id, product?.quantity, product?.productId, product?.colorId, product?.sizeId);
+        // else {
+        //     localStorage.setItem(item.id, 0)
+        //     localStorage.setItem(item.id, Number(localStorage.getItem(item.id)) + Number(product?.quantity), product?.productId, product?.colorId, product?.sizeId)
+        // }
+        if (!!Storage.get('cart')) {
+            console.log('vaotren')
+            let check = true
+            let cart = Storage.get('cart')?.map((item, i) => {
+                if (item.id == product.productId) {
+                    console.log('id',item.id,product.productId)
+                    check = false
+                    item.quantity = Number(item.quantity) + Number(product.quantity)
+                }
+                return item
+            })
+
+            if (check) {
+                Storage.save('cart', [...Storage.get('cart'), product])
+            }else {
+                Storage.save('cart',cart)
+            }
+        } else {
+            console.log('vaoday')
+            Storage.save('cart', [product])
         }
+        // Storage.delete('cart')
         alert("Sản phầm đã thêm vào giỏ hàng");
     }
+    console.log('getcart', Storage.get('cart'))
     return (
         <div>
             <div className="slider-area ">
