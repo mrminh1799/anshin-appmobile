@@ -31,7 +31,7 @@ function ListCategories({setLoading,category,setClickedRow,setFormData,setCatego
                     <tr>
                         <th>STT</th>
                         <th>ID</th>
-                        <th>Tên danh mục</th>
+                        <th>Tên đơn hàng</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>

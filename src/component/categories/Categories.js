@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import callApi from "../callAPI/apiCaller";
 import FormCategories from "./FormCategories"
 import ListCategories from "./ListCategories"
+import {useGetAllOrder} from "../../service/order";
 
 function Categories({ category, setCategory, loading, setLoading }) {
     const formDataInItValue = {
@@ -16,6 +17,9 @@ function Categories({ category, setCategory, loading, setLoading }) {
     const [totalPage, setTotalPage] = useState(1);
     const [page, setPage] = useState(1);
 
+    const order = useGetAllOrder()
+
+    console.log(order?.data)
     
     const onChangePage = (event, newPage) => {
         setPage(newPage);
@@ -41,15 +45,15 @@ function Categories({ category, setCategory, loading, setLoading }) {
             {/* <Backdrop open={loading} style={{ zIndex: "1000" }}>
                 <CircularProgress />
             </Backdrop> */}
-            <FormCategories
-                formData={formData}
-                setCategory={setCategory}
-                category={category}
-                setFormData={setFormData}
-                clickedRow={clickedRow}
-                setLoading={setLoading}
-                formDataInItValue={formDataInItValue}
-            />
+            {/*<FormCategories*/}
+            {/*    formData={formData}*/}
+            {/*    setCategory={setCategory}*/}
+            {/*    category={category}*/}
+            {/*    setFormData={setFormData}*/}
+            {/*    clickedRow={clickedRow}*/}
+            {/*    setLoading={setLoading}*/}
+            {/*    formDataInItValue={formDataInItValue}*/}
+            {/*/>*/}
             <ListCategories
                 formData={formData}
                 setFormData={setFormData}

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {STATUS} from '../../constants';
+import Storage from "../../utils/Storage";
 /**
  * @author AnhVTN11
  * @type {AxiosInstance}
@@ -14,9 +15,13 @@ const client = axios.create({
         baseURL: 'http://localhost:8080/',
         // baseURL: 'https://app.itel.vn/api/',
         //baseURL: 'http://10.14.121.6/api/',
+        mode: 'no-cors',
         headers: {
+            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
         },
+        withCredentials: true,
+        credentials: 'same-origin',
         timeout: 5000
     }
 );
@@ -26,6 +31,8 @@ const client = axios.create({
  * @returns {Promise<string|undefined>}
  */
 const getAccessToken = async () => {
+    const userData = Storage.get('userData')
+    return userData?.accessToken
 };
 
 // return JSON.parse(userData)?.token?.accessToken
@@ -53,7 +60,7 @@ client.interceptors.request.use(async (config) => {
  */
 client.interceptors.response.use(
     async response => {
-        console.log('response',response)
+        console.log('response', response)
         // try {
         //     const { httpMetric } = response.config.metadata;
         //     // add any extra metric attributes if needed
@@ -98,6 +105,7 @@ const _get = (_url) => {
         .then(
             response => response.data,
             error => {
+                console.log('err', error)
                 const apiCallErrorMessage = getApiErrorMessage(error);
                 return Promise.reject(apiCallErrorMessage);
             }
