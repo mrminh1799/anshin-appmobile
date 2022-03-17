@@ -75,8 +75,9 @@ function Cart() {
     }, [])
 
     useEffect(() => {
-        Storage.save('cart', cart)
+        // Storage.save('cart', cart)
     }, [cart])
+
     const onHandleDelete = (id) => {
         setCart(cart.filter((value, index) => {
             return value.productId != id

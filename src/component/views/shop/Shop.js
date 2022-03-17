@@ -74,7 +74,7 @@ function Shop() {
                         <div className="row">
                             <div className="col-xl-12">
                                 <div className="hero-cap text-center">
-                                    <h2>Watch Shop</h2>
+                                    <h2>Shop</h2>
                                 </div>
                             </div>
                         </div>

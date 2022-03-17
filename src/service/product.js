@@ -22,7 +22,7 @@ export const useGetProducts = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_product', params], () => _get('http://localhost:8080/product/findAll'));
+    } = useQuery(['get_product', params], () => _get('product/findAll'));
     return {
         status, error, data, refetch
     }

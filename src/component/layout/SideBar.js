@@ -61,14 +61,14 @@ function SideBar() {
                                     <ListItemText primary="Đơn hàng" />
                                 </ListItem>
                             </Link>
-                            {/*<Link to="/admin/products">*/}
-                            {/*    <ListItem button className="pl-3">*/}
-                            {/*        <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>*/}
-                            {/*            <AllInboxIcon style={{ color: 'white' }} />*/}
-                            {/*        </ListItemIcon>*/}
-                            {/*        <ListItemText primary="Sản phẩm" />*/}
-                            {/*    </ListItem>*/}
-                            {/*</Link>*/}
+                            <Link to="/admin/products">
+                                <ListItem button className="pl-3">
+                                    <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>
+                                        <AllInboxIcon style={{ color: 'white' }} />
+                                    </ListItemIcon>
+                                    <ListItemText primary="Sản phẩm" />
+                                </ListItem>
+                            </Link>
                             {/*<Link to="/admin/users">*/}
                             {/*    <ListItem button className="pl-3">*/}
                             {/*        <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>*/}
