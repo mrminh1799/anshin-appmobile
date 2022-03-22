@@ -1,8 +1,18 @@
-﻿import React from "react";
+﻿import React, {useEffect} from "react";
 import { Button } from "@material-ui/core";
 import callApi from "../callAPI/apiCaller";
+import {useGetProducts} from "../../service/product";
 
 function ListProduct({ setLoading,product, setClickedRow, setFormData, setProduct, categoriesId, page, setPage }) {
+
+    const listProduct = useGetProducts()
+
+    useEffect(()=>{
+        if(listProduct?.data){
+            setProduct(listProduct?.data)
+        }
+    },[listProduct?.data])
+
     const tblOnClickHandler = (event, value, index) => {
         if (event.target.textContent == "Delete") return;
         setClickedRow(index);
@@ -32,54 +42,13 @@ function ListProduct({ setLoading,product, setClickedRow, setFormData, setProduc
             <table className="table table-striped table-bordered table-hover shadow">
                 <thead className="thead-dark">
                     <tr>
-                        <th>STT</th>
-                        <th>ID</th>
                         <th>Ảnh</th>
-                        <th style={{width:"30%"}}>Tên sản phẩm</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
-                        <th>Danh mục</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Đơn giá</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
                 <tbody>
-<tr
-                                
-                            >
-                                <th>1</th>
-                                <td>32</td>
-                                <td className="text-center">fds</td>
-                                <td>Gói siêu cấp</td>
-                                <td>100000$</td>
-                                <td>ok</td>
-                                <td>blabla</td>
-                                <td>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                    >
-                                        Delete
-                                    </Button>
-                                </td>
-                            </tr><tr
-                                
-                            >
-                                <th>1</th>
-                                <td>32</td>
-                                <td className="text-center">fds</td>
-                                <td>Gói siêu cấp</td>
-                                <td>100000$</td>
-                                <td>ok</td>
-                                <td>blabla</td>
-                                <td>
-                                    <Button
-                                        variant="contained"
-                                        color="secondary"
-                                    >
-                                        Delete
-                                    </Button>
-                                </td>
-                            </tr>
                     {product.map(function (value, index) {
                         return (
                             <tr
@@ -88,13 +57,9 @@ function ListProduct({ setLoading,product, setClickedRow, setFormData, setProduc
                                 }}
                                 key={index}
                             >
-                                <th>{page < 2 ? index + 1 : page * 10 - 10 + index + 1}</th>
-                                <td>{value.id}</td>
                                 <td className="text-center"><img style={{ width: 100 }} src={value.image} /></td>
                                 <td>{value.name}</td>
                                 <td>{value.price}$</td>
-                                <td>{value.avaiable}</td>
-                                <td>{value.category.name}</td>
                                 <td>
                                     <Button
                                         onClick={(event) => {

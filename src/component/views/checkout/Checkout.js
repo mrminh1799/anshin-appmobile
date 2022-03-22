@@ -12,6 +12,7 @@ import {
 } from "react-router-dom";
 import {useAuth} from "../../../context";
 import {useOrder} from "../../../service/product";
+import Storage from "../../../utils/Storage";
 
 
 const Checkout = () => {
@@ -75,6 +76,7 @@ const Checkout = () => {
         }
        order.refetch().then((res)=>{
            alert('Đặt thành công')
+           Storage.delete('cart')
        })
     }
 
