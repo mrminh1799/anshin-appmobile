@@ -1,4 +1,6 @@
 import axios from 'axios';
+import {STATUS} from '../../constants';
+import Storage from "../../utils/Storage";
 /**
  * @author AnhVTN11
  * @type {AxiosInstance}
@@ -10,10 +12,9 @@ import axios from 'axios';
  */
 
 const client = axios.create({
-        baseURL: 'http://123.30.50.94/api',
-        // baseURL: 'https://app.itel.vn/api/',
-        //baseURL: 'http://10.14.121.6/api/',
+        baseURL: 'http://localhost:8080/',
         headers: {
+            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
         },
         timeout: 5000
@@ -25,6 +26,8 @@ const client = axios.create({
  * @returns {Promise<string|undefined>}
  */
 const getAccessToken = async () => {
+    const userData = Storage.get('userData')
+    return userData?.accessToken
 };
 
 // return JSON.parse(userData)?.token?.accessToken
@@ -91,10 +94,13 @@ client.interceptors.response.use(
  */
 
 const _get = (_url) => {
+    console.log('get----', _url)
+
     return client.get(_url)
         .then(
             response => response.data,
             error => {
+                console.log('err',error)
                 const apiCallErrorMessage = getApiErrorMessage(error);
                 return Promise.reject(apiCallErrorMessage);
             }
@@ -174,21 +180,7 @@ const _custom = (_url, _params, _method, _host) => {
             return Promise.reject(apiCallErrorMessage);
         });
 }
-const _customSoapApi = (_url, _params, _method, _host) => {
-    return client({
-        baseURL: _host,
-        url: _url,
-        data: _method === 'GET' ? null : _params,
-        method: _method,
-        headers: {'Content-Type': 'text/xml; charset=utf-8'},
-    }).then(
-        response => {
-            let xmlResponse = response.data;
-            // let parseString = require('xml2js').parseString;
-            let parseString = require('xml2js').parseString;
-        }
-    )
-}
+
 /**
  *
  * @param token

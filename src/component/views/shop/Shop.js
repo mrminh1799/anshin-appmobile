@@ -1,8 +1,8 @@
 import { InputLabel, MenuItem, Select } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Link, NavLink, BrowserRouter, Switch } from "react-router-dom";
-import callApi from "../../callAPI/apiCaller";
+import {BrowserRouter as Router, Route, Link, NavLink, BrowserRouter, Switch, useHistory} from "react-router-dom";
+import {useGetAllProduct, useGetAllProducts, useGetDetailProduct} from "../../../service/product";
 
 function Shop() {
     const [product, setProduct] = useState([]);
@@ -10,6 +10,30 @@ function Shop() {
     const [category, setCategory] = useState();
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
+    const [idProduct, setIdProduct] = useState()
+    let detail = useHistory();
+    const allProducts = useGetAllProducts({
+        currenPage:1,
+        sizePage: 9
+    })
+    const detailProduct = useGetDetailProduct({
+        id:idProduct
+    })
+
+    const toDetailProduct =(item)=>{
+        console.log('item',item.id)
+        setIdProduct(item?.id)
+       if(idProduct){
+           detailProduct.refetch().then(res =>{
+               if(res){
+                   detail.push(`/detail/${item.id}`,{
+                       item:res?.data
+                   })
+               }
+           })
+       }
+
+    }
 
     // useEffect(() => {
     //     callApi(`product`, "GET", null)
@@ -50,7 +74,7 @@ function Shop() {
                         <div className="row">
                             <div className="col-xl-12">
                                 <div className="hero-cap text-center">
-                                    <h2>Watch Shop</h2>
+                                    <h2>Shop</h2>
                                 </div>
                             </div>
                         </div>
@@ -106,7 +130,7 @@ function Shop() {
                     <div className="tab-content" id="nav-tabContent">
                         <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
                             <div className="row">
-                                {filterProduct && filterProduct.map((value, index) => {
+                                {allProducts?.data && allProducts?.data.map((value, index) => {
                                     return (
                                         <div key={index} className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                                             <div className="single-popular-items mb-50 text-center">
@@ -120,7 +144,7 @@ function Shop() {
                                                     backgroundPosition: "center"
                                                 }}>
                                                     <div className="img-cap">
-                                                        <span><Link to={`/detail/${value.id}`}>Add to cart</Link></span>
+                                                        <span onClick={()=>toDetailProduct(value)}>Thêm vào giỏ hàng</span>
                                                     </div>
                                                 </div>
                                                 <div className="popular-caption">

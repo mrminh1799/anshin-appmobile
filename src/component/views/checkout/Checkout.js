@@ -1,63 +1,84 @@
-import { Button, TextField } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Link, NavLink, BrowserRouter, Switch, useParams } from "react-router-dom";
-import callApi from "../../callAPI/apiCaller";
+import {Button, TextField} from "@material-ui/core";
+import React, {useEffect, useState} from "react";
+import {
+    BrowserRouter as Router,
+    Route,
+    Link,
+    NavLink,
+    BrowserRouter,
+    Switch,
+    useParams,
+    useLocation
+} from "react-router-dom";
+import {useAuth} from "../../../context";
+import {useOrder} from "../../../service/product";
+import Storage from "../../../utils/Storage";
 
-function Checkout() {
-    const formDataInItValue = {
-        id: "",
-        firstname: "",
-        lastname: "",
-        country: "",
-        city: "",
-        address: "",
-        phone: "",
-        email: "",
-        note: ""
-    };
+
+const Checkout = () => {
+    const {userInfo, setUserInfo} = useAuth()
+    const [stateDetails,setSateDetails]=useState([])
+    const location = useLocation()
+    const {item} = location.state
+
     const [product, setProduct] = useState([])
-    const [formData, setFormData] = useState(formDataInItValue);
-    const array = [];
+    const [formData, setFormData] = useState({
+        fullname: "",
+        address1: "",
+        address2: "",
+        phone: "",
+    });
+
+    const order = useOrder({
+        idAcount: userInfo ? userInfo?.id : 5,
+        fullName:formData?.fullname,
+        address: formData?.address1,
+        detailAddress: formData?.address2,
+        phoneNumber: formData?.phone,
+        listOrderProductDetailDTO: stateDetails
+    })
+    console.log('order', order)
     useEffect(() => {
-        callApi(`categories/1/products/`, "GET", null)
-            .then((response) => {
-                const { data } = response
-                for (var i = 0; i < localStorage.length; i++) {
-                    data.map((value, index) => {
-                        if (value.id == localStorage.key(i)) {
-                            value = {
-                                ...value,
-                                quantity: localStorage.getItem(localStorage.key(i)),
-                            };
-                            array.push(value);
-                        }
-                    });
-                }
-                setProduct(array)
+        if(item){
+            item?.map((item)=>{
+                setSateDetails(prev=>{
+                   return[
+                       ...prev,
+                       {
+                           quantity:item?.quantity,
+                           idProductDetail: item?.productId
+                       }
+                   ]
+                })
             })
-    }, [])
-    const onChangeHandler = (event) => {
-        const { name, value } = event.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-    let total = product.reduce((total, product) => {
-        return total += product.quantity * product.price;
+        }
+    },[])
+    let total = item.reduce((total, item) => {
+        return total += Number(item.quantity) * Number(item.price);
     }, 0)
-    const onSubmitHandler = () => {
-        callApi("customer","POST",formData)
-        .then((res)=>{
-            console.log(res)
-        })
-        console.log(product.keys)
-        callApi("order","POST",{product})
-        .then((res)=>{
-            console.log(res)
-        })
-        localStorage.clear();
+    const onSubmitHandler = (quantity,productId) => {
+        if(formData.fullname==''){
+            alert('Không bỏ trống tên')
+            return false
+        }
+        if(formData.phone==''){
+            alert('Không bỏ trống số điện thoại')
+            return false
+        }
+        if(formData.address1==''){
+            alert('Không bỏ trống địa chỉ 1')
+            return false
+        }
+        if(formData.address2==''){
+            alert('Không bỏ trống địa chỉ 2')
+            return false
+        }
+       order.refetch().then((res)=>{
+           alert('Đặt thành công')
+           Storage.delete('cart')
+       })
     }
+
     return (
         <div>
             <div className="slider-area ">
@@ -82,20 +103,15 @@ function Checkout() {
                                 <form className="row contact_form">
                                     <div className="col-md-6">
                                         <TextField
-                                            onChange={onChangeHandler}
+                                            onChange={(item) => {
+                                                setFormData(prev=>({
+                                                    ...prev,
+                                                    fullname: item?.target?.value
+                                                }))
+                                            }
+                                            }
                                             fullWidth
-                                            label="First name"
-                                            className="my-2"
-                                            type="text"
-                                            id="firstname"
-                                            name="firstname"
-                                        />
-                                    </div>
-                                    <div className="col-md-6">
-                                        <TextField
-                                            onChange={onChangeHandler}
-                                            fullWidth
-                                            label="Last name"
+                                            label="Full name"
                                             className="my-2"
                                             type="text"
                                             id="lastname"
@@ -104,7 +120,13 @@ function Checkout() {
                                     </div>
                                     <div className="col-md-6">
                                         <TextField
-                                            onChange={onChangeHandler}
+                                            onChange={(item) => {
+                                                setFormData(prev=>({
+                                                    ...prev,
+                                                    phone: item?.target?.value
+                                                }))
+                                            }
+                                            }
                                             fullWidth
                                             label="Phone number"
                                             className="my-2"
@@ -113,33 +135,17 @@ function Checkout() {
                                             name="phone"
                                         />
                                     </div>
-                                    <div className="col-md-6">
-                                        <TextField
-                                            onChange={onChangeHandler}
-                                            fullWidth
-                                            label="Email"
-                                            className="my-2"
-                                            type="text"
-                                            id="email"
-                                            name="email"
-                                        />
-                                    </div>
                                     <div className="col-md-12">
                                         <TextField
-                                            onChange={onChangeHandler}
+                                            onChange={(item) => {
+                                                setFormData(prev=>({
+                                                    ...prev,
+                                                    address1: item?.target?.value
+                                                }))
+                                            }
+                                            }
                                             fullWidth
-                                            label="Country"
-                                            className="my-2"
-                                            type="text"
-                                            id="country"
-                                            name="country"
-                                        />
-                                    </div>
-                                    <div className="col-md-12">
-                                        <TextField
-                                            onChange={onChangeHandler}
-                                            fullWidth
-                                            label="Address"
+                                            label="Address1"
                                             className="my-2"
                                             type="text"
                                             id="address"
@@ -148,21 +154,25 @@ function Checkout() {
                                     </div>
                                     <div className="col-md-12">
                                         <TextField
-                                            onChange={onChangeHandler}
+                                            onChange={(item) => {
+                                                setFormData(prev=>({
+                                                    ...prev,
+                                                    address2: item?.target?.value
+                                                }))
+                                            }
+                                            }
                                             fullWidth
-                                            label="City"
+                                            label="Address2"
                                             className="my-2"
                                             type="text"
-                                            id="city"
-                                            name="city"
+                                            id="address"
+                                            name="address"
                                         />
                                     </div>
                                     <div className="col-md-12 form-group">
-                                        <div className="creat_account">
-                                            <h3>Shipping Details</h3>
-                                        </div>
-                                        <textarea className="form-control" name="message" id="message" rows="1"
-                                            placeholder="Order Notes"></textarea>
+
+                                        <h3>Shipping Details</h3>
+
                                     </div>
                                 </form>
                             </div>
@@ -172,13 +182,13 @@ function Checkout() {
                                     <ul className="list">
                                         <li>
                                             <Link href="#">Product
-                                            <span>Total</span>
+                                                <span>Total</span>
                                             </Link>
                                         </li>
-                                        {product.map((value, index) => {
+                                        {item.map((value, index) => {
                                             return (
                                                 <li key={index}>
-                                                    <Link >{value.name}
+                                                    <Link>{value.productName}
                                                         <span className="middle">x {value.quantity}</span>
                                                         <span className="last">${value.price}</span>
                                                     </Link>
@@ -189,11 +199,12 @@ function Checkout() {
                                     <ul className="list list_2 mb-5">
                                         <li>
                                             <Link href="#">Total
-                                            <span>${total}</span>
+                                                <span>${total}</span>
                                             </Link>
                                         </li>
                                     </ul>
-                                    <Button variant="contained" color="primary" className="mt-5 w-100" onClick={onSubmitHandler}><Link className="w-100" to="/confirm">Proceed to Paypal</Link></Button>
+                                    <Button variant="contained" color="primary" className="mt-5 w-100"
+                                            onClick={onSubmitHandler}>Proceed to Paypal</Button>
                                 </div>
                             </div>
                         </div>
