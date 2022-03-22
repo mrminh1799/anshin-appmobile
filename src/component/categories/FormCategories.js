@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { TextField, Button } from "@material-ui/core";
 import callApi from "../callAPI/apiCaller";
-import {Box, Chip, FormControl, InputLabel, Modal, OutlinedInput, Select, MenuItem, useTheme} from "@mui/material";
+import {Box, Chip, FormControl, InputLabel, OutlinedInput, Select, MenuItem, useTheme, Modal} from "@mui/material";
 import {useGetProducts} from "../../service/product";
 
 const ITEM_HEIGHT = 48;

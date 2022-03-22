@@ -42,12 +42,9 @@ function ListProduct({ setLoading,product, setClickedRow, setFormData, setProduc
             <table className="table table-striped table-bordered table-hover shadow">
                 <thead className="thead-dark">
                     <tr>
-                        <th>STT</th>
-                        <th>ID</th>
                         <th>Ảnh</th>
-                        <th style={{width:"30%"}}>Tên sản phẩm</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
+                        <th>Tên sản phẩm</th>
+                        <th>Đơn giá</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
@@ -60,12 +57,9 @@ function ListProduct({ setLoading,product, setClickedRow, setFormData, setProduc
                                 }}
                                 key={index}
                             >
-                                <th>{page < 2 ? index + 1 : page * 10 - 10 + index + 1}</th>
-                                <td>{value.id}</td>
                                 <td className="text-center"><img style={{ width: 100 }} src={value.image} /></td>
                                 <td>{value.name}</td>
                                 <td>{value.price}$</td>
-                                <td>123</td>
                                 <td>
                                     <Button
                                         onClick={(event) => {

@@ -1,4 +1,13 @@
-import {BrowserRouter as Router, Route, Link, NavLink, BrowserRouter, Switch, Redirect} from "react-router-dom";
+import {
+    BrowserRouter as Router,
+    Route,
+    Link,
+    NavLink,
+    BrowserRouter,
+    Switch,
+    Redirect,
+    useHistory
+} from "react-router-dom";
 import Home from "./component/views/home/Home"
 import Shop from "./component/views/shop/Shop"
 import SideBar from "./component/layout/SideBar"
@@ -28,6 +37,7 @@ function App() {
     const [user, setUser] = useState([]);
     const [role, setRole] = useState([]);
     const [loading, setLoading] = useState(false);
+    const history = useHistory()
 
     useEffect(() => {
         let userData = Storage.get('userData')
@@ -48,7 +58,7 @@ function App() {
                                     <SideBar
                                         category={category}
                                     />
-                                    <Route path="/admin/categories">
+                                    <Route path="/admin/categories/:id">
                                         <Categories
                                             category={category}
                                             setCategory={setCategory}
