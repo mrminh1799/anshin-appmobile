@@ -50,7 +50,7 @@ function ListCategories({setLoading,category,setClickedRow,setFormData,setCatego
     }
     return (
         <div className="p-5 m-auto">
-            <Button onClick={()=>setOpen(true)}>alo</Button>
+            {/*<Button onClick={()=>setOpen(true)}>Tạo đơn</Button>*/}
             <table className="table table-striped table-bordered table-hover shadow">
                 <thead className="thead-dark">
                     <tr>
@@ -90,9 +90,7 @@ function ListCategories({setLoading,category,setClickedRow,setFormData,setCatego
                                 <td>{value.sumPrice}</td>
                                 <td>
                                     <Button
-                                        onClick={(event) => {
-
-                                        }}
+                                        onClick={()=>setOpen(true)}
                                         variant="contained"
                                         color="secondary"
                                     >
@@ -166,27 +164,27 @@ function ListCategories({setLoading,category,setClickedRow,setFormData,setCatego
                             <th>Action</th>
                         </tr>
                         </thead>
-                        <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>2</td>
-                                    <td>22</td>
-                                    <td>2</td>
-                                    <td>3</td>
-                                    <td>3</td>
-                                    <td>
-                                        <Button
-                                            onClick={(event) => {
+                        {/*<tbody>*/}
+                        {/*        <tr>*/}
+                        {/*            <td>1</td>*/}
+                        {/*            <td>2</td>*/}
+                        {/*            <td>22</td>*/}
+                        {/*            <td>2</td>*/}
+                        {/*            <td>3</td>*/}
+                        {/*            <td>3</td>*/}
+                        {/*            <td>*/}
+                        {/*                <Button*/}
+                        {/*                    onClick={(event) => {*/}
 
-                                            }}
-                                            variant="contained"
-                                            color="secondary"
-                                        >
-                                            Delete
-                                        </Button>
-                                    </td>
-                                </tr>
-                        </tbody>
+                        {/*                    }}*/}
+                        {/*                    variant="contained"*/}
+                        {/*                    color="secondary"*/}
+                        {/*                >*/}
+                        {/*                    Delete*/}
+                        {/*                </Button>*/}
+                        {/*            </td>*/}
+                        {/*        </tr>*/}
+                        {/*</tbody>*/}
                     </table>
                 </form>
             </Modal>
