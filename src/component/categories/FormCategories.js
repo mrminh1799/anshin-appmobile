@@ -101,9 +101,9 @@ function FormCategories({ formDataInItValue,setCategory, category, formData, set
     };
     return (
         <div>
-            <Box>
-                <Button variant={'contained'} onClick={()=>setOpen(true)}>Tạo đơn</Button>
-            </Box>
+            {/*<Box>*/}
+            {/*    <Button variant={'contained'} onClick={()=>setOpen(true)}>Tạo đơn</Button>*/}
+            {/*</Box>*/}
             <Modal
                 keepMounted
                 open={open} onClose={()=>{setOpen(false)}} className="px-5 pt-4">
