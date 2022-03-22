@@ -11,15 +11,50 @@ import {
     useHistory
 } from "react-router-dom";
 import callApi from "../../callAPI/apiCaller";
-import {useGetDetailProduct} from "../../../service/product";
+import {useGetDetailProduct, useGetListOrder} from "../../../service/product";
 import Storage from "../../../utils/Storage";
 import axios from "axios";
-
+import {useAuth} from "../../../context";
 
 const Order = () => {
+    const {userInfo, setUserInfo} = useAuth()
     const checkout = useHistory()
     const [cart, setCart] = useState([])
+    const [order, setOrder] = useState([])
 
+    const getListOrder = useGetListOrder({
+        id: userInfo?.id
+    })
+    console.log('sss', {
+        id: userInfo?.id
+    })
+    useEffect(() => {
+        if (userInfo) {
+            getListOrder.refetch()
+
+        }
+    }, [])
+
+    useEffect(() => {
+        setOrder(getListOrder?.data)
+    }, [getListOrder?.data])
+
+    const total = (value) => {
+        let a = 0
+
+        value?.map((item, index) => {
+            a += item?.price
+        })
+
+        console.log('s232ss', a)
+
+        return a
+    }
+
+// const total= order.reduce((total,item)=> {
+//     return total += item?.idProduct
+// })
+    console.log('userInfo', getListOrder?.data)
     const onChangeHandler = (event) => {
         console.log('event', event.target.value)
         // if (event.target.value < 1) {
@@ -85,7 +120,7 @@ const Order = () => {
         // Storage.delete('cart',id)
 
     }
-    console.log('--===', Storage.get('cart'))
+
     return (
         <div>
             <div className="slider-area ">
@@ -108,45 +143,60 @@ const Order = () => {
                             <table className="table">
                                 <thead>
                                 <tr>
-                                    <th scope="col">Product</th>
-                                    <th scope="col">Price</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Total</th>
+                                    <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col">Giá</th>
+                                    <th scope="col">Tổng</th>
+                                    <th scope="col">Trạng thái</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                {cart?.map((value, index) => {
+                                {order?.map((value, index) => {
                                     return (
                                         <tr key={index}>
                                             <td>
-                                                <div className="media">
-                                                    <div className="d-flex">
-                                                        <img width="150px" src={value.image}/>
-                                                    </div>
-                                                    <div className="media-body">
-                                                        <p>{value.productName}</p>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <h5>${value.price}</h5>
-                                            </td>
-                                            <td>
                                                 <div className="product_count">
-                                                    <TextField
-                                                        name="quantity"
-                                                        onChange={(event) => onChangeHandler(event, value)}
-                                                        value={value.quantity}
-                                                        className="mb-2 fs-2"
-                                                        type="number"
-                                                    />
+                                                    {value?.listOrderDetailDTO?.map((item, index) => {
+                                                        return (
+                                                            <p>{item?.nameProduct}</p>
+                                                        )
+                                                    })}
                                                 </div>
                                             </td>
                                             <td>
-                                                <h5 style={{display: "inline-block", marginRight: 10}}>
-                                                    {/*${Number(value.quantity) * 20}*/}
-                                                    ${Number(value.quantity) * Number(value.price)}
+                                                <h5>
+                                                    {value?.listOrderDetailDTO?.map((item, index) => {
+                                                        return (
+                                                            <p>$ {item?.price}</p>
+                                                        )
+                                                    })}
                                                 </h5>
+                                            </td>
+
+                                            <td>
+                                                <p style={{display: "inline-block", marginRight: 10}}>
+                                                    $ {total(value?.listOrderDetailDTO)}
+                                                </p>
+                                            </td>
+                                            <td>
+                                                <p style={{display: "inline-block", marginRight: 10}}>
+                                                    {
+                                                        value?.status == 1 ?
+                                                            <p>Chờ xác nhận</p> :
+                                                            (value?.status == 2 ?
+                                                                    <p>Đã xác nhận</p> :
+                                                                    (value?.status == 3 ?
+                                                                            <p>Đã nhận</p> :
+                                                                            (value?.status == 4) ?
+                                                                                <p>Không nhận hàng</p>
+                                                                                : (value?.status == 0) ?
+                                                                                    <p>Bị huỷ</p> :
+                                                                                    <></>
+                                                                    )
+                                                            )
+                                                    }
+                                                </p>
+                                            </td>
+                                            <td>
                                                 <Button onClick={() => {
                                                     onHandleDelete(value.productId)
                                                 }} style={{float: "right"}}>X</Button>
@@ -155,25 +205,14 @@ const Order = () => {
                                     )
                                 })}
 
-                                <tr>
-                                    <td></td>
-                                    <td></td>
-                                    <td>
-                                        <h5>Subtotal</h5>
-                                    </td>
-                                    <td>
-                                        <h5>${cart.reduce((total, cart) => {
-                                            return total += Number(cart.quantity) * Number(cart.price);
-                                        }, 0)}</h5>
-                                    </td>
-                                </tr>
+
                                 </tbody>
                             </table>
-                            <div className="checkout_btn_inner float-right">
-                                <Link className="btn_1 mr-2" to="/shop">Continue Shopping</Link>
-                                <button onClick={toCheckout} className="btn_1 checkout_btn_1">Proceed to checkout
-                                </button>
-                            </div>
+                            {/*<div className="checkout_btn_inner float-right">*/}
+                            {/*    <Link className="btn_1 mr-2" to="/shop">Continue Shopping</Link>*/}
+                            {/*    <button onClick={toCheckout} className="btn_1 checkout_btn_1">Proceed to checkout*/}
+                            {/*    </button>*/}
+                            {/*</div>*/}
                         </div>
                     </div>
                 </div>

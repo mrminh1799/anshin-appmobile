@@ -3,6 +3,18 @@ import {_custom, _get, _put, _post} from '../../src/component/callAPI/index';
 import {useEffect, useState} from "react";
 import axios from "axios";
 
+//getallproduct
+export const useGetProducts = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_products', params], () => _get('product/findAll'));
+    return {
+        status, error, data, refetch
+    }
+}
 //lay danh sp phan trang
 export const useGetAllProducts = (params) => {
     const {
@@ -75,6 +87,107 @@ export const useOrder = (params) => {
         error,
         refetch
     } = useQuery(['get_order_product', params], () => _post('Order/newOrder' ,params),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+
+//top 10sp yeu thich
+export const useGetTop10 = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_top10_product', params], () => _get('product/findByTop', params),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+//top 10sp yeu ban chay
+export const useGetTop10Sell = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_top10_product_sell', params], () => _get('product/findBySumTop' ,params),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+//danh sach order khach hang
+export const useGetListOrder = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_list_order', params], () => _get('Order/findByAcountId/'+ params?.id),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+
+//lay danh sach sp trong cart theo accountid
+export const useGetListCart = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_list_cart', params], () => _get('cart/findByIdAcount2/'+ params?.id),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+
+//lay danh sach màu
+export const useGetListColor = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_list_color', params], () => _get('color/findAll', params),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+
+//lay danh sach size
+export const useGetListSize = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_list_size', params], () => _get('size/findAll', params),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+
+//lay danh sach sp khuyeens maix
+export const useGetProductDiscount = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_list_product_discount', params], () => _get('discount/findAll', params),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+//filter product
+export const useGetFilterProduct = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_filter_product', params], () => _get('product/findByColorSizePrice/' + params?.idColor +'/'+ params?.idSize + '/' +params?.priceFrom + '/' + params?.priceTo),{enabled:false});
     return {
         status, error, data, refetch
     }

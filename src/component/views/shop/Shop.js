@@ -1,71 +1,126 @@
-import { InputLabel, MenuItem, Select } from "@material-ui/core";
-import { Pagination } from "@material-ui/lab";
-import React, { useEffect, useState } from "react";
-import {BrowserRouter as Router, Route, Link, NavLink, BrowserRouter, Switch, useHistory} from "react-router-dom";
-import {useGetAllProduct, useGetAllProducts, useGetDetailProduct} from "../../../service/product";
+import {FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
+import {Pagination} from "@material-ui/lab";
+import React, {useEffect, useState} from "react";
+import {useHistory} from "react-router-dom";
+import {
+    useGetAllProducts,
+    useGetDetailProduct, useGetFilterProduct,
+    useGetListColor,
+    useGetListSize
+} from "../../../service/product";
+
 
 function Shop() {
+    let detail = useHistory();
     const [product, setProduct] = useState([]);
-    const [filterProduct, setFilterProduct] = useState([]);
     const [category, setCategory] = useState();
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
     const [idProduct, setIdProduct] = useState()
-    let detail = useHistory();
+    const [allSize, setAllSize] = useState()
+    const [allColor, setAllColor] = useState()
+    const listColor = useGetListColor({})
+    const listSize = useGetListSize({})
+    const [checkFilter,setCheckFilter] = useState(true)
+
+
+    const [filterProduct, setFilterProduct] = useState({
+        size: 0,
+        priceFrom: 0,
+        priceTo: 0,
+        color: 0,
+        labelPrice: "",
+        labelSize: "",
+        labelColor: ""
+    })
+    const priceFilter = [
+        {
+            label: "Tất cả",
+            priceFrom: 0,
+            priceTo: 0
+        },
+        {
+            label: "$1 - $100",
+            priceFrom: 1,
+            priceTo: 100
+        },
+        {
+            label: "$100 - $500",
+            priceFrom: 100,
+            priceTo: 500
+        },
+        {
+            label: "$500 - $1000",
+            priceFrom: 500,
+            priceTo: 1000
+        },
+        {
+            label: "Trên $1000",
+            priceFrom: 1000,
+            priceTo: 100000000
+        }
+    ]
     const allProducts = useGetAllProducts({
-        currenPage:1,
+        currenPage: 1,
         sizePage: 9
     })
     const detailProduct = useGetDetailProduct({
-        id:idProduct
+        id: idProduct
     })
 
-    const toDetailProduct =(item)=>{
-        console.log('item',item.id)
+    const filterSP= useGetFilterProduct({
+        idColor:filterProduct?.color,
+        idSize:filterProduct?.size,
+        priceFrom: filterProduct?.priceFrom,
+        priceTo: filterProduct?.priceTo
+    })
+    console.log('fiii', filterSP)
+    const toDetailProduct = (item) => {
         setIdProduct(item?.id)
-       if(idProduct){
-           detailProduct.refetch().then(res =>{
-               if(res){
-                   detail.push(`/detail/${item.id}`,{
-                       item:res?.data
-                   })
-               }
-           })
-       }
+    }
+
+    const handleFilter = () =>{
 
     }
 
-    // useEffect(() => {
-    //     callApi(`product`, "GET", null)
-    //         .then((response) => {
-    //             const { data } = response;
-    //             setProduct(data);
-    //             setFilterProduct(data)
-    //         })
-    // }, [page, category]);
+    useEffect(() => {
+        filterSP.refetch()
+        setCheckFilter(false)
+    },[filterProduct])
 
+    useEffect(() => {
+        listColor.refetch()
+        listSize.refetch()
+    }, [])
 
-    // useEffect(() => {
-    //     callApi(`category`, "GET", null)
-    //         .then((response) => {
-    //             const { data } = response;
-    //             setCategory(data);
-    //         })
-    // }, []);
+    useEffect(() => {
+        if (listSize?.data) {
+            setAllSize([{id: 0, size_name: "Tất cả"}, ...listSize?.data])
+        }
+
+    }, [listSize?.data])
+
+    useEffect(() => {
+        if (listColor?.data) {
+            setAllColor([{id: 0, colorName: "Tất cả"}, ...listColor?.data])
+        }
+    }, [listColor?.data])
+
+    useEffect(() => {
+        if (idProduct) {
+            detailProduct.refetch().then(res => {
+                if (res) {
+                    detail.push(`/detail/${idProduct}`, {
+                        item: res?.data
+                    })
+                }
+            })
+        }
+    }, [idProduct])
 
     const onChangePage = (event, newPage) => {
         setPage(newPage);
     };
-    const onChangeCate = (event) => {
-        let data = event.target.value
-        if (data.match('all')) {
-            setFilterProduct(product)
-        } else {
-            setFilterProduct(() => {
-                return product.filter(item => item.category.id == event.target.value)
-            })
-        }
-    }
     return (
         <div>
             <div className="slider-area ">
@@ -83,88 +138,179 @@ function Shop() {
             </div>
             <section className="popular-items latest-padding">
                 <div className="container">
-                    <div className="row product-btn justify-content-between mb-40">
-                        {/* <div className="properties__button">
-                            <nav>
-                                <div className="nav nav-tabs" id="nav-tab" role="tablist">
-                                    <Link onClick={onClickHandler} className="nav-item nav-link" id="nav-name-tab" data-toggle="tab" href="#nav-name"
-                                        role="tab" aria-controls="nav-name" aria-selected="true">Alphabetical
-                        </Link>
-                                    <Link onClick={onClickHandler} className="nav-item nav-link" id="nav-price-tab" data-toggle="tab" href="#nav-price"
-                                        role="tab" aria-controls="nav-price" aria-selected="false"> Price
-                        high to low</Link>
-                                    <Link onClick={onClickHandler} className="nav-item nav-link" id="nav-pricelow-tab" data-toggle="tab" href="#nav-pricelow"
-                                        role="tab" aria-controls="nav-pricelow" aria-selected="false"> Price
-                        low to high</Link>
-                                </div>
-                            </nav>
-                        </div> */}
-                        <div className="grid-list-view">
-                        </div>
-                        <div className="select-this">
-                            <form action="#">
-                                <div className="select-itms">
-                                    <select onChange={onChangeCate} className="custom-select">
-                                        <option
-                                            value={'all'}
-                                        >
-                                            All
-                                        </option>
-                                        {category && category.map(item => {
-                                            console.log(item);
-                                            return (
-                                                <option
-                                                    key={item.id}
-                                                    value={item.id}
-                                                >
-                                                    {item.name}
-                                                </option>
-                                            )
-                                        })}
+                    <FormControl style={{width: 200}}>
+                        <InputLabel id="demo-simple-select-label">Màu sắc</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={filterProduct.labelColor}
+                            label={filterProduct.labelColor}
+                            defaultValue={filterProduct.labelColor}
+                            onChange={(event) => {
+                                setFilterProduct(prev => ({
+                                    ...prev,
+                                    color: event.target.value.id,
+                                    labelColor: event.target.value.colorName
+                                }))
 
-                                    </select>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                    <div className="tab-content" id="nav-tabContent">
-                        <div className="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                            <div className="row">
-                                {allProducts?.data && allProducts?.data.map((value, index) => {
+                            }}
+
+                        >
+                            {
+                                allColor?.map((item, index) => {
                                     return (
-                                        <div key={index} className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                            <div className="single-popular-items mb-50 text-center">
-                                                <div className="popular-img" style={{
-                                                    backgroundImage: `url(${value.image})`,
-                                                    width: 360,
-                                                    height: 360,
-                                                    overFlow: "hidden",
-                                                    backgroundSize: "cover",
-                                                    backgroundRepeat: "no-repeat",
-                                                    backgroundPosition: "center"
-                                                }}>
-                                                    <div className="img-cap">
-                                                        <span onClick={()=>toDetailProduct(value)}>Thêm vào giỏ hàng</span>
+                                        <MenuItem value={item}>{item.colorName}</MenuItem>
+                                    )
+                                })
+                            }
+
+                        </Select>
+                    </FormControl>
+                    <FormControl style={{width: 200}}>
+                        <InputLabel id="demo-simple-select-label">Kích cỡ</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={filterProduct.labelSize}
+                            label={filterProduct.labelSize}
+                            defaultValue={filterProduct.labelSize}
+                            onChange={(event) => {
+                                console.log('ưewe', event.target.value)
+                                setFilterProduct(prev => ({
+                                    ...prev,
+                                    size: event.target.value.id,
+                                    labelSize: event.target.value.size_name
+                                }))
+
+                            }}
+
+                        >
+                            {
+                                allSize?.map((item, index) => {
+                                    return (
+                                        <MenuItem value={item}>{item.size_name}</MenuItem>
+                                    )
+                                })
+                            }
+
+                        </Select>
+                    </FormControl>
+                    <FormControl style={{width: 200}}>
+                        <InputLabel id="demo-simple-select-label">Giá</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={filterProduct.labelPrice}
+                            label={filterProduct.labelPrice}
+                            defaultValue={filterProduct.labelPrice}
+                            onChange={(event) => {
+                                setFilterProduct(prev => ({
+                                    ...prev,
+                                    priceFrom: event.target.value.priceFrom,
+                                    priceTo: event.target.value.priceTo,
+                                    labelPrice: event.target.value.label
+                                }))
+
+                            }}
+
+                        >
+                            {
+                                priceFilter?.map((item, index) => {
+                                    return (
+                                        <MenuItem value={item}>{item.label}</MenuItem>
+                                    )
+                                })
+                            }
+
+                        </Select>
+                    </FormControl>
+
+                    {
+                        checkFilter?
+                            <div className="tab-content" id="nav-tabContent" style={{marginTop: 50}}>
+                                <div className="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                     aria-labelledby="nav-home-tab">
+                                    <div className="row">
+                                        {allProducts?.data && allProducts?.data.map((value, index) => {
+                                            return (
+                                                <div key={index} className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                                    <div className="single-popular-items mb-50 text-center">
+                                                        <div className="popular-img" style={{
+                                                            backgroundImage: `url(${value.image})`,
+                                                            width: 360,
+                                                            height: 360,
+                                                            overFlow: "hidden",
+                                                            backgroundSize: "cover",
+                                                            backgroundRepeat: "no-repeat",
+                                                            backgroundPosition: "center"
+                                                        }}>
+                                                            {/*<div className="img-cap">*/}
+                                                            {/*    <span >Thêm vào giỏ hàng</span>*/}
+                                                            {/*</div>*/}
+                                                        </div>
+                                                        <button onClick={() => toDetailProduct(value)}
+                                                                className="btn-danger">
+                                                            <h4>
+                                                                <span color={'white'}>{value.name}</span>
+
+                                                            </h4>
+                                                            <span>${value.price}</span>
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <div className="popular-caption">
-                                                    <h3>
-                                                        <Link to={`/detail/${value.id}`}>{value.name}</Link>
-                                                    </h3>
-                                                    <span>${value.price}</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    )
-                                })}
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                <Pagination
+                                    count={totalPage}
+                                    onChange={onChangePage}
+                                    className="py-4 d-flex justify-content-center"
+                                />
                             </div>
-                        </div>
-                        <Pagination
-                            count={totalPage}
-                            onChange={onChangePage}
-                            className="py-4 d-flex justify-content-center"
-                        />
-                    </div>
+                            :
+                            <div className="tab-content" id="nav-tabContent" style={{marginTop: 50}}>
+                                <div className="tab-pane fade show active" id="nav-home" role="tabpanel"
+                                     aria-labelledby="nav-home-tab">
+                                    <div className="row">
+                                        {filterSP?.data && filterSP?.data.map((value, index) => {
+                                            return (
+                                                <div key={index} className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
+                                                    <div className="single-popular-items mb-50 text-center">
+                                                        <div className="popular-img" style={{
+                                                            backgroundImage: `url(${value.image})`,
+                                                            width: 360,
+                                                            height: 360,
+                                                            overFlow: "hidden",
+                                                            backgroundSize: "cover",
+                                                            backgroundRepeat: "no-repeat",
+                                                            backgroundPosition: "center"
+                                                        }}>
+                                                            {/*<div className="img-cap">*/}
+                                                            {/*    <span >Thêm vào giỏ hàng</span>*/}
+                                                            {/*</div>*/}
+                                                        </div>
+                                                        <button onClick={() => toDetailProduct(value)}
+                                                                className="btn-danger">
+                                                            <h4>
+                                                                <span color={'white'}>{value.name}</span>
+
+                                                            </h4>
+                                                            <span>${value.price}</span>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                <Pagination
+                                    count={totalPage}
+                                    onChange={onChangePage}
+                                    className="py-4 d-flex justify-content-center"
+                                />
+                            </div>
+                    }
                 </div>
             </section>
         </div>

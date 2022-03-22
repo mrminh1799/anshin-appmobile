@@ -16,8 +16,8 @@ const Detail = () => {
     const location = useLocation()
     const {item} = location.state
     const checkout = useHistory()
-    const [cart, setCart] = useState([])
-    console.log('item=-=',item)
+    const [cart, setCart] = useState(null)
+
     const [product, setProduct] = useState({
         productId: item?.id,
         colorId: "",
@@ -26,7 +26,7 @@ const Detail = () => {
         size: "",
         quantity: 1,
         image: item?.image,
-        name:""
+        name: item?.name
     });
 
     const checkProduct = useGetCheckProduct({
@@ -68,29 +68,42 @@ const Detail = () => {
         }))
     }
 
-    const toCheckout=()=>{
-        axios.get(`http://localhost:8080/product/findById/${product?.productId}`)
-            .then(res => {
-                const data = res.data;
-                setCart(prev => {
-                    return [
-                        ...prev,
-                        {
-                            quantity: product?.quantity,
-                            productName: product?.name,
-                            image: product?.image,
-                            price: product?.price,
-                            productId: product?.productId
-                        }
-                    ]
+    const toCheckout = () => {
+        if (product?.sizeId === '') {
+            alert("Vui lòng chọn size");
+            return;
+        }
+        if (product?.colorId === '') {
+            alert("Vui lòng chọn màu sắc");
+            return;
+        }
 
-                })
-            })
-            .catch(error => console.log(error));
-        checkout.push('/checkout',{
-
-        })
+        setCart([{
+                quantity: product?.quantity,
+                productName: product?.name,
+                image: product?.image,
+                price: product?.price ? product?.price : 0,
+                productId: product?.productId
+            }]
+        )
     }
+    useEffect(() => {
+        if (cart !== null) {
+            checkout.push('/checkout', {
+                item: cart
+            })
+            // checkProduct.refetch().then(res => {
+            //     if (res?.data) {
+            //         checkout.push('/checkout', {
+            //             item: cart
+            //         })
+            //     } else {
+            //         alert("Sản phầm này đã hết");
+            //     }
+            // })
+
+        }
+    }, [cart])
 
     const addToCart = () => {
         if (product?.colorId === '') {
@@ -122,7 +135,7 @@ const Detail = () => {
             let check = true
             let cart = Storage.get('cart')?.map((item, i) => {
                 if (item.id == product.productId) {
-                    console.log('id',item.id,product.productId)
+                    console.log('id', item.id, product.productId)
                     check = false
                     item.quantity = Number(item.quantity) + Number(product.quantity)
                 }
@@ -131,8 +144,8 @@ const Detail = () => {
 
             if (check) {
                 Storage.save('cart', [...Storage.get('cart'), product])
-            }else {
-                Storage.save('cart',cart)
+            } else {
+                Storage.save('cart', cart)
             }
         } else {
             Storage.save('cart', [product])
@@ -164,7 +177,8 @@ const Detail = () => {
                             <div className="preview col-md-7">
                                 <div className="preview-pic tab-content">
                                     <div id="pic-1">
-                                        <img src={item?.image}/></div>
+                                        <img width={'500px'} src={item?.image}/>
+                                    </div>
                                 </div>
 
                             </div>
@@ -223,7 +237,9 @@ const Detail = () => {
                                     </div>
                                     <br/>
                                     <div>
-                                        <button className="btn btn-primary ml-1" onClick={toCheckout} type="button">Mua ngay</button>
+                                        <button className="btn btn-primary ml-1" onClick={toCheckout} type="button">Mua
+                                            ngay
+                                        </button>
                                         <button onClick={addToCart} className="btn btn-primary ml-1" type="button">Thêm
                                             vào giỏ hàng
                                         </button>
