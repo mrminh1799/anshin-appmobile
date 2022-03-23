@@ -1,11 +1,12 @@
 import {BrowserRouter, Switch, Route, Link, useHistory} from "react-router-dom";
 import {useAuth} from "../../context";
-import {Avatar, Box, IconButton, ListItemIcon, Menu, MenuItem, Tooltip} from "@material-ui/core";
+import {Avatar, Box, Button, IconButton, ListItemIcon, Menu, MenuItem, TextField, Tooltip} from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import * as PropTypes from "prop-types";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Storage from "../../utils/Storage";
 import {useGetDetailProduct, useGetProducts} from "../../service/product";
+import {Modal} from "@mui/material";
 
 function Logout(props) {
     return null;
@@ -22,6 +23,8 @@ function Header() {
     const [option, setOption] = useState([])
     const [anchorEl, setAnchorEl] = useState(null);
     const [idProduct, setIdProduct] = useState()
+    const [openCNTT,setOpenCNTT] = useState(false)
+    const [openChangePass,setOpenChangePass] = useState(false)
     let detail = useHistory();
 
     const open = Boolean(anchorEl);
@@ -169,7 +172,115 @@ function Header() {
                 }}>
                     Logout
                 </MenuItem>
+                {
+                    userInfo?.roles?.includes('Admin') &&
+                    <MenuItem  onClick={()=>setOpenCNTT(true)}>
+                       Cập nhật thông tin
+                    </MenuItem>
+                }
             </Menu>
+            <Modal
+                keepMounted
+                open={openCNTT} onClose={()=>{setOpenCNTT(false)}} className="px-5 pt-4">
+                <form style={{
+                    backgroundColor: 'white',
+                    marginLeft: 400,
+                    marginRight: 400,
+                }} className="border rounded p-4 shadow" autoComplete="off">
+                    <div style={{
+                        display: 'flex',
+                    }}>
+                        <div>
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Tên khách hàng"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Số điện thoại"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Email"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Địa chỉ"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Địa chỉ chi tiết"
+                                className="my-2 mb-4"
+                            />
+                        </div>
+                        <div className={'ml-5'}>
+                            <Button className="mr-2 w-100 mb-1"  onClick={()=>setOpenChangePass(true)} variant="outlined">
+                                Đổi mật khẩu
+                            </Button>
+                            <Button className="mr-2 w-100 mb-1" type="submit" variant="outlined">
+                                Xác nhận
+                            </Button>
+                            <Button className={'w-100'} onClick={()=>setOpenCNTT(false)} variant="outlined" color="inherit">
+                                Huỷ
+                            </Button>
+                        </div>
+                    </div>
+
+                </form>
+            </Modal>
+            <Modal
+                keepMounted
+                open={openChangePass} onClose={()=>{setOpenChangePass(false)}} className="px-5 pt-4">
+                <form style={{
+                    backgroundColor: 'white',
+                    marginLeft: 600,
+                    marginRight:600,
+                }} className="border rounded p-4 shadow" autoComplete="off">
+                    <div style={{
+                        display: 'flex',
+                    }}>
+                        <div>
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Mật khẩu mới"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Nhập lại mật khẩu mới"
+                                className="my-2 mb-4"
+                            />
+                        </div>
+                        <div className={'ml-5'}>
+                            <Button className="mr-2 w-100 mb-1" type="submit" variant="outlined">
+                                Xác nhận
+                            </Button>
+                            <Button className={'w-100'} onClick={()=>setOpenChangePass(false)} variant="outlined" color="inherit">
+                                Huỷ
+                            </Button>
+                        </div>
+                    </div>
+
+                </form>
+            </Modal>
         </div>
     )
 }

@@ -204,3 +204,16 @@ export const useGetFilterProduct = (params) => {
         status, error, data, refetch
     }
 }
+
+//xac nhan pass cu
+export const useConfirmPass = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_confirm_pass', params], () => _get('test/confirmPassword/' + params?.id +'/'+ params?.idSize + '/' +params?.priceFrom + '/' + params?.priceTo),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
