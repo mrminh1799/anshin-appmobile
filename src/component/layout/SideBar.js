@@ -107,6 +107,14 @@ function SideBar() {
                                     <ListItemText primary="Sản phẩm"/>
                                 </ListItem>
                             </Link>
+                            <Link to="/admin/users">
+                                <ListItem button className="pl-3">
+                                    <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                        <AllInboxIcon style={{color: 'white'}}/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Tài khoản"/>
+                                </ListItem>
+                            </Link>
                         </div>
                     </List>
                 </div>
