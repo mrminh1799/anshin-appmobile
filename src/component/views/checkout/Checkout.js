@@ -16,11 +16,12 @@ import Storage from "../../../utils/Storage";
 
 
 const Checkout = () => {
+
     const {userInfo, setUserInfo} = useAuth()
     const [stateDetails,setSateDetails]=useState([])
     const location = useLocation()
     const {item} = location.state
-
+    console.log('par',item)
     const [product, setProduct] = useState([])
     const [formData, setFormData] = useState({
         fullname: "",
@@ -168,11 +169,6 @@ const Checkout = () => {
                                             id="address"
                                             name="address"
                                         />
-                                    </div>
-                                    <div className="col-md-12 form-group">
-
-                                        <h3>Shipping Details</h3>
-
                                     </div>
                                 </form>
                             </div>

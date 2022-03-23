@@ -26,6 +26,7 @@ import {QueryClient, QueryClientProvider, useQuery} from 'react-query'
 import {useAuth} from "./context";
 import Storage from "./utils/Storage";
 import Order from "./component/views/Order";
+import ProductDiscount from "./component/views/ProductDiscount";
 
 const queryClient = new QueryClient()
 
@@ -109,6 +110,9 @@ function App() {
                             </Route>
                             <Route path="/order" exact>
                                 <Order/>
+                            </Route>
+                            <Route path="/discount" exact>
+                                <ProductDiscount/>
                             </Route>
                             <Route path="/checkout" exact>
                                 <Checkout/>

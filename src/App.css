@@ -36,3 +36,17 @@
     transform: rotate(360deg);
   }
 }
+ .search-bar-dropdown{
+   width:30em;
+ }
+ .height-select{
+   height:1em
+ }
+.span.a {
+  display: inline; /* the default for span */
+  width: 100px;
+  height: 100px;
+  padding: 5px;
+  border: 1px solid blue;
+  background-color: yellow;
+}
