@@ -26,6 +26,7 @@ import {QueryClient, QueryClientProvider, useQuery} from 'react-query'
 import {useAuth} from "./context";
 import Storage from "./utils/Storage";
 import Order from "./component/views/Order";
+import Orders from "./component/orders/Orders";
 
 const queryClient = new QueryClient()
 
@@ -33,7 +34,6 @@ function App() {
     const {userInfo, setUserInfo} = useAuth()
     const userData = Storage.get('userData')
     const [product, setProduct] = useState([]);
-    const [category, setCategory] = useState([]);
     const [user, setUser] = useState([]);
     const [role, setRole] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -55,13 +55,9 @@ function App() {
                             !!userData && userData?.roles.includes('Admin')
                                 ?
                                 <div className="App d-flex h-100">
-                                    <SideBar
-                                        category={category}
-                                    />
-                                    <Route path="/admin/categories/:id">
-                                        <Categories
-                                            category={category}
-                                            setCategory={setCategory}
+                                    <SideBar/>
+                                    <Route path="/admin/orders/:id">
+                                        <Orders
                                             loading={loading}
                                             setLoading={setLoading}
                                         />
@@ -72,7 +68,6 @@ function App() {
                                             setProduct={setProduct}
                                             loading={loading}
                                             setLoading={setLoading}
-                                            category={category}
                                         />
                                     </Route>
                                     <Route path="/admin/users">
