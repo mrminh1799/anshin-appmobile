@@ -74,7 +74,7 @@ function Shop() {
         priceFrom: filterProduct?.priceFrom,
         priceTo: filterProduct?.priceTo
     })
-    console.log('fiii', filterSP)
+
     const toDetailProduct = (item) => {
         setIdProduct(item?.id)
     }

@@ -1,11 +1,13 @@
 import {BrowserRouter, Switch, Route, Link} from "react-router-dom";
-import {useGetTop10, useGetTop10Sell} from "../../../service/product";
+import {useGetInforUser, useGetTop10, useGetTop10Sell} from "../../../service/product";
 import {useEffect} from "react";
+import {useAuth} from "../../../context";
 
 
 
 function Home() {
     const top10Products = useGetTop10({})
+
     useEffect(() => {
         top10Products.refetch()
     }, [])
@@ -15,7 +17,6 @@ function Home() {
     }, [])
 
 
-    console.log('123', top10Products)
     return (
         <div>
             <div className="section">

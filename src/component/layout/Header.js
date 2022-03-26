@@ -5,8 +5,16 @@ import Divider from "@material-ui/core/Divider";
 import * as PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
 import Storage from "../../utils/Storage";
-import {useGetDetailProduct, useGetProducts} from "../../service/product";
+import {
+    useChangePass,
+    useConfirmPass,
+    useGetDetailProduct, useGetInforUser,
+    useGetParentCate,
+    useGetProducts
+} from "../../service/product";
 import {Modal} from "@mui/material";
+import Text from "antd/es/typography/Text";
+import DanhMuc from "./DanhMuc";
 
 function Logout(props) {
     return null;
@@ -25,6 +33,76 @@ function Header() {
     const [idProduct, setIdProduct] = useState()
     const [openCNTT,setOpenCNTT] = useState(false)
     const [openChangePass,setOpenChangePass] = useState(false)
+    const [statusConfirm, setStatusConfirm] = useState()
+    const categoryNav = useGetParentCate({})
+
+    console.log('asas',userInfo)
+    const [password, setPassword] = useState({
+        oldPass:'',
+        newPass1:'',
+        newPass2:'',
+    })
+    const onChangeOldPass = (value)=>{
+        setPassword((prev)=>({
+            ...prev,
+            oldPass:value.target.value
+        }))
+    }
+    const onChangeNewPass1 = (value)=>{
+        setPassword((prev)=>({
+            ...prev,
+            newPass1:value.target.value
+        }))
+    }
+    const onChangeNewPass2 = (value)=>{
+        setPassword((prev)=>({
+            ...prev,
+            newPass2:value.target.value
+        }))
+    }
+    //call api confirm pass
+    const confirmPass= useConfirmPass({
+        id:userInfo?.id,
+        password: password?.oldPass
+    })
+    const changePass= useChangePass({
+        id:userInfo?.id,
+        password: password?.newPass2
+    })
+
+    const handlerChangePass =()=>{
+        console.log({
+            id:userInfo?.id,
+            password: password?.oldPass
+        })
+        confirmPass.refetch()
+    }
+
+
+    useEffect(() => {
+            if(confirmPass?.data){
+                setStatusConfirm(confirmPass?.data)
+                // changePass.refetch()
+                confirmPass.remove()
+            }else {
+                setStatusConfirm(confirmPass?.data)
+            }
+
+
+    },[confirmPass?.data])
+
+    useEffect(() => {
+        if(statusConfirm){
+            console.log('vaoooo')
+            changePass.refetch()
+            alert('true')
+        }
+    },[statusConfirm])
+
+    useEffect(() => {
+        categoryNav.refetch()
+    },[])
+
     let detail = useHistory();
 
     const open = Boolean(anchorEl);
@@ -39,7 +117,6 @@ function Header() {
         id: idProduct
     })
     const onChangeHander = (value) => {
-        console.log('1232',value)
         setIdProduct(value?.id)
     }
     const toDiscount =()=>{
@@ -120,6 +197,7 @@ function Header() {
                                     <li><Link to="/cart">Cart</Link></li>
                                     <li onClick={toOrder}><Link >My Order</Link></li>
                                     <li onClick={toDiscount}><Link>Discount</Link></li>
+                                    <DanhMuc data={categoryNav?.data}/>
 
                                 </ul>
                             </nav>
@@ -193,7 +271,6 @@ function Header() {
                         <div>
                             <TextField
                                 name="name"
-                                // value={formData.name}
                                 fullWidth
                                 label="Tên khách hàng"
                                 className="my-2 mb-4"
@@ -256,21 +333,35 @@ function Header() {
                         <div>
                             <TextField
                                 name="name"
-                                // value={formData.name}
+                                onChange={onChangeOldPass}
                                 fullWidth
+                                type={'password'}
+                                label="Mật khẩu cũ"
+                                className="my-2 mb-4"
+                            />
+                            {
+                                statusConfirm===false?  <Text style={{color:'red'}}>Mât khẩu cũ không đúng</Text>:<></>
+                            }
+                            <TextField
+                                name="name"
+                                onChange={onChangeNewPass1}
+                                fullWidth
+                                type={'password'}
                                 label="Mật khẩu mới"
                                 className="my-2 mb-4"
                             />
                             <TextField
                                 name="name"
-                                // value={formData.name}
+                               onChange={onChangeNewPass2}
+                                type={'password'}
                                 fullWidth
                                 label="Nhập lại mật khẩu mới"
                                 className="my-2 mb-4"
                             />
+
                         </div>
                         <div className={'ml-5'}>
-                            <Button className="mr-2 w-100 mb-1" type="submit" variant="outlined">
+                            <Button className="mr-2 w-100 mb-1" onClick={handlerChangePass} variant="outlined">
                                 Xác nhận
                             </Button>
                             <Button className={'w-100'} onClick={()=>setOpenChangePass(false)} variant="outlined" color="inherit">

@@ -25,6 +25,7 @@ import Storage from "./utils/Storage";
 import Order from "./component/views/Order";
 import Orders from "./component/orders/Orders";
 import ProductDiscount from "./component/views/ProductDiscount";
+import ListProductFindByCate from "./component/views/ListProductFindByCate";
 
 const queryClient = new QueryClient()
 
@@ -106,16 +107,19 @@ function App() {
                             <Route path="/discount" exact>
                                 <ProductDiscount/>
                             </Route>
-                                <Route path="/checkout" exact>
-                                    <Checkout/>
-                                </Route>
-                            </Switch>
-                            <Footer/>
-                        </Route>
-                    </Switch>
-                </BrowserRouter>
-            </QueryClientProvider>
-        </Provider>
+                            <Route path="/checkout" exact>
+                                <Checkout/>
+                            </Route>
+                            <Route path="/findProduct" exact>
+                                <ListProductFindByCate/>
+                            </Route>
+                        </Switch>
+                        <Footer/>
+                    </Route>
+                </Switch>
+            </BrowserRouter>
+        </QueryClientProvider>
+
     )
 }
 

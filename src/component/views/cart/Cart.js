@@ -1,17 +1,11 @@
 import {Button, TextField} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import {
-    BrowserRouter as Router,
-    Route,
     Link,
-    NavLink,
-    BrowserRouter,
-    Switch,
-    useParams,
     useHistory
 } from "react-router-dom";
-import callApi from "../../callAPI/apiCaller";
-import {useGetDetailProduct, useGetListCart} from "../../../service/product";
+
+import { useGetListCart} from "../../../service/product";
 import Storage from "../../../utils/Storage";
 import axios from "axios";
 import {useAuth} from "../../../context";
@@ -21,11 +15,10 @@ function Cart() {
     const checkout = useHistory()
     const [cart, setCart] = useState([])
     const {userInfo, setUserInfo} = useAuth()
-    const [product, setProduct] = useState(null)
     const listCart = useGetListCart({
         id: userInfo?.id
     })
-    console.log('lít listCart', listCart)
+
     const getDetailProduct = (id, quantity) => {
         axios.get(`http://localhost:8080/product/findById/${id}`)
             .then(res => {
@@ -60,7 +53,7 @@ function Cart() {
             }
         }
     }, [listCart?.data])
-    console.log('ssasdfwd',cart)
+
 
     const onChangeHandler = (event) => {
         // if (event.target.value < 1) {
