@@ -107,6 +107,7 @@ function App() {
                             <Route path="/discount" exact>
                                 <ProductDiscount/>
                             </Route>
+
                             <Route path="/checkout" exact>
                                 <Checkout/>
                             </Route>
@@ -119,6 +120,8 @@ function App() {
                 </Switch>
             </BrowserRouter>
         </QueryClientProvider>
+
+        </Provider>
 
     )
 }
