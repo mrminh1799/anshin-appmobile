@@ -25,9 +25,7 @@ const Order = () => {
     const getListOrder = useGetListOrder({
         id: userInfo?.id
     })
-    console.log('sss', {
-        id: userInfo?.id
-    })
+
     useEffect(() => {
         if (userInfo) {
             getListOrder.refetch()

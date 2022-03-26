@@ -211,9 +211,72 @@ export const useConfirmPass = (params) => {
         status,
         data,
         error,
+        refetch,remove
+    } = useQuery(['get_confirm_pass', params], () => _get('test/confirmPassword/' + params?.id +'/'+ params?.password),{enabled:false});
+    return {
+        status, error, data, refetch,remove
+    }
+}
+//doi pass
+export const useChangePass = (params) => {
+    const {
+        status,
+        data,
+        error,
         refetch
-    } = useQuery(['get_confirm_pass', params], () => _get('test/confirmPassword/' + params?.id +'/'+ params?.idSize + '/' +params?.priceFrom + '/' + params?.priceTo),{enabled:false});
+    } = useQuery(['get_confirm_pass', params], () => _get('test/changePassword/' + params?.id +'/'+ params?.password),{enabled:false});
     return {
         status, error, data, refetch
     }
 }
+//cap nhat thong tin
+export const useUpdateInfor = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_update_infor', params], () => _put('test/updateAcountUser'),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+
+//lay danh muc cha
+export const useGetParentCate = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_parent_cate', params], () => _get('Category/getNavBar'),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+//lay danh sach sp theo danh mục con
+export const useGetProductChildCate = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_product_child_cate', params], () => _get('product/findAllByIdCategory/'+params?.id),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+
+//lay thong tin người dùng
+export const useGetInforUser = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_info_user', params], () => _get('test/findBy/'+params?.id),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+

@@ -27,6 +27,7 @@ import {useAuth} from "./context";
 import Storage from "./utils/Storage";
 import Order from "./component/views/Order";
 import ProductDiscount from "./component/views/ProductDiscount";
+import ListProductFindByCate from "./component/views/ListProductFindByCate";
 
 const queryClient = new QueryClient()
 
@@ -116,6 +117,9 @@ function App() {
                             </Route>
                             <Route path="/checkout" exact>
                                 <Checkout/>
+                            </Route>
+                            <Route path="/findProduct" exact>
+                                <ListProductFindByCate/>
                             </Route>
                         </Switch>
                         <Footer/>
