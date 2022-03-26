@@ -1,10 +1,12 @@
 import {BrowserRouter, Switch, Route, Link, useHistory} from "react-router-dom";
 import {useAuth} from "../../context";
-import {Avatar, Box, IconButton, ListItemIcon, Menu, MenuItem, Tooltip} from "@material-ui/core";
+import {Avatar, Box, Button, IconButton, ListItemIcon, Menu, MenuItem, TextField, Tooltip} from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import * as PropTypes from "prop-types";
-import {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Storage from "../../utils/Storage";
+import {useGetDetailProduct, useGetProducts} from "../../service/product";
+import {Modal} from "@mui/material";
 
 function Logout(props) {
     return null;
@@ -14,10 +16,17 @@ Logout.propTypes = {fontSize: PropTypes.string};
 
 function Header() {
     const {userInfo, setUserInfo} = useAuth()
-
+    const [input,setInput] =useState('')
     const history = useHistory()
-
+    const navigateOrder = useHistory()
+    const navigateDiscount = useHistory()
+    const [option, setOption] = useState([])
     const [anchorEl, setAnchorEl] = useState(null);
+    const [idProduct, setIdProduct] = useState()
+    const [openCNTT,setOpenCNTT] = useState(false)
+    const [openChangePass,setOpenChangePass] = useState(false)
+    let detail = useHistory();
+
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -25,8 +34,70 @@ function Header() {
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const getAllProduct = useGetProducts()
+    const detailProduct = useGetDetailProduct({
+        id: idProduct
+    })
+    const onChangeHander = (value) => {
+        console.log('1232',value)
+        setIdProduct(value?.id)
+    }
+    const toDiscount =()=>{
+        navigateDiscount.push(`/discount`)
+    }
+    const toOrder =()=>{
+        if(userInfo===null){
+            alert('Vui lòng đăng nhập')
+        }else {
+            navigateOrder.push(`/order`)
+        }
+    }
 
-    console.log(userInfo)
+    const onChangeInput = (value) => {
+        setInput(value.target.value)
+        if(value.target.value===''){
+            setOption([])
+        }else {
+            setOption(getAllProduct?.data?.filter(item => {return (item?.name?.includes(value.target.value))}))
+        }
+    }
+
+    useEffect(() => {
+        if (idProduct) {
+            detailProduct.refetch().then(res => {
+                if (res) {
+                    detail.push(`/detail/${idProduct}`, {
+                        item: res?.data
+                    })
+                }
+            })
+        }
+    }, [idProduct])
+    const searchbarDropdown = () => {
+        return (<div className={'search-bar-dropdown'}>
+            <input onChange={(value) => onChangeInput(value)}  type="text" className="form-control"
+                   placeholder="Search"/>
+            <div >
+            <ul className="list-group" >
+
+                {
+                    option?.map((item, index) => {
+                        return (
+
+                                <button key={index} onClick={() => onChangeHander(item)} type="button"
+                                        className="list-group-item list-group-item-action active">
+                                    {item?.name}
+                                </button>
+
+                        )
+                    })
+                }
+
+            </ul>
+            </div>
+        </div>
+            )
+    };
 
     return (
         <div className="header-area">
@@ -43,12 +114,16 @@ function Header() {
                         <div className="main-menu d-none d-lg-block">
                             <nav>
                                 <ul id="navigation">
+
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="/shop">Shop</Link></li>
                                     <li><Link to="/cart">Cart</Link></li>
-                                    <li><Link to="/order">My Order</Link></li>
+                                    <li onClick={toOrder}><Link >My Order</Link></li>
+                                    <li onClick={toDiscount}><Link>Discount</Link></li>
+
                                 </ul>
                             </nav>
+                            {searchbarDropdown()}
                         </div>
                         <div className="header-right">
                             <ul>
@@ -97,7 +172,115 @@ function Header() {
                 }}>
                     Logout
                 </MenuItem>
+                {
+                    userInfo?.roles?.includes('Admin') &&
+                    <MenuItem  onClick={()=>setOpenCNTT(true)}>
+                       Cập nhật thông tin
+                    </MenuItem>
+                }
             </Menu>
+            <Modal
+                keepMounted
+                open={openCNTT} onClose={()=>{setOpenCNTT(false)}} className="px-5 pt-4">
+                <form style={{
+                    backgroundColor: 'white',
+                    marginLeft: 400,
+                    marginRight: 400,
+                }} className="border rounded p-4 shadow" autoComplete="off">
+                    <div style={{
+                        display: 'flex',
+                    }}>
+                        <div>
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Tên khách hàng"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Số điện thoại"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Email"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Địa chỉ"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Địa chỉ chi tiết"
+                                className="my-2 mb-4"
+                            />
+                        </div>
+                        <div className={'ml-5'}>
+                            <Button className="mr-2 w-100 mb-1"  onClick={()=>setOpenChangePass(true)} variant="outlined">
+                                Đổi mật khẩu
+                            </Button>
+                            <Button className="mr-2 w-100 mb-1" type="submit" variant="outlined">
+                                Xác nhận
+                            </Button>
+                            <Button className={'w-100'} onClick={()=>setOpenCNTT(false)} variant="outlined" color="inherit">
+                                Huỷ
+                            </Button>
+                        </div>
+                    </div>
+
+                </form>
+            </Modal>
+            <Modal
+                keepMounted
+                open={openChangePass} onClose={()=>{setOpenChangePass(false)}} className="px-5 pt-4">
+                <form style={{
+                    backgroundColor: 'white',
+                    marginLeft: 600,
+                    marginRight:600,
+                }} className="border rounded p-4 shadow" autoComplete="off">
+                    <div style={{
+                        display: 'flex',
+                    }}>
+                        <div>
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Mật khẩu mới"
+                                className="my-2 mb-4"
+                            />
+                            <TextField
+                                name="name"
+                                // value={formData.name}
+                                fullWidth
+                                label="Nhập lại mật khẩu mới"
+                                className="my-2 mb-4"
+                            />
+                        </div>
+                        <div className={'ml-5'}>
+                            <Button className="mr-2 w-100 mb-1" type="submit" variant="outlined">
+                                Xác nhận
+                            </Button>
+                            <Button className={'w-100'} onClick={()=>setOpenChangePass(false)} variant="outlined" color="inherit">
+                                Huỷ
+                            </Button>
+                        </div>
+                    </div>
+
+                </form>
+            </Modal>
         </div>
     )
 }
