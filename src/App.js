@@ -1,28 +1,25 @@
 import {
-    BrowserRouter as Router,
     Route,
-    Link,
-    NavLink,
     BrowserRouter,
     Switch,
     Redirect,
     useHistory
 } from "react-router-dom";
+import {Provider} from 'react-redux';
+import {store} from './store';
 import Home from "./component/views/home/Home"
 import Shop from "./component/views/shop/Shop"
 import SideBar from "./component/layout/SideBar"
 import Products from "./component/products/Products"
-import Categories from "./component/categories/Categories";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Header from "./component/layout/Header";
 import Footer from "./component/layout/Footer";
 import Detail from "./component/views/detail/Detail";
 import Cart from "./component/views/cart/Cart";
 import Checkout from "./component/views/checkout/Checkout";
-import callApi from "./component/callAPI/apiCaller";
 import Users from "./component/users/Users";
 import Login from "./component/views/login/Login";
-import {QueryClient, QueryClientProvider, useQuery} from 'react-query'
+import {QueryClient, QueryClientProvider} from 'react-query'
 import {useAuth} from "./context";
 import Storage from "./utils/Storage";
 import Order from "./component/views/Order";
@@ -37,7 +34,6 @@ function App() {
     const [user, setUser] = useState([]);
     const [role, setRole] = useState([]);
     const [loading, setLoading] = useState(false);
-    const history = useHistory()
 
     useEffect(() => {
         let userData = Storage.get('userData')
@@ -47,73 +43,75 @@ function App() {
     }, [])
 
     return (
-        <QueryClientProvider client={queryClient}>
-            <BrowserRouter>
-                <Switch>
-                    <Route path="/admin">
-                        {
-                            !!userData && userData?.roles.includes('Admin')
-                                ?
-                                <div className="App d-flex h-100">
-                                    <SideBar/>
-                                    <Route path="/admin/orders/:id">
-                                        <Orders
-                                            loading={loading}
-                                            setLoading={setLoading}
-                                        />
-                                    </Route>
-                                    <Route path="/admin/products">
-                                        <Products
-                                            product={product}
-                                            setProduct={setProduct}
-                                            loading={loading}
-                                            setLoading={setLoading}
-                                        />
-                                    </Route>
-                                    <Route path="/admin/users">
-                                        <Users
-                                            user={user}
-                                            setUser={setUser}
-                                            loading={loading}
-                                            setLoading={setLoading}
-                                            role={role}
-                                        />
-                                    </Route>
-                                </div>
-                                :
-                                <Redirect to="/"/>
-                        }
-                    </Route>
-                    <Route>
-                        <Header/>
-                        <Switch>
-                            <Route path="/" exact>
-                                <Home/>
-                            </Route>
-                            <Route path="/shop" exact>
-                                <Shop/>
-                            </Route>
-                            <Route path="/login" exact>
-                                {!userData ? <Login/> : <Redirect to="/"/>}
-                            </Route>
-                            <Route path="/detail/:id" exact>
-                                <Detail/>
-                            </Route>
-                            <Route path="/cart" exact>
-                                <Cart/>
-                            </Route>
-                            <Route path="/order" exact>
-                                <Order/>
-                            </Route>
-                            <Route path="/checkout" exact>
-                                <Checkout/>
-                            </Route>
-                        </Switch>
-                        <Footer/>
-                    </Route>
-                </Switch>
-            </BrowserRouter>
-        </QueryClientProvider>
+        <Provider store={store}>
+            <QueryClientProvider client={queryClient}>
+                <BrowserRouter>
+                    <Switch>
+                        <Route path="/admin">
+                            {
+                                !!userData && userData?.roles.includes('Admin')
+                                    ?
+                                    <div className="App d-flex h-100">
+                                        <SideBar/>
+                                        <Route path="/admin/orders/:id">
+                                            <Orders
+                                                loading={loading}
+                                                setLoading={setLoading}
+                                            />
+                                        </Route>
+                                        <Route path="/admin/products">
+                                            <Products
+                                                product={product}
+                                                setProduct={setProduct}
+                                                loading={loading}
+                                                setLoading={setLoading}
+                                            />
+                                        </Route>
+                                        <Route path="/admin/users">
+                                            <Users
+                                                user={user}
+                                                setUser={setUser}
+                                                loading={loading}
+                                                setLoading={setLoading}
+                                                role={role}
+                                            />
+                                        </Route>
+                                    </div>
+                                    :
+                                    <Redirect to="/"/>
+                            }
+                        </Route>
+                        <Route>
+                            <Header/>
+                            <Switch>
+                                <Route path="/" exact>
+                                    <Home/>
+                                </Route>
+                                <Route path="/shop" exact>
+                                    <Shop/>
+                                </Route>
+                                <Route path="/login" exact>
+                                    {!userData ? <Login/> : <Redirect to="/"/>}
+                                </Route>
+                                <Route path="/detail/:id" exact>
+                                    <Detail/>
+                                </Route>
+                                <Route path="/cart" exact>
+                                    <Cart/>
+                                </Route>
+                                <Route path="/order" exact>
+                                    <Order/>
+                                </Route>
+                                <Route path="/checkout" exact>
+                                    <Checkout/>
+                                </Route>
+                            </Switch>
+                            <Footer/>
+                        </Route>
+                    </Switch>
+                </BrowserRouter>
+            </QueryClientProvider>
+        </Provider>
     )
 }
 
