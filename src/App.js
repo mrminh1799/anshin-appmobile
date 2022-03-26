@@ -104,23 +104,22 @@ function App() {
                                 <Route path="/order" exact>
                                     <Order/>
                                 </Route>
-                            <Route path="/discount" exact>
-                                <ProductDiscount/>
-                            </Route>
 
-                            <Route path="/checkout" exact>
-                                <Checkout/>
-                            </Route>
-                            <Route path="/findProduct" exact>
-                                <ListProductFindByCate/>
-                            </Route>
-                        </Switch>
-                        <Footer/>
-                    </Route>
-                </Switch>
-            </BrowserRouter>
-        </QueryClientProvider>
-
+                                <Route path="/discount" exact>
+                                    <ProductDiscount/>
+                                </Route>
+                                <Route path="/checkout" exact>
+                                    <Checkout/>
+                                </Route>
+                                <Route path="/findProduct" exact>
+                                    <ListProductFindByCate/>
+                                </Route>
+                            </Switch>
+                            <Footer/>
+                        </Route>
+                    </Switch>
+                </BrowserRouter>
+            </QueryClientProvider>
         </Provider>
 
     )

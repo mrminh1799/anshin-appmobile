@@ -145,19 +145,19 @@ function Orders() {
     }
 
     const handleSuccess = (id) => {
-            dispatch(changeStatus({
-                id: id,
-                status: 3
-            }))
-            setListOrder(listOrder.filter(item => item.id !== id))
+        dispatch(changeStatus({
+            id: id,
+            status: 3
+        }))
+        setListOrder(listOrder.filter(item => item.id !== id))
     }
 
     const handleFail = (id) => {
-            dispatch(changeStatus({
-                id: id,
-                status: 0
-            }))
-            setListOrder(listOrder.filter(item => item.id !== id))
+        dispatch(changeStatus({
+            id: id,
+            status: 0
+        }))
+        setListOrder(listOrder.filter(item => item.id !== id))
     }
 
     const formOrder = () => {
@@ -301,9 +301,6 @@ function Orders() {
 
                         return (
                             <tr
-                                // onClick={(event) => {
-                                //     tblOnClickHandler(event, value, index);
-                                // }}
                                 key={index}
                             >
                                 <td>{((pagination.index + 1) * pagination.size - pagination.size + 1) + index}</td>
@@ -321,16 +318,18 @@ function Orders() {
                                             <Dropdown.Menu>
                                                 {
                                                     ['1'].includes(params?.id) ?
-                                                    <>
-                                                        <Dropdown.Item onClick={() => handleUpdate(value)}>Cập
-                                                            nhật</Dropdown.Item>
-                                                        <Dropdown.Item onClick={() => handleCancelOrder(value.id)}>Huỷ
-                                                            đơn</Dropdown.Item>
-                                                    </>
+                                                        <>
+                                                            <Dropdown.Item onClick={() => handleUpdate(value)}>Cập
+                                                                nhật</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleCancelOrder(value.id)}>Huỷ
+                                                                đơn</Dropdown.Item>
+                                                        </>
                                                         :
                                                         <>
-                                                            <Dropdown.Item onClick={() => handleSuccess(value.id)}>Giao thành công</Dropdown.Item>
-                                                            <Dropdown.Item onClick={() => handleFail(value.id)}>Không nhận hàng</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleSuccess(value.id)}>Giao
+                                                                thành công</Dropdown.Item>
+                                                            <Dropdown.Item onClick={() => handleFail(value.id)}>Không
+                                                                nhận hàng</Dropdown.Item>
                                                         </>
                                                 }
                                             </Dropdown.Menu>
