@@ -70,28 +70,28 @@ function SideBar() {
                                 {open ? <ExpandLess/> : <ExpandMoreIcon/>}
                             </ListItem>
                             <Collapse in={open} timeout="auto" unmountOnExit>
-                                <Link to="/admin/categories/1">
+                                <Link to="/admin/orders/1">
                                     <List component="div" disablePadding>
                                         <ListItemButton sx={{pl: 9}}>
                                             <ListItemText primary="Chờ xử lý"/>
                                         </ListItemButton>
                                     </List>
                                 </Link>
-                                <Link to="/admin/categories/2">
+                                <Link to="/admin/orders/2">
                                     <List component="div" disablePadding>
                                         <ListItemButton sx={{pl: 9}}>
                                             <ListItemText primary="Đã xử lý"/>
                                         </ListItemButton>
                                     </List>
                                 </Link>
-                                <Link to="/admin/categories/3">
+                                <Link to="/admin/orders/3">
                                     <List component="div" disablePadding>
                                         <ListItemButton sx={{pl: 9}}>
                                             <ListItemText primary="Hoàn thành"/>
                                         </ListItemButton>
                                     </List>
                                 </Link>
-                                <Link to="/admin/categories/0">
+                                <Link to="/admin/orders/0">
                                     <List component="div" disablePadding>
                                         <ListItemButton sx={{pl: 9}}>
                                             <ListItemText primary="Thất bại"/>
@@ -105,6 +105,14 @@ function SideBar() {
                                         <AllInboxIcon style={{color: 'white'}}/>
                                     </ListItemIcon>
                                     <ListItemText primary="Sản phẩm"/>
+                                </ListItem>
+                            </Link>
+                            <Link to="/admin/users">
+                                <ListItem button className="pl-3">
+                                    <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                        <AllInboxIcon style={{color: 'white'}}/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Tài khoản"/>
                                 </ListItem>
                             </Link>
                         </div>

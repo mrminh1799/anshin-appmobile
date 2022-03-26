@@ -21,10 +21,16 @@
     "react": "^17.0.1",
     "react-delay": "^0.1.0",
     "react-dom": "^17.0.1",
+    "react-icons": "^4.3.1",
     "react-horizontal-scrolling-menu": "^2.7.1",
     "react-query": "^3.34.16",
+    "react-redux": "^7.2.6",
     "react-router-dom": "^5.2.0",
     "react-scripts": "^5.0.0",
+    "redux": "^4.1.2",
+    "redux-logger": "^3.0.6",
+    "redux-thunk": "^2.4.1",
+    "semantic-ui-react": "^2.1.2",
     "web-vitals": "^1.1.0",
     "yup": "^0.32.9"
   },
@@ -51,5 +57,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "reactstrap": "^9.0.1"
   }
 }
