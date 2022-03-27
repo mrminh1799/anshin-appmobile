@@ -48,10 +48,6 @@ function Orders() {
     })
 
     useEffect(() => {
-        orderApi.refetch()
-    }, [])
-
-    useEffect(() => {
         if (listOrder) {
             let lastIndex = (pagination.index + 1) * pagination.size
             let firstIndex = lastIndex - pagination.size
@@ -83,12 +79,12 @@ function Orders() {
     }, [params.id])
 
     const handleUpdate = (value) => {
+        setFormData(value)
         dispatch(getDetailOrder({
             orderId: value.id
         }, (res) => {
             setDetailOrder(res)
             setOpen(true)
-            setFormData(value)
         }))
     }
 
@@ -160,8 +156,7 @@ function Orders() {
         setListOrder(listOrder.filter(item => item.id !== id))
     }
 
-    const formOrder = () => {
-
+    const formOrder = useMemo(() => {
         return (
             <Modal
                 keepMounted
@@ -241,7 +236,6 @@ function Orders() {
                                         <td>{item.nameProduct}</td>
                                         <td>{item.coloName}</td>
                                         <td>{item.sizeName}</td>
-                                        {/*<td>{item.quantity}</td>*/}
                                         <td><TextField type={'number'} onBlur={() =>
                                             dispatch(changeQuantityDetailOrder({
                                                 orderDetailId: item.idOrderDetail,
@@ -265,12 +259,22 @@ function Orders() {
                 </form>
             </Modal>
         )
-    }
+    },[open, detailOrder])
 
     return (
         <div className="justify-content-center flex-fill">
-            {formOrder()}
-            <div className="p-5 m-auto">
+
+            <div className="pt-5 px-5 m-auto">
+                <div className={'px-5 pb-4 rounded-bottom'} style={{backgroundColor: '#eeeeee', borderTop: '3px solid'}}>
+                    <h3 style={{width: 'fit-content'}} className={'bg-light p-2 rounded-bottom'}>Lọc</h3>
+                    <div className={'row'}>
+                        <TextField className={'col-3 mr-5'} label={'Tên khách hàng'}/>
+                        <TextField className={'col-3 mr-5'} label={'Số điện thoại'}/>
+                    </div>
+                </div>
+            </div>
+            {formOrder}
+            <div className="pt-5 px-5 m-auto">
                 <table className="table table-striped table-bordered table-hover shadow">
                     <thead className="thead-dark">
                     <tr>
@@ -288,16 +292,6 @@ function Orders() {
                     </thead>
                     <tbody>
                     {order.map(function (value, index) {
-
-                        let status = value.status === 1 ? 'Chờ xác nhận' : (
-                            value.status === 2 ? 'Đã xác nhận' : (
-                                value.status === 3 ? "Đổi trả" : (
-                                    value.status === 4 ? "Không nhận" : (
-                                        value.status === 5 ? "Đã nhận" : "Huỷ"
-                                    )
-                                )
-                            )
-                        )
 
                         return (
                             <tr
