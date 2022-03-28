@@ -259,7 +259,7 @@ function Orders() {
                 </form>
             </Modal>
         )
-    },[open, detailOrder])
+    },[open, detailOrder, formData])
 
     return (
         <div className="justify-content-center flex-fill">
