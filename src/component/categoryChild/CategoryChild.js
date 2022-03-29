@@ -15,10 +15,11 @@ const formDataInItValue = {
     name: "",
 }
 
-function Categories() {
+function CategoryChild() {
 
     const dispatch = useDispatch()
 
+    const [currentCate, setCurrentCate] = useState({id: '', name: ''})
     const [category, setCategory] = useState([])
     const [dadCategory, setDadCategory] = useState([])
     const [listCategory, setListCategory] = useState([])
@@ -34,6 +35,7 @@ function Categories() {
     useEffect(() => {
         if (!open) {
             setFormData(formDataInItValue)
+            setCurrentCate({id: '', name: ''})
         }
     }, [open])
 
@@ -55,7 +57,10 @@ function Categories() {
     }, [pagination.index])
 
     useEffect(() => {
-        dispatch(getAllCategory({}, res => {
+        dispatch(getAllCategory({}, (res) => {
+            setDadCategory(res)
+        }))
+        dispatch(getAllChildCategory({}, res => {
             if (res) {
                 setTotalPage(Math.ceil(res.length / pagination.size))
                 setPagination({
@@ -74,6 +79,7 @@ function Categories() {
             ...value,
             update: true
         })
+        setCurrentCate(dadCategory.find(item => item?.id === value.parentId))
     }
 
     const onChangePage = (event, newPage) => {
@@ -95,18 +101,20 @@ function Categories() {
 
     const handleSave = (event) => {
         event.preventDefault()
-        if (!formData.name) return
+        if (!currentCate?.id || !formData.name) return
         if (formData?.update) {
             dispatch(updateCategory({
                 "id": formData.id,
                 "categoryName": formData.name,
-                "categoryParentId": 0,
+                "categoryParentId": currentCate.id,
                 "deleted": false
             }, (res) => {
                 setListCategory([
                     ...listCategory.map(item => {
                         if (item.id === res.id) {
                             item.name = formData.name
+                            item.parentId = currentCate.id
+                            item.parentName = currentCate.name
                         }
                         return item
                     })
@@ -116,14 +124,16 @@ function Categories() {
         } else {
             dispatch(createCategory({
                 "categoryName": formData.name,
-                "deleted": false,
-                "categoryParentId": 0,
+                "categoryParentId": currentCate.id,
+                "deleted": false
             }, (res) => {
                 setListCategory([
                     ...listCategory,
                     {
                         id: res.id,
                         name: res.categoryName,
+                        parentId: currentCate.id,
+                        parentName: currentCate.name
                     }
                 ])
                 setOpen(false)
@@ -159,6 +169,25 @@ function Categories() {
                             className="my-2 mb-4"
                         />
                     </div>
+                    <FormControl fullWidth
+                                 className="my-2 mb-4">
+                        <InputLabel required id="demo-simple-select-label">Danh mục cha</InputLabel>
+                        <Select
+                            required
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            value={currentCate?.id ? currentCate : ''}
+                            defaultValue={''}
+                            label="Danh mục cha"
+                            onChange={(item) => {
+                                setCurrentCate(item.target.value)
+                            }}
+                        >
+                            {
+                                dadCategory.map(item => <MenuItem value={item}>{item.name}</MenuItem>)
+                            }
+                        </Select>
+                    </FormControl>
                     <div className={'row justify-content-center'}>
                         <Button className="col col-lg-2" type={'submit'}
                                 color={'primary'} variant="contained">
@@ -193,7 +222,8 @@ function Categories() {
                     <thead className="thead-dark">
                     <tr>
                         <th>STT</th>
-                        <th>Tên danh mục</th>
+                        <th>Tên danh mục con</th>
+                        <th>Tên danh mục cha</th>
                         <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
@@ -207,6 +237,7 @@ function Categories() {
                             >
                                 <td>{((pagination.index + 1) * pagination.size - pagination.size + 1) + index}</td>
                                 <td>{value.name}</td>
+                                <td>{value.parentName}</td>
                                 <td>{!value.deleted ? "Đang bán" : "Ngừng bán"}</td>
                                 <td>
                                     <Dropdown icon={<IconButton>
@@ -236,4 +267,4 @@ function Categories() {
     )
 }
 
-export default Categories;
+export default CategoryChild;

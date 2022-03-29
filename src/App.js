@@ -26,6 +26,8 @@ import Order from "./component/views/Order";
 import Orders from "./component/orders/Orders";
 import ProductDiscount from "./component/views/ProductDiscount";
 import ListProductFindByCate from "./component/views/ListProductFindByCate";
+import CategoryChild from "./component/categoryChild/CategoryChild";
+import Categories from "./component/categories/Categories";
 
 const queryClient = new QueryClient()
 
@@ -33,8 +35,6 @@ function App() {
     const {userInfo, setUserInfo} = useAuth()
     const userData = Storage.get('userData')
     const [product, setProduct] = useState([]);
-    const [user, setUser] = useState([]);
-    const [role, setRole] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -56,10 +56,7 @@ function App() {
                                     <div className="App d-flex h-100">
                                         <SideBar/>
                                         <Route path="/admin/orders/:id">
-                                            <Orders
-                                                loading={loading}
-                                                setLoading={setLoading}
-                                            />
+                                            <Orders/>
                                         </Route>
                                         <Route path="/admin/products">
                                             <Products
@@ -70,13 +67,13 @@ function App() {
                                             />
                                         </Route>
                                         <Route path="/admin/users">
-                                            <Users
-                                                user={user}
-                                                setUser={setUser}
-                                                loading={loading}
-                                                setLoading={setLoading}
-                                                role={role}
-                                            />
+                                            <Users/>
+                                        </Route>
+                                        <Route path="/admin/categories">
+                                            <Categories/>
+                                        </Route>
+                                        <Route path="/admin/childCategory">
+                                            <CategoryChild/>
                                         </Route>
                                     </div>
                                     :
@@ -93,7 +90,7 @@ function App() {
                                     <Shop/>
                                 </Route>
                                 <Route path="/login" exact>
-                                    {!userData ? <Login/> : <Redirect to="/"/>}
+                                    {!userData ? <Login/> : (userData?.roles?.[0] === 'Admin' ? <Redirect to={'/admin'}/> : <Redirect to={'/'}/>) }
                                 </Route>
                                 <Route path="/detail/:id" exact>
                                     <Detail/>

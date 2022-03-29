@@ -271,7 +271,7 @@ function Users() {
         <div className="justify-content-center flex-fill">
 
             <div className="pt-5 px-5 m-auto">
-                <div className={'px-5 pb-4 rounded-bottom'} style={{backgroundColor: '#eeeeee', buserTop: '3px solid'}}>
+                <div className={'px-5 pb-4 rounded-bottom'} style={{backgroundColor: '#eeeeee', borderTop: '3px solid'}}>
                     <h3 style={{width: 'fit-content'}} className={'bg-light p-2 rounded-bottom'}>Lọc</h3>
                     <div className={'row'}>
                         <TextField className={'col-3 mr-5'} label={'Tên khách hàng'}/>
