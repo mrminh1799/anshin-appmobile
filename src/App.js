@@ -28,6 +28,7 @@ import ProductDiscount from "./component/views/ProductDiscount";
 import ListProductFindByCate from "./component/views/ListProductFindByCate";
 import CategoryChild from "./component/categoryChild/CategoryChild";
 import Categories from "./component/categories/Categories";
+import Register from "./component/views/register/Register";
 
 const queryClient = new QueryClient()
 
@@ -91,6 +92,9 @@ function App() {
                                 </Route>
                                 <Route path="/login" exact>
                                     {!userData ? <Login/> : (userData?.roles?.[0] === 'Admin' ? <Redirect to={'/admin'}/> : <Redirect to={'/'}/>) }
+                                </Route>
+                                <Route path="/register" exact>
+                                    {!userData ? <Register/> : (userData?.roles?.[0] === 'Admin' ? <Redirect to={'/admin'}/> : <Redirect to={'/'}/>) }
                                 </Route>
                                 <Route path="/detail/:id" exact>
                                     <Detail/>
