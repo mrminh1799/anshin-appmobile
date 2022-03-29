@@ -280,3 +280,27 @@ export const useGetInforUser = (params) => {
     }
 }
 
+//lay danh sach sp theo danh mục cha
+export const useGetProductParentCate = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['get_product_parent_cate', params], () => _get('/product/findByCategoryParentId/'+params?.id),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+//lay danh sach sp theo danh mục cha
+export const useAddCart = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['add_cart', params], () => _get('/cart/createForAcount/'+params?.id+'/'+params?.idProduct+'/'+params?.quantity),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}

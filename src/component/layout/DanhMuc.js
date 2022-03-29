@@ -1,19 +1,25 @@
 import React, {useEffect, useState} from 'react';
 import {Button} from "@material-ui/core";
-import {useGetProductChildCate} from "../../service/product";
+import {useGetProductChildCate, useGetProductParentCate} from "../../service/product";
 import {useHistory} from "react-router-dom";
 
 const DanhMuc = ({data})=>{
     const list = useHistory()
     const [idCate,setIdCate] = useState()
+    const [idCateParent,setIdCateParent] = useState()
     const productChildCate=useGetProductChildCate({
         id: idCate
+    })
+    const productParentCate=useGetProductParentCate({
+        id: idCateParent
     })
 
     const detailListChild=(value)=>{
         setIdCate(value?.idCategory)
     }
-
+    const detailListParent=(value)=>{
+        setIdCateParent(value?.idCategory)
+    }
     useEffect(() => {
         if(idCate){
             productChildCate.refetch().then(res=>{
@@ -25,6 +31,17 @@ const DanhMuc = ({data})=>{
             })
         }
     },[idCate])
+    useEffect(() => {
+        if(idCateParent){
+            productParentCate.refetch().then(res=>{
+                if (res){
+                    list.push(`/findProduct`,{
+                        item: res?.data
+                    })
+                }
+            })
+        }
+    },[idCateParent])
 
     // useEffect(() => {
     //     if(productChildCate?.data){
@@ -46,7 +63,7 @@ const DanhMuc = ({data})=>{
                              </Button>
 
                              <div className="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                 <Button  className="dropdown-item" type="button">Tất cả</Button>
+                                 <Button  className="dropdown-item" onClick={()=>detailListParent(item)}>Tất cả</Button>
 
                                  {
                                      item?.listChild?.map((item, index)=>{
