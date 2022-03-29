@@ -1,23 +1,21 @@
 import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
 import React, {useState, useEffect, useMemo} from "react";
-import {useParams} from "react-router-dom";
-import moment from "moment";
-import {IconButton, Modal} from "@mui/material";
+import {FormControlLabel, IconButton, Modal, Switch} from "@mui/material";
 import {FaEllipsisV, FaTrash} from 'react-icons/fa';
 import {useDispatch} from "react-redux";
 import {Dropdown} from "semantic-ui-react";
-import {getAllUser} from "../../service/user";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import {createUser, getAllUser, updateUser} from "../../service/user";
 import {storage} from "../firebase/firebase";
+import _ from "lodash";
 
 const formDataInItValue = {
     fullName: "",
-    address: "",
-    detailAddress: "",
     phoneNumber: "",
-    sumPrice: '',
-    timeCreate: ""
+    email: '',
+    password: '',
+    photo: '',
+    role: ''
 }
 const userImage = "https://upload.wikimedia.org/wikipedia/commons/7/70/User_icon_BLACK-01.png";
 
@@ -35,8 +33,6 @@ function Users() {
     });
 
     const [open, setOpen] = useState(false)
-
-    const [image, setImage] = useState(null)
 
     useEffect(() => {
         if (listUser) {
@@ -69,27 +65,11 @@ function Users() {
         }))
     }, [])
 
-    // const handleUpdate = (value) => {
-    //     dispatch(getDetailUser({
-    //         userId: value.id
-    //     }, (res) => {
-    //         setDetailUser(res)
-    //         setOpen(true)
-    //         setFormData(value)
-    //     }))
-    // }
-
-    // const handleCancelUser = (id) => {
-    //     let a = window.confirm('Bạn có chắc muốn huỷ đơn?')
-    //     if (a) {
-    //         setOpen(false)
-    //         dispatch(changeStatus({
-    //             id: id,
-    //             status: 0
-    //         }))
-    //         setListUser(listUser.filter(item => item.id !== id))
-    //     }
-    // }
+    useEffect(() => {
+        if (!open) {
+            setFormData(formDataInItValue)
+        }
+    }, [open])
 
     const onChangePage = (event, newPage) => {
         setPagination({
@@ -97,55 +77,6 @@ function Users() {
             index: newPage - 1
         });
     };
-
-    // const handleDeleteUserDetail = (id) => {
-    //     let a = window.confirm('Bạn có chắc muốn xoá đơn này?')
-    //     if (a) {
-    //         dispatch(deleteUserDetail({
-    //             userDetailId: id,
-    //         }))
-    //         setDetailUser(detailUser.filter(item => item.idUserDetail !== id))
-    //     }
-    // }
-
-    // const onChangeQuantity = (id, quantity) => {
-    //     if (quantity.target.value > 0) {
-    //         setDetailUser(detailUser.map(item => {
-    //             if (item.idUserDetail === id) {
-    //                 item.quantity = quantity.target.value
-    //             }
-    //             return item
-    //         }))
-    //     }
-    // }
-
-    // const handleConfirmUser = (id) => {
-    //     let a = window.confirm('Bạn có chắc muốn xác nhận đơn?')
-    //     if (a) {
-    //         setOpen(false)
-    //         dispatch(changeStatus({
-    //             id: id,
-    //             status: 2
-    //         }))
-    //         setListUser(listUser.filter(item => item.id !== id))
-    //     }
-    // }
-
-    // const handleSuccess = (id) => {
-    //     dispatch(changeStatus({
-    //         id: id,
-    //         status: 3
-    //     }))
-    //     setListUser(listUser.filter(item => item.id !== id))
-    // }
-    //
-    // const handleFail = (id) => {
-    //     dispatch(changeStatus({
-    //         id: id,
-    //         status: 0
-    //     }))
-    //     setListUser(listUser.filter(item => item.id !== id))
-    // }
 
     const handleUpload = (image) => {
         const uploadTask = storage.ref(`images/${image.name}`).put(image);
@@ -165,7 +96,7 @@ function Users() {
                         console.log(url)
                         setFormData({
                             ...formData,
-                            image: url
+                            photo: url
                         })
                     })
             }
@@ -176,6 +107,55 @@ function Users() {
         if (event?.target?.files[0]) {
             const image = event.target.files[0];
             handleUpload(image);
+        }
+    }
+
+    const handleChangeRole = (event) => {
+        setFormData({
+            ...formData,
+            'role': event.target.value
+        })
+    }
+
+    const onChangeHandler = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault()
+        if (formData.fullName && formData.phoneNumber && formData.email && formData.password && formData.role) {
+            dispatch(createUser(formData, res => {
+                setListUser([
+                    ...listUser,
+                    {
+                        ...formData,
+                        roles: [formData.role === 1 ? 'Admin': (formData.role === 2 ? 'Supper_Admin' : 'Custommer')],
+                        isActive: true
+                    }
+                ])
+                setOpen(false)
+            }))
+        }
+    }
+
+    const onChangeActive = (value, e) => {
+        let a = window.confirm('Bạn có chắc muốn đổi trạng thái')
+        if(a){
+            dispatch(updateUser({
+                ...value,
+                status: e.target.checked,
+                isDeleted: 0
+            },()=>{
+                setListUser(listUser.map(item=>{
+                    if(item.id === value.id){
+                        item.isActive = !item.isActive
+                    }
+                    return item
+                }))
+            }))
         }
     }
 
@@ -197,35 +177,46 @@ function Users() {
                     <div className="pl-3 pr-5 pt-3 w-auto">
                         <label htmlFor="contained-button-file">
                             <img className="shadow rounded" style={{width: 200}}
-                                 src={formData?.image ? formData.image : userImage}/>
+                                 src={formData?.photo ? formData.photo : userImage}/>
                         </label>
                     </div>
-                    <form autoComplete="off" style={{
+                    <form onSubmit={onSubmit} autoComplete="off" style={{
                         flex: 1,
                     }}>
                         <TextField
                             required
-                            // onChange={onChangeHandler}
-                            name="name"
-                            value={formData.name}
+                            onChange={onChangeHandler}
+                            name="fullName"
+                            value={formData.fullName}
                             fullWidth
                             label="Tên khách hàng"
                             className="my-2"
                         />
                         <TextField
                             required
-                            // onChange={onChangeHandler}
-                            name="price"
-                            value={formData.price}
+                            onChange={onChangeHandler}
+                            name="phoneNumber"
+                            value={formData.phoneNumber}
                             fullWidth
                             label="Số điện thoại"
                             className="my-2"
                         />
                         <TextField
+                            type={'password'}
                             required
-                            // onChange={onChangeHandler}
-                            name="avaiable"
-                            value={formData.avaiable}
+                            onChange={onChangeHandler}
+                            name="password"
+                            value={formData.password}
+                            fullWidth
+                            label="Mật khẩu"
+                            className="my-2"
+                        />
+                        <TextField
+                            required
+                            type={'email'}
+                            onChange={onChangeHandler}
+                            name="email"
+                            value={formData.email}
                             fullWidth
                             label="Email"
                             className="my-2"
@@ -236,13 +227,13 @@ function Users() {
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"
-                                // value={age}
-                                label="Age"
-                                // onChange={handleChange}
+                                value={formData?.role}
+                                label="role"
+                                onChange={handleChangeRole}
                             >
-                                <MenuItem value={10}>Admin</MenuItem>
-                                <MenuItem value={20}>Twenty</MenuItem>
-                                <MenuItem value={30}>Thirty</MenuItem>
+                                <MenuItem value={1}>Admin</MenuItem>
+                                <MenuItem value={2}>Supper_Admin</MenuItem>
+                                <MenuItem value={3}>Custommer</MenuItem>
                             </Select>
                         </FormControl>
                         <div className={'mt-2'}>
@@ -251,15 +242,12 @@ function Users() {
                                    id="contained-button-file" type="file"/>
                             <label style={{display: "block", width: 0}} className="mb-3"
                                    htmlFor="contained-button-file">
-                                <Button startIcon={<CloudUploadIcon/>} variant="outlined" color="primary"
-                                        component="span"> Ảnh </Button>
+                                {/*<Button startIcon={<CloudUploadIcon/>} variant="outlined" color="primary"*/}
+                                {/*        component="span"> Ảnh </Button>*/}
                             </label>
                         </div>
                         <Button style={{display: "inline-block"}} className="mr-2" type="submit" variant="outlined">
                             Lưu
-                        </Button>
-                        <Button type="button" variant="outlined" color="inherit">
-                            Xóa form
                         </Button>
                     </form>
                 </div>
@@ -271,7 +259,8 @@ function Users() {
         <div className="justify-content-center flex-fill">
 
             <div className="pt-5 px-5 m-auto">
-                <div className={'px-5 pb-4 rounded-bottom'} style={{backgroundColor: '#eeeeee', borderTop: '3px solid'}}>
+                <div className={'px-5 pb-4 rounded-bottom'}
+                     style={{backgroundColor: '#eeeeee', borderTop: '3px solid'}}>
                     <h3 style={{width: 'fit-content'}} className={'bg-light p-2 rounded-bottom'}>Lọc</h3>
                     <div className={'row'}>
                         <TextField className={'col-3 mr-5'} label={'Tên khách hàng'}/>
@@ -295,7 +284,6 @@ function Users() {
                         <th>Số điện thoại</th>
                         <th>Trạng thái</th>
                         <th>Chức vụ</th>
-                        <th>Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -309,20 +297,25 @@ function Users() {
                                 <td>{value.fullName}</td>
                                 <td>{value.email}</td>
                                 <td>{value.phoneNumber}</td>
-                                <td>{value.isActive ? "Hoạt động" : "Ngừng hoạt động"}</td>
-                                <td>{value.roles?.[0]}</td>
                                 <td>
-                                    <Dropdown icon={<IconButton>
-                                        <FaEllipsisV size={15}/>
-                                    </IconButton>}>
-                                        <Dropdown.Menu>
-                                            <Dropdown.Item>Cập
-                                                nhật</Dropdown.Item>
-                                            <Dropdown.Item>Huỷ
-                                                đơn</Dropdown.Item>
-                                        </Dropdown.Menu>
-                                    </Dropdown>
-                                </td>
+                                    <FormControlLabel label={value.isActive ? "Hoạt động" : "Ngừng hoạt động"}
+                                        control={
+                                    <Switch checked={value.isActive} onChange={(event)=>{onChangeActive(value, event)}}/>}
+                                    />
+                                        </td>
+                                <td>{value.roles?.[0]}</td>
+                                {/*<td>*/}
+                                {/*    <Dropdown icon={<IconButton>*/}
+                                {/*        <FaEllipsisV size={15}/>*/}
+                                {/*    </IconButton>}>*/}
+                                {/*        <Dropdown.Menu>*/}
+                                {/*            <Dropdown.Item>Cập*/}
+                                {/*                nhật</Dropdown.Item>*/}
+                                {/*            <Dropdown.Item>Huỷ*/}
+                                {/*                đơn</Dropdown.Item>*/}
+                                {/*        </Dropdown.Menu>*/}
+                                {/*    </Dropdown>*/}
+                                {/*</td>*/}
                             </tr>
                         );
                     })}
