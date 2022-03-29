@@ -28,6 +28,7 @@ import ProductDiscount from "./component/views/ProductDiscount";
 import ListProductFindByCate from "./component/views/ListProductFindByCate";
 import CategoryChild from "./component/categoryChild/CategoryChild";
 import Categories from "./component/categories/Categories";
+import Event from "./component/admin/Event";
 
 const queryClient = new QueryClient()
 
@@ -74,6 +75,9 @@ function App() {
                                         </Route>
                                         <Route path="/admin/childCategory">
                                             <CategoryChild/>
+                                        </Route>
+                                        <Route path="/admin/event">
+                                            <Event/>
                                         </Route>
                                     </div>
                                     :

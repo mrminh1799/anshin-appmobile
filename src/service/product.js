@@ -292,3 +292,15 @@ export const useGetProductParentCate = (params) => {
         status, error, data, refetch
     }
 }
+//lay danh sach sp theo danh mục cha
+export const useAddCart = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['add_cart', params], () => _get('/cart/createForAcount/'+params?.id+'/'+params?.idProduct+'/'+params?.quantity),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}

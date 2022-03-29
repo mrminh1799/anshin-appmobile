@@ -36,13 +36,6 @@ function Header() {
     const [statusConfirm, setStatusConfirm] = useState()
     const categoryNav = useGetParentCate({})
     const [openModal,setOpenModal] = useState(false)
-    const updateInfo=useUpdateInfor({
-        id: userInfo?.id,
-        phoneNumber: textInfo?.phone,
-        fullName:textInfo?.name,
-        email:textInfo?.email,
-        photo:"123wwwd"
-    })
     const [textInfo,setTextInfo] = useState({
         name:"",
         phone:"",
@@ -52,6 +45,13 @@ function Header() {
         oldPass:'',
         newPass1:'',
         newPass2:'',
+    })
+    const updateInfo=useUpdateInfor({
+        id: userInfo?.id,
+        phoneNumber: textInfo?.phone,
+        fullName:textInfo?.name,
+        email:textInfo?.email,
+        photo:"123wwwd"
     })
 
     const updateInforUser =()=>{
@@ -107,7 +107,6 @@ function Header() {
 
     useEffect(() => {
         if(statusConfirm){
-            console.log('vaoooo')
             changePass.refetch()
             alert('true')
         }
