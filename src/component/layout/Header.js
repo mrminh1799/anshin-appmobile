@@ -10,7 +10,7 @@ import {
     useConfirmPass,
     useGetDetailProduct, useGetInforUser,
     useGetParentCate,
-    useGetProducts
+    useGetProducts, useUpdateInfor
 } from "../../service/product";
 import {Modal} from "@mui/material";
 import Text from "antd/es/typography/Text";
@@ -35,13 +35,28 @@ function Header() {
     const [openChangePass,setOpenChangePass] = useState(false)
     const [statusConfirm, setStatusConfirm] = useState()
     const categoryNav = useGetParentCate({})
-
-    console.log('asas',userInfo)
+    const [openModal,setOpenModal] = useState(false)
+    const updateInfo=useUpdateInfor({
+        id: userInfo?.id,
+        phoneNumber: textInfo?.phone,
+        fullName:textInfo?.name,
+        email:textInfo?.email,
+        photo:"123wwwd"
+    })
+    const [textInfo,setTextInfo] = useState({
+        name:"",
+        phone:"",
+        email:"",
+    })
     const [password, setPassword] = useState({
         oldPass:'',
         newPass1:'',
         newPass2:'',
     })
+
+    const updateInforUser =()=>{
+        updateInfo.refetch()
+    }
     const onChangeOldPass = (value)=>{
         setPassword((prev)=>({
             ...prev,
@@ -71,13 +86,12 @@ function Header() {
     })
 
     const handlerChangePass =()=>{
-        console.log({
-            id:userInfo?.id,
-            password: password?.oldPass
-        })
         confirmPass.refetch()
     }
 
+    const handleChangeTextInfo=(value)=>{
+
+    }
 
     useEffect(() => {
             if(confirmPass?.data){
@@ -252,24 +266,53 @@ function Header() {
                 </MenuItem>
                 {
                     userInfo?.roles?.includes('Admin') &&
-                    <MenuItem  onClick={()=>setOpenCNTT(true)}>
+                    <MenuItem  onClick={()=>setOpenModal(true)}>
                        Cập nhật thông tin
                     </MenuItem>
                 }
             </Menu>
             <Modal
                 keepMounted
+                open={openModal} onClose={()=>{setOpenModal(false)}} className="px-5 pt-4">
+                <form style={{
+                    backgroundColor: 'white',
+                    marginLeft: 700,
+                    marginRight:700,
+                }} className="border rounded p-4 shadow" autoComplete="off">
+                    <div >
+                        <p>Họ và tên:  {userInfo?.fullname}</p>
+                        <p>Số điện thoại:  {userInfo?.username}</p>
+                        <p>Email:  {userInfo?.email}</p>
+                        <div >
+                            <Button className="mr-2 w-100 mb-1"  onClick={()=>setOpenChangePass(true)} variant="outlined">
+                                Đổi mật khẩu
+                            </Button>
+                            <Button className="mr-2 w-100 mb-1"  onClick={()=>setOpenCNTT(true)} variant="outlined">
+                                Cập nhật thông tin
+                            </Button>
+                            <Button className={'w-100'} onClick={()=>setOpenModal(false)} variant="outlined" color="inherit">
+                                Huỷ
+                            </Button>
+                        </div>
+                    </div>
+
+                </form>
+            </Modal>
+            <Modal
+                keepMounted
                 open={openCNTT} onClose={()=>{setOpenCNTT(false)}} className="px-5 pt-4">
                 <form style={{
                     backgroundColor: 'white',
-                    marginLeft: 400,
-                    marginRight: 400,
+                    marginLeft: 700,
+                    marginRight: 700,
                 }} className="border rounded p-4 shadow" autoComplete="off">
-                    <div style={{
-                        display: 'flex',
-                    }}>
+                    <div>
                         <div>
                             <TextField
+                                onChange={(value)=>handleChangeTextInfo(setTextInfo((prev)=>({
+                                    ...prev,
+                                    name: value.target.value
+                                })))}
                                 name="name"
                                 fullWidth
                                 label="Tên khách hàng"
@@ -277,38 +320,28 @@ function Header() {
                             />
                             <TextField
                                 name="name"
-                                // value={formData.name}
+                                onChange={(value)=>handleChangeTextInfo(setTextInfo((prev)=>({
+                                    ...prev,
+                                    phone: value.target.value
+                                })))}
                                 fullWidth
                                 label="Số điện thoại"
                                 className="my-2 mb-4"
                             />
                             <TextField
                                 name="name"
-                                // value={formData.name}
+                                onChange={(value)=>handleChangeTextInfo(setTextInfo((prev)=>({
+                                    ...prev,
+                                    email: value.target.value
+                                })))}
                                 fullWidth
                                 label="Email"
                                 className="my-2 mb-4"
                             />
-                            <TextField
-                                name="name"
-                                // value={formData.name}
-                                fullWidth
-                                label="Địa chỉ"
-                                className="my-2 mb-4"
-                            />
-                            <TextField
-                                name="name"
-                                // value={formData.name}
-                                fullWidth
-                                label="Địa chỉ chi tiết"
-                                className="my-2 mb-4"
-                            />
                         </div>
-                        <div className={'ml-5'}>
-                            <Button className="mr-2 w-100 mb-1"  onClick={()=>setOpenChangePass(true)} variant="outlined">
-                                Đổi mật khẩu
-                            </Button>
-                            <Button className="mr-2 w-100 mb-1" type="submit" variant="outlined">
+                        <div >
+
+                            <Button className="mr-2 w-100 mb-1" onClick={updateInforUser} variant="outlined">
                                 Xác nhận
                             </Button>
                             <Button className={'w-100'} onClick={()=>setOpenCNTT(false)} variant="outlined" color="inherit">
@@ -324,12 +357,10 @@ function Header() {
                 open={openChangePass} onClose={()=>{setOpenChangePass(false)}} className="px-5 pt-4">
                 <form style={{
                     backgroundColor: 'white',
-                    marginLeft: 600,
-                    marginRight:600,
+                    marginLeft: 700,
+                    marginRight:700,
                 }} className="border rounded p-4 shadow" autoComplete="off">
-                    <div style={{
-                        display: 'flex',
-                    }}>
+                    <div>
                         <div>
                             <TextField
                                 name="name"
@@ -360,7 +391,7 @@ function Header() {
                             />
 
                         </div>
-                        <div className={'ml-5'}>
+                        <div >
                             <Button className="mr-2 w-100 mb-1" onClick={handlerChangePass} variant="outlined">
                                 Xác nhận
                             </Button>
