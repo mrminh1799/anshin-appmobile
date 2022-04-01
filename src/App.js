@@ -26,13 +26,16 @@ import Order from "./component/views/Order";
 import Orders from "./component/orders/Orders";
 import ProductDiscount from "./component/views/ProductDiscount";
 import ListProductFindByCate from "./component/views/ListProductFindByCate";
+import DetailProduct from "./component/products/DetailProduct";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import DetailProductForUpdate from "./component/products/DetailProductForUpdate";
 import CategoryChild from "./component/categoryChild/CategoryChild";
 import Categories from "./component/categories/Categories";
 
 import Event from "./component/admin/Event";
 
 import Register from "./component/views/register/Register";
-
 
 const queryClient = new QueryClient()
 
@@ -51,6 +54,17 @@ function App() {
 
     return (
         <Provider store={store}>
+            <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
             <QueryClientProvider client={queryClient}>
                 <BrowserRouter>
                     <Switch>
@@ -63,13 +77,24 @@ function App() {
                                         <Route path="/admin/orders/:id">
                                             <Orders/>
                                         </Route>
-                                        <Route path="/admin/products">
+                                        <Route path="/admin/products" >
                                             <Products
                                                 product={product}
                                                 setProduct={setProduct}
                                                 loading={loading}
                                                 setLoading={setLoading}
                                             />
+                                        </Route>
+
+                                        <Route path="/admin/productDetail/:id" >
+                                           <DetailProduct></DetailProduct>
+                                        </Route>
+                                        <Route path="/admin/productDetailUD/:id" >
+                                           <DetailProductForUpdate/>
+                                        </Route>
+
+                                        <Route path="/abc">
+                                            <DetailProduct/>
                                         </Route>
                                         <Route path="/admin/users">
                                             <Users/>
