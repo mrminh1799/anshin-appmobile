@@ -41,5 +41,5 @@ export const deleteOrderDetail = (params, _callback) => async dispatch => {
 }
 
 export const changeQuantityDetailOrder = (params, _callback) => async dispatch => {
-    await createGet(dispatch, 'change_quantity_detail_order','http://localhost:8080/Order/updateQuanityForOrderDetail/'+ params.orderDetailId + '/' + params.quantity ,{}, _callback);
+    await createGet(dispatch, 'change_quantity_detail_order','Order/updateQuanityForOrderDetail/'+ params.orderDetailId + '/' + params.quantity ,{}, _callback);
 }

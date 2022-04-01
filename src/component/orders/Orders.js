@@ -30,6 +30,7 @@ function Orders() {
 
     const dispatch = useDispatch()
 
+    const [filter, setFilter] = useState({})
     const [order, setOrder] = useState([])
     const [listOrder, setListOrder] = useState([])
     const [formData, setFormData] = useState(formDataInItValue);
@@ -54,6 +55,14 @@ function Orders() {
             setOrder(listOrder.slice(firstIndex, lastIndex))
         }
     }, [listOrder])
+
+    // useEffect(()=>{
+    //     if(!!filter){
+    //         setListOrder(listOrder.filter(item=>{
+    //
+    //         }))
+    //     }
+    // },[filter])
 
     useEffect(() => {
         if (listOrder) {
@@ -154,6 +163,13 @@ function Orders() {
             status: 0
         }))
         setListOrder(listOrder.filter(item => item.id !== id))
+    }
+
+    const onchangeFilter = (e) => {
+        setFilter({
+            ...filter,
+            [e.target.name]: e.target.value
+        })
     }
 
     const formOrder = useMemo(() => {
@@ -259,7 +275,7 @@ function Orders() {
                 </form>
             </Modal>
         )
-    },[open, detailOrder])
+    },[open, detailOrder, formData])
 
     return (
         <div className="justify-content-center flex-fill">
@@ -268,8 +284,8 @@ function Orders() {
                 <div className={'px-5 pb-4 rounded-bottom'} style={{backgroundColor: '#eeeeee', borderTop: '3px solid'}}>
                     <h3 style={{width: 'fit-content'}} className={'bg-light p-2 rounded-bottom'}>Lọc</h3>
                     <div className={'row'}>
-                        <TextField className={'col-3 mr-5'} label={'Tên khách hàng'}/>
-                        <TextField className={'col-3 mr-5'} label={'Số điện thoại'}/>
+                        <TextField onChange={onchangeFilter} name={'name'} className={'col-3 mr-5'} label={'Tên khách hàng'}/>
+                        <TextField onChange={onchangeFilter} name={'phone'} className={'col-3 mr-5'} label={'Số điện thoại'}/>
                     </div>
                 </div>
             </div>

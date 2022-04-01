@@ -7,13 +7,16 @@ import {
     useParams,
     useLocation, useHistory
 } from "react-router-dom";
-import {useGetCheckProduct, useGetColorProduct, useGetSizeProduct} from "../../../service/product";
+import {useAddCart, useGetCheckProduct, useGetColorProduct, useGetSizeProduct} from "../../../service/product";
 import Storage from "../../../utils/Storage";
 import axios from "axios";
+import {useAuth} from "../../../context";
 
 
 const Detail = () => {
     const location = useLocation()
+    const {userInfo, setUserInfo} = useAuth()
+
     const {item} = location.state
     const checkout = useHistory()
     const [cart, setCart] = useState(null)
@@ -28,7 +31,11 @@ const Detail = () => {
         image: item?.image,
         name: item?.name
     });
-
+    // const addToCartApi = useAddCart({
+    //     id:userInfo?.id,
+    //     idProduct:,
+    //     quantity:
+    // })
     const checkProduct = useGetCheckProduct({
         idColor: product?.colorId,
         idSize: product?.sizeId,
@@ -131,11 +138,15 @@ const Detail = () => {
         //     localStorage.setItem(item.id, 0)
         //     localStorage.setItem(item.id, Number(localStorage.getItem(item.id)) + Number(product?.quantity), product?.productId, product?.colorId, product?.sizeId)
         // }
+        // if(userInfo){
+        //
+        // }else {
+        //
+        // }
         if (!!Storage.get('cart')) {
             let check = true
             let cart = Storage.get('cart')?.map((item, i) => {
                 if (item.id == product.productId) {
-                    console.log('id', item.id, product.productId)
                     check = false
                     item.quantity = Number(item.quantity) + Number(product.quantity)
                 }

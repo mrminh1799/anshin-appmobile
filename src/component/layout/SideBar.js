@@ -47,7 +47,9 @@ const useStyles = makeStyles((theme) => ({
 function SideBar() {
     const classes = useStyles();
 
-    const [open, setOpen] = React.useState(true);
+    const [open, setOpen] = useState(true);
+
+    const [openCate, setOpenCate] = useState(true);
 
     const handleClick = () => {
         setOpen(!open);
@@ -62,6 +64,14 @@ function SideBar() {
                             <h1 className={"text-center m-4 text-white"}><Link to="/">SHOP</Link></h1>
                         </div>
                         <div className={classes.bgList}>
+                            <Link to="/admin/dashboard">
+                                <ListItem button className="pl-3">
+                                    <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                        <AllInboxIcon style={{color: 'white'}}/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Tổng quan"/>
+                                </ListItem>
+                            </Link>
                             <ListItem button className="pl-3" onClick={handleClick}>
                                 <ListItemIcon className="pl-1" style={{minWidth: 45}}>
                                     <CategoryOutlinedIcon style={{color: 'white'}}/>
@@ -99,12 +109,43 @@ function SideBar() {
                                     </List>
                                 </Link>
                             </Collapse>
+                            <ListItem button className="pl-3" onClick={()=>setOpenCate(!openCate)}>
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <CategoryOutlinedIcon style={{color: 'white'}}/>
+                                </ListItemIcon>
+                                <ListItemText primary="Danh mục"/>
+                                {openCate ? <ExpandLess/> : <ExpandMoreIcon/>}
+                            </ListItem>
+                            <Collapse in={openCate} timeout="auto" unmountOnExit>
+                                <Link to="/admin/categories">
+                                    <List component="div" disablePadding>
+                                        <ListItemButton sx={{pl: 9}}>
+                                            <ListItemText primary="Danh mục cha"/>
+                                        </ListItemButton>
+                                    </List>
+                                </Link>
+                                <Link to="/admin/childCategory">
+                                    <List component="div" disablePadding>
+                                        <ListItemButton sx={{pl: 9}}>
+                                            <ListItemText primary="Danh mục con"/>
+                                        </ListItemButton>
+                                    </List>
+                                </Link>
+                            </Collapse>
                             <Link to="/admin/products">
                                 <ListItem button className="pl-3">
                                     <ListItemIcon className="pl-1" style={{minWidth: 45}}>
                                         <AllInboxIcon style={{color: 'white'}}/>
                                     </ListItemIcon>
                                     <ListItemText primary="Sản phẩm"/>
+                                </ListItem>
+                            </Link>
+                            <Link to="/admin/event">
+                                <ListItem button className="pl-3">
+                                    <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                        <AllInboxIcon style={{color: 'white'}}/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Sự kiện"/>
                                 </ListItem>
                             </Link>
                             <Link to="/admin/users">

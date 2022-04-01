@@ -4,7 +4,6 @@ import {useEffect} from "react";
 import {useAuth} from "../../../context";
 
 
-
 function Home() {
     const top10Products = useGetTop10({})
 
@@ -66,7 +65,6 @@ function Home() {
                         </div>
 
                         <div className="row">
-
                             {
                                 top10Products?.data?.map((item, index) => {
                                     return (
@@ -88,6 +86,8 @@ function Home() {
                                     )
                                 })
                             }
+
+
 
 
                         </div>

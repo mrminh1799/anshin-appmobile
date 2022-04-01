@@ -30,6 +30,12 @@ import DetailProduct from "./component/products/DetailProduct";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DetailProductForUpdate from "./component/products/DetailProductForUpdate";
+import CategoryChild from "./component/categoryChild/CategoryChild";
+import Categories from "./component/categories/Categories";
+
+import Event from "./component/admin/Event";
+
+import Register from "./component/views/register/Register";
 
 const queryClient = new QueryClient()
 
@@ -37,8 +43,6 @@ function App() {
     const {userInfo, setUserInfo} = useAuth()
     const userData = Storage.get('userData')
     const [product, setProduct] = useState([]);
-    const [user, setUser] = useState([]);
-    const [role, setRole] = useState([]);
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
@@ -71,10 +75,7 @@ function App() {
                                     <div className="App d-flex h-100">
                                         <SideBar/>
                                         <Route path="/admin/orders/:id">
-                                            <Orders
-                                                loading={loading}
-                                                setLoading={setLoading}
-                                            />
+                                            <Orders/>
                                         </Route>
                                         <Route path="/admin/products" >
                                             <Products
@@ -96,13 +97,16 @@ function App() {
                                             <DetailProduct/>
                                         </Route>
                                         <Route path="/admin/users">
-                                            <Users
-                                                user={user}
-                                                setUser={setUser}
-                                                loading={loading}
-                                                setLoading={setLoading}
-                                                role={role}
-                                            />
+                                            <Users/>
+                                        </Route>
+                                        <Route path="/admin/categories">
+                                            <Categories/>
+                                        </Route>
+                                        <Route path="/admin/childCategory">
+                                            <CategoryChild/>
+                                        </Route>
+                                        <Route path="/admin/event">
+                                            <Event/>
                                         </Route>
                                     </div>
                                     :
@@ -119,7 +123,10 @@ function App() {
                                     <Shop/>
                                 </Route>
                                 <Route path="/login" exact>
-                                    {!userData ? <Login/> : <Redirect to="/"/>}
+                                    {!userData ? <Login/> : (userData?.roles?.[0] === 'Admin' ? <Redirect to={'/admin'}/> : <Redirect to={'/'}/>) }
+                                </Route>
+                                <Route path="/register" exact>
+                                    {!userData ? <Register/> : (userData?.roles?.[0] === 'Admin' ? <Redirect to={'/admin'}/> : <Redirect to={'/'}/>) }
                                 </Route>
                                 <Route path="/detail/:id" exact>
                                     <Detail/>
@@ -130,6 +137,7 @@ function App() {
                                 <Route path="/order" exact>
                                     <Order/>
                                 </Route>
+
                                 <Route path="/discount" exact>
                                     <ProductDiscount/>
                                 </Route>
@@ -146,6 +154,7 @@ function App() {
                 </BrowserRouter>
             </QueryClientProvider>
         </Provider>
+
     )
 }
 
