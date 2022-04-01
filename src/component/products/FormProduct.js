@@ -5,6 +5,7 @@ import {storage} from "../firebase/firebase"
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import axios from "axios";
 import {Box, Modal} from "@mui/material";
+import { Link } from "react-router-dom";
 
 function FormProduct({
                          clickedRow,
@@ -135,7 +136,8 @@ function FormProduct({
     return (
         <div>
             <Box>
-                <Button variant={'contained'} onClick={() => setOpen(true)}>Tạo sản phẩm</Button>
+                
+                {/* <Link to="/admin/productDetail/1" >Link</Link> */}
             </Box>
             <Modal
                 style={{
@@ -268,17 +270,7 @@ function FormProduct({
                                 <tr
                                     key={index}
                                 >
-                                    <td className="text-center"><img style={{ width: 100 }} src={value.image} /></td>
-                                    <td>{value.name}</td>
-                                    <td>{value.price}$</td>
-                                    <td>
-                                        <Button
-                                            variant="contained"
-                                            color="secondary"
-                                        >
-                                            Delete
-                                        </Button>
-                                    </td>
+                                    
                                 </tr>
                             );
                         })}
