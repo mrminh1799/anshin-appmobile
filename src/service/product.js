@@ -236,7 +236,7 @@ export const useUpdateInfor = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_update_infor', params], () => _put('test/updateAcountUser'),{enabled:false});
+    } = useQuery(['get_update_infor', params], () => _put('test/updateAcount',params),{enabled:false});
     return {
         status, error, data, refetch
     }
