@@ -1,6 +1,8 @@
 import {useQuery, useQueryClient, useMutation, useQueries} from 'react-query';
 import {_custom, _get, _put, _post} from '../../src/component/callAPI/index';
 import {useEffect, useState} from "react";
+import axiosHelper from "../common/axiosHelper";
+
 import axios from "axios";
 
 //getallproduct

@@ -1,11 +1,30 @@
-﻿import React, {useEffect} from "react";
-import { Button } from "@material-ui/core";
+﻿import React, {useEffect, useState} from "react";
+import { Button, TablePagination } from "@material-ui/core";
 import callApi from "../callAPI/apiCaller";
 import {useGetProducts} from "../../service/product";
+import { useHistory } from 'react-router-dom'; 
+
 
 function ListProduct({ setLoading,product, setClickedRow, setFormData, setProduct, categoriesId, page, setPage }) {
+    
+    const [page2, setPage2] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const handleChangePage = (event, newPage) => {
+        setPage2(newPage);
+      };
+
+      const handleChangeRowsPerPage = (event) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage2(0);
+      };
+
+      const history = useHistory()
+
+    
+
 
     const listProduct = useGetProducts()
+    
 
     useEffect(()=>{
         if(listProduct?.data){
@@ -37,9 +56,17 @@ function ListProduct({ setLoading,product, setClickedRow, setFormData, setProduc
                 })
         }
     }
+
+    const onUpdateHandle=(event, value, index)=>{
+        history.push(`/admin/productDetailUD/${value.id}`)
+
+    }
     return (
+
+        
         <div className="pt-5 px-5 m-auto">
             <table className="table table-striped table-bordered table-hover shadow">
+
                 <thead className="thead-dark">
                     <tr>
                         <th>Ảnh</th>
@@ -49,7 +76,7 @@ function ListProduct({ setLoading,product, setClickedRow, setFormData, setProduc
                     </tr>
                 </thead>
                 <tbody>
-                    {product.map(function (value, index) {
+                    {product.slice(page2 * rowsPerPage, page2 * rowsPerPage + rowsPerPage).map(function (value, index) {
                         return (
                             <tr
                                 onClick={(event) => {
@@ -70,12 +97,30 @@ function ListProduct({ setLoading,product, setClickedRow, setFormData, setProduc
                                     >
                                         Delete
                                     </Button>
+                                    <Button
+                                        onClick={(event) => {
+                                            onUpdateHandle(event, value, index);
+                                        }}
+                                        variant="contained"
+                                        color="primary"
+                                    >
+                                        Update
+                                    </Button>
                                 </td>
                             </tr>
                         );
                     })}
                 </tbody>
             </table>
+            <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={product.length}
+            rowsPerPage={rowsPerPage}
+            page={page2}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
         </div>
     )
 }
