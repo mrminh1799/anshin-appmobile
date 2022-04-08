@@ -43,3 +43,19 @@ export const deleteOrderDetail = (params, _callback) => async dispatch => {
 export const changeQuantityDetailOrder = (params, _callback) => async dispatch => {
     await createGet(dispatch, 'change_quantity_detail_order','Order/updateQuanityForOrderDetail/'+ params.orderDetailId + '/' + params.quantity ,{}, _callback);
 }
+
+export const getAllProduct = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'all_product','product/findAll' ,{}, _callback);
+}
+
+export const getProductSize = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'product_size','size/findByProductId/' + params.id ,{}, _callback);
+}
+
+export const getProductColor = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'product_color','color/findByProductId/' + params.id ,{}, _callback);
+}
+
+export const getProductDetail = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'product_detail','product/findById/' + params.id ,{}, _callback);
+}

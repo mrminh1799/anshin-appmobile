@@ -14,6 +14,7 @@ import {IconButton, Modal} from "@mui/material";
 import {FaEllipsisV, FaTrash} from 'react-icons/fa';
 import {useDispatch} from "react-redux";
 import {Dropdown} from "semantic-ui-react";
+import SearchProduct from "./SearchProduct";
 
 const formDataInItValue = {
     fullName: "",
@@ -40,7 +41,10 @@ function Orders() {
         size: 10
     });
 
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState({
+        open: false,
+        update: false
+    })
 
     const [detailOrder, setDetailOrder] = useState([])
 
@@ -93,14 +97,20 @@ function Orders() {
             orderId: value.id
         }, (res) => {
             setDetailOrder(res)
-            setOpen(true)
+            setOpen({
+                open: true,
+                update: true
+            })
         }))
     }
 
     const handleCancelOrder = (id) => {
         let a = window.confirm('Bạn có chắc muốn huỷ đơn?')
         if (a) {
-            setOpen(false)
+            setOpen({
+                open: false,
+                update: false
+            })
             dispatch(changeStatus({
                 id: id,
                 status: 0
@@ -140,7 +150,10 @@ function Orders() {
     const handleConfirmOrder = (id) => {
         let a = window.confirm('Bạn có chắc muốn xác nhận đơn?')
         if (a) {
-            setOpen(false)
+            setOpen({
+                open: false,
+                update: false
+            })
             dispatch(changeStatus({
                 id: id,
                 status: 2
@@ -171,13 +184,30 @@ function Orders() {
             [e.target.name]: e.target.value
         })
     }
+    const options = [
+        {name: 'Swedish', value: 'sv'},
+        {name: 'English', value: 'en'},
+        {
+            type: 'group',
+            name: 'Group name',
+            items: [
+                {name: 'Spanish', value: 'es'},
+            ]
+        },
+    ];
 
     const formOrder = useMemo(() => {
         return (
             <Modal
+                style={{
+                    overflow: 'scroll'
+                }}
                 keepMounted
-                open={open} onClose={() => {
-                setOpen(false)
+                open={open.open} onClose={() => {
+                setOpen({
+                    open: false,
+                    update: false
+                })
             }} className="px-5 pt-4">
                 <form style={{
                     backgroundColor: 'white',
@@ -189,7 +219,7 @@ function Orders() {
                     }}>
                         <div>
                             <TextField
-                                disabled
+                                disabled={!open.update}
                                 name="name"
                                 value={formData.fullName}
                                 fullWidth
@@ -197,7 +227,7 @@ function Orders() {
                                 className="my-2 mb-4"
                             />
                             <TextField
-                                disabled
+                                disabled={!open.update}
                                 name="name"
                                 value={formData.phoneNumber}
                                 fullWidth
@@ -205,7 +235,7 @@ function Orders() {
                                 className="my-2 mb-4"
                             />
                             <TextField
-                                disabled
+                                disabled={!open.update}
                                 name="name"
                                 value={formData.address}
                                 fullWidth
@@ -213,7 +243,7 @@ function Orders() {
                                 className="my-2 mb-4"
                             />
                             <TextField
-                                disabled
+                                disabled={!open.update}
                                 name="name"
                                 value={formData.detailAddress}
                                 fullWidth
@@ -232,6 +262,10 @@ function Orders() {
                             </Button>
                         </div>
                     </div>
+                    <div className={'my-3'}>
+                        <h4>Sản phẩm</h4>
+                        <SearchProduct/>
+                    </div>
                     <table className="table table-striped table-bordered table-hover shadow">
                         <thead className="thead-dark">
                         <tr>
@@ -241,7 +275,11 @@ function Orders() {
                             <th>số lượng</th>
                             <th>Giá</th>
                             <th>Tổng tiền</th>
-                            <th>Action</th>
+                            {
+                                open.update
+                                &&
+                                <th>Action</th>
+                            }
                         </tr>
                         </thead>
                         <tbody>
@@ -252,20 +290,33 @@ function Orders() {
                                         <td>{item.nameProduct}</td>
                                         <td>{item.coloName}</td>
                                         <td>{item.sizeName}</td>
-                                        <td><TextField type={'number'} onBlur={() =>
-                                            dispatch(changeQuantityDetailOrder({
-                                                orderDetailId: item.idOrderDetail,
-                                                quantity: item.quantity
-                                            }))}
-                                                       onChange={(value) => onChangeQuantity(item.idOrderDetail, value)}
-                                                       value={item.quantity}/></td>
+                                        <td>
+                                            {
+                                                open.update
+                                                ?
+                                                <TextField type={'number'} onBlur={() =>
+                                                    dispatch(changeQuantityDetailOrder({
+                                                        orderDetailId: item.idOrderDetail,
+                                                        quantity: item.quantity
+                                                    }))}
+                                                           onChange={(value) => onChangeQuantity(item.idOrderDetail, value)}
+                                                           value={item.quantity}/>
+                                                :
+                                                item.quantity
+                                            }
+                                        </td>
                                         <td>{item.price}</td>
                                         <td>{item.quantity * item.price}</td>
-                                        <td>
-                                            <IconButton onClick={() => handleDeleteOrderDetail(item.idOrderDetail)}>
-                                                <FaTrash color={'red'} size={14}/>
-                                            </IconButton>
-                                        </td>
+
+                                        {
+                                            open.update
+                                            &&
+                                            <td>
+                                                <IconButton onClick={() => handleDeleteOrderDetail(item.idOrderDetail)}>
+                                                    <FaTrash color={'red'} size={14}/>
+                                                </IconButton>
+                                            </td>
+                                        }
                                     </tr>
                                 )
                             })
