@@ -54,8 +54,11 @@ function Header() {
         photo:"123wwwd"
     })
 
+
     const updateInforUser =()=>{
-        updateInfo.refetch()
+        updateInfo.refetch().then(
+            alert('Cap nhat thanh cong')
+        )
     }
     const onChangeOldPass = (value)=>{
         setPassword((prev)=>({
