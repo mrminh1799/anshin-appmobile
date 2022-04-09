@@ -1,6 +1,6 @@
 import {useQuery} from "react-query";
 import {_get, _post} from "../component/callAPI";
-import {createGet} from "./utils";
+import {createGet, createPost} from "./utils";
 
 //chitiet sp
     export const useGetAllOrder = (params) => {
@@ -58,4 +58,8 @@ export const getProductColor = (params, _callback) => async dispatch => {
 
 export const getProductDetail = (params, _callback) => async dispatch => {
     await createGet(dispatch, 'product_detail','product/findById/' + params.id ,{}, _callback);
+}
+
+export const changeOrder = (params, _callback) => async dispatch => {
+    await createPost(dispatch, 'change_order','Order/createOrderDetail',params, _callback);
 }
