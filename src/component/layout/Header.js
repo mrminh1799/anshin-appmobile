@@ -210,7 +210,6 @@ function Header() {
 
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="/shop">Shop</Link></li>
-                                    <li><Link to="/cart">Cart</Link></li>
                                     <li onClick={toOrder}><Link >My Order</Link></li>
                                     <li onClick={toDiscount}><Link>Discount</Link></li>
                                     <DanhMuc data={categoryNav?.data}/>

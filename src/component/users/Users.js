@@ -132,7 +132,7 @@ function Users() {
                     ...listUser,
                     {
                         ...formData,
-                        roles: [formData.role === 1 ? 'Admin': (formData.role === 2 ? 'Supper_Admin' : 'Custommer')],
+                        roles: [formData.role === 1 ? 'Admin' : (formData.role === 2 ? 'Supper_Admin' : 'Custommer')],
                         isActive: true
                     }
                 ])
@@ -143,14 +143,14 @@ function Users() {
 
     const onChangeActive = (value, e) => {
         let a = window.confirm('Bạn có chắc muốn đổi trạng thái')
-        if(a){
+        if (a) {
             dispatch(updateUser({
                 ...value,
                 status: e.target.checked,
                 isDeleted: 0
-            },()=>{
-                setListUser(listUser.map(item=>{
-                    if(item.id === value.id){
+            }, () => {
+                setListUser(listUser.map(item => {
+                    if (item.id === value.id) {
                         item.isActive = !item.isActive
                     }
                     return item
@@ -297,12 +297,11 @@ function Users() {
                                 <td>{value.fullName}</td>
                                 <td>{value.email}</td>
                                 <td>{value.phoneNumber}</td>
-                                <td>
-                                    <FormControlLabel label={value.isActive ? "Hoạt động" : "Ngừng hoạt động"}
-                                        control={
-                                    <Switch checked={value.isActive} onChange={(event)=>{onChangeActive(value, event)}}/>}
-                                    />
-                                        </td>
+                                <td><Switch checked={value.isActive} onChange={(event) => {
+                                    onChangeActive(value, event)
+                                }}/>
+                                    {value.isActive ? "Hoạt động" : "Ngừng hoạt động"}
+                                </td>
                                 <td>{value.roles?.[0]}</td>
                                 {/*<td>*/}
                                 {/*    <Dropdown icon={<IconButton>*/}

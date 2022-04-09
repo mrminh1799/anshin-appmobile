@@ -56,7 +56,7 @@ function SideBar() {
     };
 
     return (
-        <div className={classes.root}>
+        <div className={classes.root}  style={{marginTop: -50}}>
             <div className="position-fixed h-100 hidescroll" style={{overflowY: "scroll"}}>
                 <div className={classes.bg}>
                     <List style={{width: '250px'}} component="nav" className="h-100" aria-label="main mailbox folders">
@@ -91,6 +91,13 @@ function SideBar() {
                                     <List component="div" disablePadding>
                                         <ListItemButton sx={{pl: 9}}>
                                             <ListItemText primary="Đã xử lý"/>
+                                        </ListItemButton>
+                                    </List>
+                                </Link>
+                                <Link to="/admin/orders/6">
+                                    <List component="div" disablePadding>
+                                        <ListItemButton sx={{pl: 9}}>
+                                            <ListItemText primary="Đã đổi trả"/>
                                         </ListItemButton>
                                     </List>
                                 </Link>
