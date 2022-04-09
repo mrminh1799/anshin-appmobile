@@ -53,19 +53,12 @@ function Header() {
         email:textInfo?.email,
         photo:"123wwwd"
     })
-    console.log('123213',updateInfo)
+
 
     const updateInforUser =()=>{
         updateInfo.refetch().then(
             alert('Cap nhat thanh cong')
         )
-        console.log('000q00w',{
-            id: userInfo?.id,
-                phoneNumber: textInfo?.phone,
-                fullName:textInfo?.name,
-                email:textInfo?.email,
-                photo:"123wwwd"
-        },)
     }
     const onChangeOldPass = (value)=>{
         setPassword((prev)=>({
