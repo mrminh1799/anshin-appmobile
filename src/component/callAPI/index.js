@@ -133,6 +133,7 @@ const _post = (_url, _params) => {
  * @private
  */
 const _put = (_url, _params) => {
+    console.log('putt',_url,_params)
     return client.put(_url, _params).then(
         response => response.data,
         error => {

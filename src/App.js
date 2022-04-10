@@ -27,7 +27,7 @@ import Orders from "./component/orders/Orders";
 import ProductDiscount from "./component/views/ProductDiscount";
 import ListProductFindByCate from "./component/views/ListProductFindByCate";
 import DetailProduct from "./component/products/DetailProduct";
-import { ToastContainer } from "react-toastify";
+import {ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DetailProductForUpdate from "./component/products/DetailProductForUpdate";
 import CategoryChild from "./component/categoryChild/CategoryChild";
@@ -39,6 +39,7 @@ import Event from "./component/admin/Event";
 import Register from "./component/views/register/Register";
 import AdminCreateOrder from "./component/orders/AdminCreateOrder";
 import { ConfirmProvider } from "material-ui-confirm";
+import HeaderAdmin from "./component/layout/HeaderAdmin";
 
 const queryClient = new QueryClient()
 
@@ -70,80 +71,84 @@ function App() {
             />
             <QueryClientProvider client={queryClient}>
                 <ConfirmProvider>
-                    <BrowserRouter>
-                        <Switch>
-                            <Route path="/admin">
-                                {
-                                    !!userData && userData?.roles.includes('Admin')
-                                        ?
-                                        <div className="App d-flex h-100">
-                                            <SideBar />
-                                            <Route path="/admin/orders/:id">
-                                                <Orders />
-                                            </Route>
-                                            <Route path="/admin/products" >
-                                                <Products
-                                                    product={product}
-                                                    setProduct={setProduct}
-                                                    loading={loading}
-                                                    setLoading={setLoading}
-                                                />
-                                            </Route>
+                <BrowserRouter>
+                    <Switch>
+                        <Route path="/admin">
+                            {
+                                !!userData && userData?.roles.includes('Admin')
+                                    ?
+                                    <div className="App d-flex h-100" style={{paddingTop: 50}}>
+                                        <SideBar/>
+                                        <HeaderAdmin/>
+                                        <Route path="/admin/orders/:id">
+                                            <Orders/>
+                                        </Route>
+                                        <Route path="/admin/products">
+                                            <Products
+                                                product={product}
+                                                setProduct={setProduct}
+                                                loading={loading}
+                                                setLoading={setLoading}
+                                            />
+                                        </Route>
 
-                                            <Route path="/admin/productDetail/:id" >
-                                                <DetailProduct></DetailProduct>
-                                            </Route>
-                                            <Route path="/admin/productDetailUD/:id" >
-                                                <DetailProductForUpdate />
-                                            </Route>
-                                            <Route path="/admin/createOrder">
+                                        <Route path="/admin/productDetail/:id">
+                                            <DetailProduct></DetailProduct>
+                                        </Route>
+                                        <Route path="/admin/productDetailUD/:id">
+                                            <DetailProductForUpdate/>
+                                        </Route>
+                                        <Route path="/admin/createOrder">
                                                 <AdminCreateOrder></AdminCreateOrder>
                                             </Route>
+                                        
 
-                                            <Route path="/abc">
-                                                <DetailProduct />
-                                            </Route>
-                                            <Route path="/admin/users">
-                                                <Users />
-                                            </Route>
-                                            <Route path="/admin/categories">
-                                                <Categories />
-                                            </Route>
-                                            <Route path="/admin/childCategory">
-                                                <CategoryChild />
-                                            </Route>
-                                            <Route path="/admin/event">
-                                                <Event />
-                                            </Route>
-                                        </div>
-                                        :
-                                        <Redirect to="/" />
-                                }
-                            </Route>
-                            <Route>
-                                <Header />
-                                <Switch>
-                                    <Route path="/" exact>
-                                        <Home />
-                                    </Route>
-                                    <Route path="/shop" exact>
-                                        <Shop />
-                                    </Route>
-                                    <Route path="/login" exact>
-                                        {!userData ? <Login /> : (userData?.roles?.[0] === 'Admin' ? <Redirect to={'/admin'} /> : <Redirect to={'/'} />)}
-                                    </Route>
-                                    <Route path="/register" exact>
-                                        {!userData ? <Register /> : (userData?.roles?.[0] === 'Admin' ? <Redirect to={'/admin'} /> : <Redirect to={'/'} />)}
-                                    </Route>
-                                    <Route path="/detail/:id" exact>
-                                        <Detail />
-                                    </Route>
-                                    <Route path="/cart" exact>
-                                        <Cart />
-                                    </Route>
-                                    <Route path="/order" exact>
-                                        <Order />
-                                    </Route>
+                                        <Route path="/abc">
+                                            <DetailProduct/>
+                                        </Route>
+                                        <Route path="/admin/users">
+                                            <Users/>
+                                        </Route>
+                                        <Route path="/admin/categories">
+                                            <Categories/>
+                                        </Route>
+                                        <Route path="/admin/childCategory">
+                                            <CategoryChild/>
+                                        </Route>
+                                        <Route path="/admin/event">
+                                            <Event/>
+                                        </Route>
+                                    </div>
+                                    :
+                                    <Redirect to="/"/>
+                            }
+                        </Route>
+                        <Route>
+                            <Header/>
+                            <Switch>
+                                <Route path="/" exact>
+                                    <Home/>
+                                </Route>
+                                <Route path="/shop" exact>
+                                    <Shop/>
+                                </Route>
+                                <Route path="/login" exact>
+                                    {!userData ? <Login/> : (userData?.roles?.[0] === 'Admin' ?
+                                        <Redirect to={'/admin'}/> : <Redirect to={'/'}/>)}
+                                </Route>
+                                <Route path="/register" exact>
+                                    {!userData ? <Register/> : (userData?.roles?.[0] === 'Admin' ?
+                                        <Redirect to={'/admin'}/> : <Redirect to={'/'}/>)}
+                                </Route>
+                                <Route path="/detail/:id" exact>
+                                    <Detail/>
+                                </Route>
+                                <Route path="/cart" exact>
+                                    <Cart/>
+                                </Route>
+                                <Route path="/order" exact>
+                                    <Order/>
+                                </Route>
 
                                     <Route path="/discount" exact>
                                         <ProductDiscount />

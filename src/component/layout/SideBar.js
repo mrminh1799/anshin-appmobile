@@ -103,6 +103,13 @@ function SideBar() {
                                         </ListItemButton>
                                     </List>
                                 </Link>
+                                <Link to="/admin/orders/6">
+                                    <List component="div" disablePadding>
+                                        <ListItemButton sx={{pl: 9}}>
+                                            <ListItemText primary="Đã đổi trả"/>
+                                        </ListItemButton>
+                                    </List>
+                                </Link>
                                 <Link to="/admin/orders/3">
                                     <List component="div" disablePadding>
                                         <ListItemButton sx={{ pl: 9 }}>
