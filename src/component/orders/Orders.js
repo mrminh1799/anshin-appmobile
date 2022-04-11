@@ -15,6 +15,7 @@ import {FaEllipsisV, FaTrash} from 'react-icons/fa';
 import {useDispatch} from "react-redux";
 import {Dropdown} from "semantic-ui-react";
 import SearchProduct from "./SearchProduct";
+import Refund from "./Refund";
 
 const formDataInItValue = {
     fullName: "",
@@ -45,6 +46,8 @@ function Orders() {
         open: false,
         update: false
     })
+
+    const [openRefund, setOpenRefund] = useState(false)
 
     const [detailOrder, setDetailOrder] = useState([])
 
@@ -91,7 +94,7 @@ function Orders() {
         })
     }, [params.id])
 
-    const handleUpdate = (value) => {
+    const handleUpdate = (value, type = true) => {
         setFormData(value)
         dispatch(getDetailOrder({
             orderId: value.id
@@ -99,7 +102,7 @@ function Orders() {
             setDetailOrder(res)
             setOpen({
                 open: true,
-                update: true
+                update: type
             })
         }))
     }
@@ -184,17 +187,6 @@ function Orders() {
             [e.target.name]: e.target.value
         })
     }
-    const options = [
-        {name: 'Swedish', value: 'sv'},
-        {name: 'English', value: 'en'},
-        {
-            type: 'group',
-            name: 'Group name',
-            items: [
-                {name: 'Spanish', value: 'es'},
-            ]
-        },
-    ];
 
     const formOrder = useMemo(() => {
         return (
@@ -251,21 +243,45 @@ function Orders() {
                                 className="my-2 mb-4"
                             />
                         </div>
-                        <div className={'ml-5'}>
-                            <Button onClick={() => handleConfirmOrder(formData.id)} className="mr-2 w-100 mb-1"
-                                    color={'primary'} variant="contained">
-                                Xác nhận
-                            </Button>
-                            <Button onClick={() => handleCancelOrder(formData.id)} className={'w-100 mt-2'}
-                                    variant="contained" color="inherit">
-                                Huỷ đơn hàng
-                            </Button>
+                        {
+                            open.update &&
+                            <div className={'ml-5'}>
+                                <Button onClick={() => handleConfirmOrder(formData.id)} className="mr-2 w-100 mb-1"
+                                        color={'primary'} variant="contained">
+                                    Xác nhận
+                                </Button>
+                                <Button onClick={() => handleCancelOrder(formData.id)} className={'w-100 mt-2'}
+                                        variant="contained" color="inherit">
+                                    Huỷ đơn hàng
+                                </Button>
+                            </div>
+                        }
+                    </div>
+                    {
+                        open.update
+                        &&
+                        <div className={'my-3'}>
+                            <h4>Sản phẩm</h4>
+                            <SearchProduct order={formData} onChange={(data) => {
+                                let a = {
+                                    ...data.orderDetail.detailProduct,
+                                    ...data.orderDetail.detailProduct.color,
+                                    ...data.orderDetail.detailProduct.size,
+                                    ...data.orderDetail,
+                                    ...data,
+                                    nameProduct: data.productName
+                                }
+                                setDetailOrder([
+                                    ...detailOrder,
+                                    {
+                                        ...a,
+                                        coloName: a.colorName,
+                                        sizeName: a.size_name
+                                    },
+                                ])
+                            }}/>
                         </div>
-                    </div>
-                    <div className={'my-3'}>
-                        <h4>Sản phẩm</h4>
-                        <SearchProduct/>
-                    </div>
+                    }
                     <table className="table table-striped table-bordered table-hover shadow">
                         <thead className="thead-dark">
                         <tr>
@@ -293,16 +309,16 @@ function Orders() {
                                         <td>
                                             {
                                                 open.update
-                                                ?
-                                                <TextField type={'number'} onBlur={() =>
-                                                    dispatch(changeQuantityDetailOrder({
-                                                        orderDetailId: item.idOrderDetail,
-                                                        quantity: item.quantity
-                                                    }))}
-                                                           onChange={(value) => onChangeQuantity(item.idOrderDetail, value)}
-                                                           value={item.quantity}/>
-                                                :
-                                                item.quantity
+                                                    ?
+                                                    <TextField type={'number'} onBlur={() =>
+                                                        dispatch(changeQuantityDetailOrder({
+                                                            orderDetailId: item.idOrderDetail,
+                                                            quantity: item.quantity
+                                                        }))}
+                                                               onChange={(value) => onChangeQuantity(item.idOrderDetail, value)}
+                                                               value={item.quantity}/>
+                                                    :
+                                                    item.quantity
                                             }
                                         </td>
                                         <td>{item.price}</td>
@@ -326,21 +342,25 @@ function Orders() {
                 </form>
             </Modal>
         )
-    },[open, detailOrder, formData])
+    }, [open, detailOrder, formData])
 
     return (
         <div className="justify-content-center flex-fill">
 
             <div className="pt-5 px-5 m-auto">
-                <div className={'px-5 pb-4 rounded-bottom'} style={{backgroundColor: '#eeeeee', borderTop: '3px solid'}}>
+                <div className={'px-5 pb-4 rounded-bottom'}
+                     style={{backgroundColor: '#eeeeee', borderTop: '3px solid'}}>
                     <h3 style={{width: 'fit-content'}} className={'bg-light p-2 rounded-bottom'}>Lọc</h3>
                     <div className={'row'}>
-                        <TextField onChange={onchangeFilter} name={'name'} className={'col-3 mr-5'} label={'Tên khách hàng'}/>
-                        <TextField onChange={onchangeFilter} name={'phone'} className={'col-3 mr-5'} label={'Số điện thoại'}/>
+                        <TextField onChange={onchangeFilter} name={'name'} className={'col-3 mr-5'}
+                                   label={'Tên khách hàng'}/>
+                        <TextField onChange={onchangeFilter} name={'phone'} className={'col-3 mr-5'}
+                                   label={'Số điện thoại'}/>
                     </div>
                 </div>
             </div>
             {formOrder}
+            <Refund open={openRefund} setOpen={setOpenRefund} detailOrder={detailOrder} formData={formData}/>
             <div className="pt-5 px-5 m-auto">
                 <table className="table table-striped table-bordered table-hover shadow">
                     <thead className="thead-dark">
@@ -351,10 +371,7 @@ function Orders() {
                         <th>Số điện thoại</th>
                         <th>Thời gian đặt</th>
                         <th>Tổng tiền</th>
-                        {
-                            !['0', '3'].includes(params?.id) &&
-                            <th>Hành động</th>
-                        }
+                        <th>Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -370,33 +387,56 @@ function Orders() {
                                 <td>{value.phoneNumber}</td>
                                 <td>{moment(value.timeCreate).format('DD/MM/YYYY')}</td>
                                 <td>{value.sumPrice}</td>
-                                {
-                                    !['0', '3'].includes(params?.id) &&
-                                    <td>
-                                        <Dropdown icon={<IconButton>
-                                            <FaEllipsisV size={15}/>
-                                        </IconButton>}>
-                                            <Dropdown.Menu>
-                                                {
-                                                    ['1'].includes(params?.id) ?
-                                                        <>
-                                                            <Dropdown.Item onClick={() => handleUpdate(value)}>Cập
-                                                                nhật</Dropdown.Item>
-                                                            <Dropdown.Item onClick={() => handleCancelOrder(value.id)}>Huỷ
-                                                                đơn</Dropdown.Item>
-                                                        </>
-                                                        :
+                                <td>
+                                    <Dropdown icon={<IconButton>
+                                        <FaEllipsisV size={15}/>
+                                    </IconButton>}>
+                                        <Dropdown.Menu>
+                                            {
+                                                !['1'].includes(params?.id)
+                                                &&
+                                                <Dropdown.Item
+                                                    onClick={() => handleUpdate(value, false)}>Chi
+                                                    tiết</Dropdown.Item>}
+                                            {
+                                                ['1'].includes(params?.id) ?
+                                                    <>
+                                                        <Dropdown.Item onClick={() => handleUpdate(value)}>Cập
+                                                            nhật</Dropdown.Item>
+                                                        <Dropdown.Item
+                                                            onClick={() => handleConfirmOrder(value.id)}>Xác
+                                                            nhận đơn</Dropdown.Item>
+                                                        <Dropdown.Item onClick={() => handleCancelOrder(value.id)}>Huỷ
+                                                            đơn</Dropdown.Item>
+                                                    </>
+                                                    :
+                                                    (['2'].includes(params?.id) ?
                                                         <>
                                                             <Dropdown.Item onClick={() => handleSuccess(value.id)}>Giao
                                                                 thành công</Dropdown.Item>
                                                             <Dropdown.Item onClick={() => handleFail(value.id)}>Không
                                                                 nhận hàng</Dropdown.Item>
                                                         </>
-                                                }
-                                            </Dropdown.Menu>
-                                        </Dropdown>
-                                    </td>
-                                }
+                                                        :
+                                                        (['3'].includes(params?.id)
+                                                                ?
+                                                                <Dropdown.Item onClick={() => {
+                                                                    setFormData(value)
+                                                                    dispatch(getDetailOrder({
+                                                                        orderId: value.id
+                                                                    }, (res) => {
+                                                                        setDetailOrder(res)
+                                                                        setOpenRefund(true);
+                                                                    }))
+                                                                }}>Đổi
+                                                                    trả</Dropdown.Item>
+                                                                :
+                                                                <></>
+                                                        ))
+                                            }
+                                        </Dropdown.Menu>
+                                    </Dropdown>
+                                </td>
                             </tr>
                         );
                     })}
