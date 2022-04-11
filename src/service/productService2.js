@@ -1,3 +1,6 @@
+
+////// Tất cả API Trưởng dùng
+
 import axiosHelper from "../common/axiosHelper";
 
 
@@ -26,4 +29,62 @@ export const deleteProductDetail=(id)=>{
     return axiosHelper.delete(`http://localhost:8080/admin/detailProduct/delete/${id}`)
 }
 
+
+export const findAllProduct= ()=>{
+    return axiosHelper.get("http://localhost:8080/product/findAll");
+}
+
+export const updateStatusProduct=(id)=>{
+    return axiosHelper.get(`http://localhost:8080/product/updateStatus/${id}`)
+}
+
+export const findAllOrderForCreateOrder=()=>{
+    return axiosHelper.get("http://localhost:8080/admin/order/findOrderForCreateAdmin")
+}
+
+
+export const getAllOrderDetailInOrderForIdOrder=(id)=>{
+    return axiosHelper.get(`http://localhost:8080/Order/findListOrderDetailForOrderId/${id}`)
+}
+
+export const findProductByName=(name)=>{
+    return axiosHelper.post("http://localhost:8080/product/findAllByNameCategory2", {name: name})
+}
+
+export const findAllProductDetailForProductID=(id) =>{
+    return axiosHelper.get(`http://localhost:8080/admin/detailProduct/findAllById/${id}`);
+}
+
+export const createOrderDetail=(idOrder, idProductDetail, quantity)=>{
+    return axiosHelper.post("http://localhost:8080/Order/createOrderDetail", {idOrder: idOrder, idProduct: idProductDetail, quantity: quantity})
+}
+
+export const deleteOrderDetaiForId=(id)=>{
+    return axiosHelper.get(`http://localhost:8080/Order/deleteOrderDetailById/${id}`)
+}
+
+export const findOrderForId=(id)=>{
+    return axiosHelper.get(`http://localhost:8080/admin/order/findById/${id}`)
+}
+
+export const updateInfomatinCustomerInOrder=(id, fullName, address, phoneNumber)=>{
+    return axiosHelper.put(`http://localhost:8080/Order/updateInfomatinCustomer/${id}`,{
+        fullName: fullName,
+        address: address,
+        phoneNumber: phoneNumber
+    })
+}
+
+export const createOrderForAdmin=(name)=>{
+    return axiosHelper.get(`http://localhost:8080/Order/createNewOrderForAdmin/${name}`)
+}
+
+export const deleteOrderTransaction=(idOrder)=>{
+    return axiosHelper.delete(`http://localhost:8080/Order/deleteTransaction/${idOrder}`)
+    }
+
+
+export const paymentOrder = (idOrder)=>{
+    return axiosHelper.get(`http://localhost:8080/Order/updateStatus/${idOrder}/2`)
+}
 

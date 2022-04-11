@@ -5,13 +5,13 @@ import {
     Redirect,
     useHistory
 } from "react-router-dom";
-import {Provider} from 'react-redux';
-import {store} from './store';
+import { Provider } from 'react-redux';
+import { store } from './store';
 import Home from "./component/views/home/Home"
 import Shop from "./component/views/shop/Shop"
 import SideBar from "./component/layout/SideBar"
 import Products from "./component/products/Products"
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./component/layout/Header";
 import Footer from "./component/layout/Footer";
 import Detail from "./component/views/detail/Detail";
@@ -19,8 +19,8 @@ import Cart from "./component/views/cart/Cart";
 import Checkout from "./component/views/checkout/Checkout";
 import Users from "./component/users/Users";
 import Login from "./component/views/login/Login";
-import {QueryClient, QueryClientProvider} from 'react-query'
-import {useAuth} from "./context";
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { useAuth } from "./context";
 import Storage from "./utils/Storage";
 import Order from "./component/views/Order";
 import Orders from "./component/orders/Orders";
@@ -32,16 +32,19 @@ import "react-toastify/dist/ReactToastify.css";
 import DetailProductForUpdate from "./component/products/DetailProductForUpdate";
 import CategoryChild from "./component/categoryChild/CategoryChild";
 import Categories from "./component/categories/Categories";
+import 'antd/dist/antd.css';
 
 import Event from "./component/admin/Event";
 
 import Register from "./component/views/register/Register";
+import AdminCreateOrder from "./component/orders/AdminCreateOrder";
+import { ConfirmProvider } from "material-ui-confirm";
 import HeaderAdmin from "./component/layout/HeaderAdmin";
 
 const queryClient = new QueryClient()
 
 function App() {
-    const {userInfo, setUserInfo} = useAuth()
+    const { userInfo, setUserInfo } = useAuth()
     const userData = Storage.get('userData')
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -67,6 +70,7 @@ function App() {
                 pauseOnHover
             />
             <QueryClientProvider client={queryClient}>
+                <ConfirmProvider>
                 <BrowserRouter>
                     <Switch>
                         <Route path="/admin">
@@ -94,6 +98,10 @@ function App() {
                                         <Route path="/admin/productDetailUD/:id">
                                             <DetailProductForUpdate/>
                                         </Route>
+                                        <Route path="/admin/createOrder">
+                                                <AdminCreateOrder></AdminCreateOrder>
+                                            </Route>
+                                        
 
                                         <Route path="/abc">
                                             <DetailProduct/>
@@ -142,20 +150,21 @@ function App() {
                                     <Order/>
                                 </Route>
 
-                                <Route path="/discount" exact>
-                                    <ProductDiscount/>
-                                </Route>
-                                <Route path="/checkout" exact>
-                                    <Checkout/>
-                                </Route>
-                                <Route path="/findProduct" exact>
-                                    <ListProductFindByCate/>
-                                </Route>
-                            </Switch>
-                            <Footer/>
-                        </Route>
-                    </Switch>
-                </BrowserRouter>
+                                    <Route path="/discount" exact>
+                                        <ProductDiscount />
+                                    </Route>
+                                    <Route path="/checkout" exact>
+                                        <Checkout />
+                                    </Route>
+                                    <Route path="/findProduct" exact>
+                                        <ListProductFindByCate />
+                                    </Route>
+                                </Switch>
+                                <Footer />
+                            </Route>
+                        </Switch>
+                    </BrowserRouter>
+                </ConfirmProvider>
             </QueryClientProvider>
         </Provider>
 

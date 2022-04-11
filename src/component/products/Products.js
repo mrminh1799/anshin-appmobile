@@ -31,26 +31,6 @@ function Products({ product, setProduct, loading, setLoading }) {
     const onChangePage = (event, newPage) => {
         setPage(newPage);
     };
-    // const getTotalPage = () => {
-    //     callApi(`product`, "GET", null)
-    //         .then((response) => {
-    //             const { data } = response;
-    //             setTotalPage(Math.ceil(data.length / limit))
-    //         })
-    // }
-    // const getListProduct = () => {
-    //     callApi(`product`, "GET", null)
-    //         .then((response) => {
-    //             console.log(response)
-    //             setLoading(false)
-    //             const { data } = response;
-    //             setProduct(data);
-    //         })
-    // }
-    // useEffect(() => {
-    //     setLoading(true)
-    //     getListProduct();
-    // }, [id, page]);
   
 
     return (
@@ -67,24 +47,7 @@ function Products({ product, setProduct, loading, setLoading }) {
                 </Link>
                 </Button>
             </Box>
-            {/* <Backdrop open={loading} style={{ zIndex: "1000" }}>
-                <CircularProgress />
-            </Backdrop> */}
-            {/* <FormProduct
-                formData={formData}
-                setProduct={setProduct}
-                product={product}
-                setFormData={setFormData}
-                setClickedRow={setClickedRow}
-                clickedRow={clickedRow}
-                categoriesId={id}
-                page={page}
-                setPage={setPage}
-                totalPage={totalPage}
-                setTotalPage={setTotalPage}
-                
-                formDataInItValue={formDataInItValue}
-            /> */}
+            
             <ListProduct
                 formData={formData}
                 setFormData={setFormData}
