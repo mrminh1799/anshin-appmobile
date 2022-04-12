@@ -156,6 +156,22 @@ function SideBar() {
                                     <ListItemText primary="Tài khoản"/>
                                 </ListItem>
                             </Link>
+                            <Link to="/admin/sizes">
+                                <ListItem button className="pl-3">
+                                    <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                        <AllInboxIcon style={{color: 'white'}}/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Size"/>
+                                </ListItem>
+                            </Link>
+                            <Link to="/admin/colors">
+                                <ListItem button className="pl-3">
+                                    <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                        <AllInboxIcon style={{color: 'white'}}/>
+                                    </ListItemIcon>
+                                    <ListItemText primary="Color"/>
+                                </ListItem>
+                            </Link>
                         </div>
                     </List>
                 </div>

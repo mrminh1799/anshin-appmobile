@@ -62,7 +62,6 @@ function Products({ product, setProduct, loading, setLoading }) {
                 setPage={setPage}
                 totalPage={totalPage}
                 setTotalPage={setTotalPage}
-                
                 formDataInItValue={formDataInItValue}
             />
             <ListProduct

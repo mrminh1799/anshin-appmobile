@@ -28,11 +28,11 @@ import ProductDiscount from "./component/views/ProductDiscount";
 import ListProductFindByCate from "./component/views/ListProductFindByCate";
 import CategoryChild from "./component/categoryChild/CategoryChild";
 import Categories from "./component/categories/Categories";
-
+import Sizes from "./component/sizes/Sizes"
 import Event from "./component/admin/Event";
 
 import Register from "./component/views/register/Register";
-
+import Colors from "./component/colors/Colors"
 
 const queryClient = new QueryClient()
 
@@ -41,7 +41,8 @@ function App() {
     const userData = Storage.get('userData')
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    const [size, setSize] = useState([]);
+    const [color, setColor] = useState([]);
     useEffect(() => {
         let userData = Storage.get('userData')
         if (userData) {
@@ -82,6 +83,21 @@ function App() {
                                         </Route>
                                         <Route path="/admin/event">
                                             <Event/>
+                                        </Route>
+                                        <Route path="/admin/sizes">
+                                            <Sizes
+                                            
+                                           
+                                            />
+                                        </Route>
+                                        <Route path="/admin/colors">
+                                            <Colors
+                                            
+                                            // color={color}
+                                            // setColor={setColor}
+                                            // loading={loading}
+                                            // setLoading={setLoading}
+                                            />
                                         </Route>
                                     </div>
                                     :
