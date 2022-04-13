@@ -1,22 +1,20 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {getAllProduct, getProductColor, getProductDetail, getProductSize} from "../../service/order";
-import {useDispatch, useSelector} from "react-redux";
-import {FormControl, InputLabel, MenuItem, Modal} from "@mui/material";
+import {changeOrder, getAllProduct, getProductColor, getProductDetail, getProductSize} from "../../service/order";
+import {useDispatch} from "react-redux";
+import {Modal} from "@mui/material";
 import Select from "react-select";
 import {Button, TextField} from "@material-ui/core";
 
-const SearchProduct = () => {
+const SearchProduct = ({order, onChange, cancelUpdate= false}) => {
     const productImage = "https://i.pinimg.com/originals/a0/86/47/a08647cec486718eaf66a38d6f6f8784.png";
 
     const [listProduct, setSearchListProduct] = useState()
 
     const [open, setOpen] = useState(false)
 
-    const [currentProduct, setCurrentProduct] = useState({})
+    const [currentProduct, setCurrentProduct] = useState()
 
     const [currentProductDetail, setCurrentProductDetail] = useState({})
-
-    const [formData, setFormData] = useState({})
 
     const dispatch = useDispatch()
 
@@ -27,18 +25,28 @@ const SearchProduct = () => {
     }, [])
 
     const handleShowDetailProduct = (data) => {
-        setCurrentProduct(data)
+        setCurrentProduct({
+            ...currentProduct,
+            data,
+            idProduct: data.id,
+            idOrder: order.id
+        })
         dispatch(getProductDetail(data, (product) => {
             setCurrentProductDetail(product)
             setOpen(true)
         }))
     }
 
-    console.log(currentProductDetail?.listColor?.filter(item => item.isSelected).map(item => {
-        item.value = item.idColor
-        item.label = item.nameColor
-        return item
-    }))
+    const handleSubmit = ()=>{
+        setOpen(false)
+        if(cancelUpdate){
+            onChange(currentProduct)
+        }else {
+            dispatch(changeOrder(currentProduct,(res)=>{
+                onChange(res)
+            }))
+        }
+    }
 
     return (
         <div className={'w-25'}>
@@ -78,13 +86,39 @@ const SearchProduct = () => {
                         <span style={{
                             display: 'block'
                         }}>Danh mục: {currentProductDetail.categoryName}</span>
+                        <span>Số lượng: </span> <TextField className={'mb-2'} placeholder={'Số lượng'} value={currentProduct?.quantity} onChange={(e)=>{
+                            setCurrentProduct({
+                                ...currentProduct,
+                                quantity: e.target.value
+                            })
+                        }}/>
                         <Select
+                            onChange={(value)=>{
+                                setCurrentProduct({
+                                    ...currentProduct,
+                                    idColor: value.idColor,
+                                    color: value.nameColor
+                                })
+                            }}
                             options={currentProductDetail?.listColor?.filter(item => item.isSelected).map(item => {
                                 item.value = item.idColor
                                 item.label = item.nameColor
                                 return item
                             })}/>
-                        <Button className="mr-2" variant={'contained'}>
+                        <Select
+                            onChange={(value)=>{
+                                setCurrentProduct({
+                                    ...currentProduct,
+                                    idSize: value.idSize,
+                                    size: value.nameSize
+                                })
+                            }}
+                            options={currentProductDetail?.listSize?.filter(item => item.isSelected).map(item => {
+                                item.value = item.idSize
+                                item.label = item.nameSize
+                                return item
+                            })}/>
+                        <Button onClick={handleSubmit} className="mr-2 mt-2" variant={'contained'}>
                             Chọn
                         </Button>
                     </div>
