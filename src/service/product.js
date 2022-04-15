@@ -24,7 +24,7 @@ export const useGetAllProducts = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_all_product', params], () => _get('product/findByPage?currenPage=' + params.currenPage + '&sizePage=' + params.sizePage));
+    } = useQuery(['get_all_product', params], () => _get('product/findAll'),{enabled:false});
     return {
         status, error, data, refetch
     }
@@ -238,7 +238,7 @@ export const useUpdateInfor = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_update_infor', params], () => _put('test/updateAcount',params),{enabled:false});
+    } = useQuery(['get_update_infor', params], () => _post('test/updateAcount',params),{enabled:false});
     return {
         status, error, data, refetch
     }
@@ -301,7 +301,7 @@ export const useAddCart = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['add_cart', params], () => _get('/cart/createForAcount/'+params?.id+'/'+params?.idProduct+'/'+params?.quantity),{enabled:false});
+    } = useQuery(['add_cart', params], () => _post('/cart/createForAcount/'+params?.id+'/'+params?.idProduct+'/'+params?.quantity),{enabled:false});
     return {
         status, error, data, refetch
     }
