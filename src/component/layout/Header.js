@@ -213,10 +213,9 @@ function Header() {
 
     return (
         <div className="header-area">
-            <div className="main-header header-sticky">
+            <div style={{padding: 0}} className="main-header">
                 <div style={{
                     backgroundColor: '#000',
-                    margin: '0 -10px',
                     color: 'white',
                     justifyContent: 'center',
                 }} className="menu-wrapper">
@@ -225,14 +224,17 @@ function Header() {
                             <ul style={{
                                 marginBottom: 0,
                             }} id="navigation">
-                                <li><Link to="/">Home</Link></li>
+                                <li><Link to="/">Trang chủ</Link></li>
                                 <li><Link to="/shop">Shop</Link></li>
-                                <li onClick={toOrder}><Link>My Order</Link></li>
-                                <li onClick={toDiscount}><Link>Discount</Link></li>
+                                <li onClick={toOrder}><Link>Đơn hàng của bạn</Link></li>
+                                <li onClick={toDiscount}><Link>Sự kiện giảm giá</Link></li>
                             </ul>
                         </nav>
                     </div>
                 </div>
+            </div>
+            <div className="main-header header-sticky">
+
                 <div style={{padding: '10px 0'}} className="container-fluid">
                     <div className="menu-wrapper">
                         <div className="logo" style={{flex: 1}}>
@@ -293,21 +295,21 @@ function Header() {
                     <MenuItem onClick={() => {
                         history.push('/admin')
                     }}>
-                        Manager
+                        Trang quản lý
                     </MenuItem>
                 }
-                <MenuItem onClick={() => {
-                    Storage.delete('userData')
-                    setUserInfo(null)
-                }}>
-                    Logout
-                </MenuItem>
                 {
                     userInfo?.roles?.includes('Admin') &&
                     <MenuItem onClick={() => setOpenModal(true)}>
                         Cập nhật thông tin
                     </MenuItem>
                 }
+                <MenuItem onClick={() => {
+                    Storage.delete('userData')
+                    setUserInfo(null)
+                }}>
+                    Đăng xuất
+                </MenuItem>
             </Menu>
             <Modal
                 keepMounted

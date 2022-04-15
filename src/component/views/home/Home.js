@@ -126,7 +126,7 @@ function Home() {
                         <div className="row justify-content-center">
                             <div className="col-xl-7 col-lg-8 col-md-10">
                                 <div className="section-tittle mb-70 text-center">
-                                    <h2 style={{textTransform: 'uppercase', fontSize: 40}}>sản phẩm yêu thích</h2>
+                                    <h2 style={{textTransform: 'uppercase', fontSize: 40}}>sản phẩm bán chạy</h2>
                                 </div>
                             </div>
                         </div>
@@ -164,35 +164,35 @@ function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="shop-method-area">
-                    <div className="container">
-                        <div className="method-wrapper">
-                            <div className="row d-flex justify-content-between">
-                                <div className="col-xl-4 col-lg-4 col-md-6">
-                                    <div className="single-method mb-40">
-                                        <i className="ti-package"></i>
-                                        <h6>Free Shipping Method</h6>
-                                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6">
-                                    <div className="single-method mb-40">
-                                        <i className="ti-unlock"></i>
-                                        <h6>Secure Payment System</h6>
-                                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6">
-                                    <div className="single-method mb-40">
-                                        <i className="ti-reload"></i>
-                                        <h6>Secure Payment System</h6>
-                                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {/*<div className="shop-method-area">*/}
+                {/*    <div className="container">*/}
+                {/*        <div className="method-wrapper">*/}
+                {/*            <div className="row d-flex justify-content-between">*/}
+                {/*                <div className="col-xl-4 col-lg-4 col-md-6">*/}
+                {/*                    <div className="single-method mb-40">*/}
+                {/*                        <i className="ti-package"></i>*/}
+                {/*                        <h6>Free Shipping Method</h6>*/}
+                {/*                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>*/}
+                {/*                    </div>*/}
+                {/*                </div>*/}
+                {/*                <div className="col-xl-4 col-lg-4 col-md-6">*/}
+                {/*                    <div className="single-method mb-40">*/}
+                {/*                        <i className="ti-unlock"></i>*/}
+                {/*                        <h6>Secure Payment System</h6>*/}
+                {/*                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>*/}
+                {/*                    </div>*/}
+                {/*                </div>*/}
+                {/*                <div className="col-xl-4 col-lg-4 col-md-6">*/}
+                {/*                    <div className="single-method mb-40">*/}
+                {/*                        <i className="ti-reload"></i>*/}
+                {/*                        <h6>Secure Payment System</h6>*/}
+                {/*                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>*/}
+                {/*                    </div>*/}
+                {/*                </div>*/}
+                {/*            </div>*/}
+                {/*        </div>*/}
+                {/*    </div>*/}
+                {/*</div>*/}
             </div>
         </div>
     )
