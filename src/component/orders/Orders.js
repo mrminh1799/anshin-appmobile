@@ -23,7 +23,7 @@ const formDataInItValue = {
     detailAddress: "",
     phoneNumber: "",
     sumPrice: 500000,
-    timeCreate: "2022-03-04T16:42:49.000+00:00"
+    timeCreate: "2022-03-04T16:42:49.000+00:00",
 }
 
 function Orders() {
@@ -360,7 +360,7 @@ function Orders() {
                 </div>
             </div>
             {formOrder}
-            <Refund open={openRefund} setOpen={setOpenRefund} detailOrder={detailOrder} formData={formData}/>
+            <Refund open={openRefund} setOpen={setOpenRefund} detailOrder={detailOrder} formData={formData} setFormData={setFormData}/>
             <div className="pt-5 px-5 m-auto">
                 <table className="table table-striped table-bordered table-hover shadow">
                     <thead className="thead-dark">
