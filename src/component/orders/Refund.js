@@ -1,13 +1,13 @@
-import React, {useMemo, useState} from "react";
+import React, {useState} from "react";
 import {IconButton, Modal} from "@mui/material";
 import {Button, TextField} from "@material-ui/core";
 import SearchProduct from "./SearchProduct";
-import {changeQuantityDetailOrder} from "../../service/order";
+import {changeQuantityDetailOrder, changeReturn} from "../../service/order";
 import {FaTrash} from "react-icons/fa";
 import {useDispatch} from "react-redux";
 
 
-const Refund = ({open, setOpen, formData, detailOrder}) => {
+const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
 
     const dispatch = useDispatch()
 
@@ -15,10 +15,17 @@ const Refund = ({open, setOpen, formData, detailOrder}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-
+        console.log({
+            ...formData,
+            listOrderProductDetailDTO: data,
+        })
+        dispatch(changeReturn({
+            ...formData,
+            listOrderProductDetailDTO: data,
+        }))
     }
 
-    return (
+    return open && (
         <Modal
             style={{
                 overflow: 'scroll'
@@ -67,7 +74,13 @@ const Refund = ({open, setOpen, formData, detailOrder}) => {
                     </div>
                     <div className={'ml-5 form-group'} style={{flex: 1}}>
                         <label htmlFor="exampleFormControlTextarea1">Lý do đổi trả</label>
-                        <textarea value={formData.reason} className="form-control" id="exampleFormControlTextarea1"
+                        <textarea value={formData.reason} onChange={(e)=>{
+                            setFormData({
+                                ...formData,
+                                reason: e.target.value
+                            })
+                        }} className="form-control"
+                                  id="exampleFormControlTextarea1"
                                   rows="6"/>
                     </div>
                 </div>
@@ -75,7 +88,6 @@ const Refund = ({open, setOpen, formData, detailOrder}) => {
                     <div style={{flex: 1}} className={'mr-3'}/>
                     <div style={{flex: 1}} className={'ml-3'}>
                         <SearchProduct order={formData} cancelUpdate={true} onChange={(value) => {
-                            console.log(value)
                             setData([
                                 ...data,
                                 {
@@ -90,7 +102,7 @@ const Refund = ({open, setOpen, formData, detailOrder}) => {
                     </div>
                 </div>
                 <div className={'d-flex'}>
-                    <table className="table table-striped table-bordered table-hover shadow mr-3">
+                    <table style={{flex: 1}} className="table table-striped table-bordered table-hover shadow mr-3">
                         <thead className="thead-dark">
                         <tr>
                             <th>Tên sản phẩm</th>
@@ -132,8 +144,7 @@ const Refund = ({open, setOpen, formData, detailOrder}) => {
                         }
                         </tbody>
                     </table>
-                    <table className="table table-striped table-bordered table-hover shadow ml-3">
-
+                    <table style={{flex: 1}} className="table table-striped table-bordered table-hover shadow ml-3">
                         <thead className="thead-dark">
                         <tr>
                             <th>Tên sản phẩm</th>

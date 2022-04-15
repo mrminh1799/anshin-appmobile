@@ -1,0 +1,8 @@
+.dropdown:hover .dropdown-menu {
+    display: block;
+    margin-top: 0;
+}
+.header-area .main-header .menu-wrapper .main-menu ul li a {
+    color: white;
+    padding: 7px 20px;
+}

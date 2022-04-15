@@ -8,6 +8,7 @@ import {
     useGetListColor,
     useGetListSize
 } from "../../../service/product";
+import './style.css'
 
 import { styled } from '@mui/material/styles';
 import {Card, Grid, Typography,Box,Stack} from "@mui/material";
@@ -30,7 +31,7 @@ function Shop() {
     const [checkFilter,setCheckFilter] = useState(true)
     const [pagination, setPagination] = useState({
         index: 0,
-        size: 10
+        size: 8
     });
     const [order, setOrder] = useState([])
     const [listOrder, setListOrder] = useState([])
@@ -163,7 +164,7 @@ function Shop() {
     };
     return (
         <div>
-            <div className="slider-area ">
+            <div className="slider-area">
                 <div className="single-slider slider-height2 d-flex align-items-center">
                     <div className="container">
                         <div className="row">
@@ -177,7 +178,7 @@ function Shop() {
                 </div>
             </div>
             <section className="popular-items latest-padding">
-                <div className="container">
+                <div className="container" style={{maxWidth: '95%'}}>
                     <FormControl style={{width: 200}}>
                         <InputLabel id="demo-simple-select-label">Màu sắc</InputLabel>
                         <Select
@@ -272,92 +273,53 @@ function Shop() {
                             <div className="tab-content" id="nav-tabContent" style={{marginTop: 50}}>
                                 <div className="tab-pane fade show active" id="nav-home" role="tabpanel"
                                      aria-labelledby="nav-home-tab">
-
-
-                                    <Grid container spacing={3}>
-
-                                        {
-                                            order?.map((item, index) =>  {
-                                                return (
-                                                    <Grid  key={item?.id} item xs={12} sm={6} md={2.2} onClick={() => toDetailProduct(item)}>
-                                                        <Card>
-                                                            <Box sx={{ pt: '100%', position: 'relative' }}>
-
-                                                                {/*<Label*/}
-                                                                {/*    variant="filled"*/}
-                                                                {/*    // color={(status === 'sale' && 'error') || 'info'}*/}
-                                                                {/*    sx={{*/}
-                                                                {/*        zIndex: 9,*/}
-                                                                {/*        top: 16,*/}
-                                                                {/*        right: 16,*/}
-                                                                {/*        position: 'absolute',*/}
-                                                                {/*        textTransform: 'uppercase'*/}
-                                                                {/*    }}*/}
-                                                                {/*>*/}
-                                                                {/*   123*/}
-                                                                {/*</Label>*/}
-
-                                                                <ProductImgStyle src={item?.image} />
-                                                            </Box>
-
-                                                            <Stack spacing={2} sx={{ p: 3 }}>
-                                                                <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                                                                    <Typography variant="subtitle2" noWrap>
-                                                                        {item?.name}}
-                                                                    </Typography>
-                                                                </Link>
-
-                                                                <Stack direction="row" alignItems="center" justifyContent="space-between">
-
-                                                                    <Typography variant="subtitle1">
-                                                                        {/*<Typography*/}
-                                                                        {/*    component="span"*/}
-                                                                        {/*    variant="body1"*/}
-                                                                        {/*    sx={{*/}
-                                                                        {/*        color: 'text.disabled',*/}
-                                                                        {/*        textDecoration: 'line-through'*/}
-                                                                        {/*    }}*/}
-                                                                        {/*>*/}
-                                                                        {/*   123*/}
-                                                                        {/*</Typography>*/}
-                                                                        &nbsp;
-                                                                        $ {item?.price}
-                                                                    </Typography>
-                                                                </Stack>
-                                                            </Stack>
-                                                        </Card>
-                                                    </Grid>
-                                                )
-                                            })
-                                        }
-
-                                    </Grid>
-                                    {/*<div key={index} className="col-xl-4 col-lg-4 col-md-6 col-sm-6">*/}
-                                    {/*    <div className="single-popular-items mb-50 text-center">*/}
-                                    {/*        <div className="popular-img" style={{*/}
-                                    {/*            backgroundImage: `url(${value.image})`,*/}
-                                    {/*            width: 360,*/}
-                                    {/*            height: 360,*/}
-                                    {/*            overFlow: "hidden",*/}
-                                    {/*            backgroundSize: "cover",*/}
-                                    {/*            backgroundRepeat: "no-repeat",*/}
-                                    {/*            backgroundPosition: "center"*/}
-                                    {/*        }}>*/}
-                                    {/*            /!*<div className="img-cap">*!/*/}
-                                    {/*            /!*    <span >Thêm vào giỏ hàng</span>*!/*/}
-                                    {/*            /!*</div>*!/*/}
-                                    {/*        </div>*/}
-                                    {/*        <button onClick={() => toDetailProduct(value)}*/}
-                                    {/*                className="btn-danger">*/}
-                                    {/*            <h4>*/}
-                                    {/*                <span color={'white'}>{value.name}</span>*/}
-
-                                    {/*            </h4>*/}
-                                    {/*            <span>${value.price}</span>*/}
-                                    {/*        </button>*/}
-                                    {/*    </div>*/}
-                                    {/*</div>*/}
-
+                                    <div className="row justify-content-around">
+                                        {order?.map((value, index) => {
+                                            return (
+                                                <div key={index} className="col-xl-3 popular-img">
+                                                    <div className="single-popular-items mb-25">
+                                                        <div className="popular-img" style={{
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            overFlow: "hidden",
+                                                            borderWidth: 0
+                                                        }}>
+                                                            <img src={value.image}/>
+                                                        </div>
+                                                        <button style={{
+                                                            borderWidth: 0,
+                                                            backgroundColor: 'white',
+                                                            textAlign: 'left',
+                                                            fontWeight: 'bold'
+                                                        }} onClick={() => toDetailProduct(value)}>
+                                                            <h5>
+                                                                <span className={'threeDot'} color={'white'}>{value.name}</span>
+                                                            </h5>
+                                                            <span style={{
+                                                                color: 'darkRed',
+                                                                fontSize: 18
+                                                            }} >{value.price}<span style={{textDecoration: 'underline', fontSize: 14}}>đ</span></span>
+                                                        </button>
+                                                        <div className="popular-img" style={{
+                                                            width: '100%',
+                                                            height: 35,
+                                                            overflow: 'unset',
+                                                            borderBottom: 0
+                                                        }}>
+                                                            <div>
+                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, left: 0}}>
+                                                                    <span style={{padding: '10px 0', borderRight: '1px solid'}}>Thêm vào giỏ hàng</span>
+                                                                </div>
+                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, right: 0}}>
+                                                                    <span onClick={() => toDetailProduct(value)} style={{padding: '10px 0'}}>Xem chi tiết</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
 
                                 <Pagination
@@ -371,92 +333,53 @@ function Shop() {
                             <div className="tab-content" id="nav-tabContent" style={{marginTop: 50}}>
                                 <div className="tab-pane fade show active" id="nav-home" role="tabpanel"
                                      aria-labelledby="nav-home-tab">
-
-                                    return (
-                                    <Grid container spacing={3}>
-
-                                        {
-                                            filterSP?.data && filterSP?.data.map((item, index) =>  {
-                                                return (
-                                                    <Grid  key={item?.id} item xs={12} sm={6} md={2.2} onClick={() => toDetailProduct(item)}>
-                                                        <Card>
-                                                            <Box sx={{ pt: '100%', position: 'relative' }}>
-
-                                                                {/*<Label*/}
-                                                                {/*    variant="filled"*/}
-                                                                {/*    // color={(status === 'sale' && 'error') || 'info'}*/}
-                                                                {/*    sx={{*/}
-                                                                {/*        zIndex: 9,*/}
-                                                                {/*        top: 16,*/}
-                                                                {/*        right: 16,*/}
-                                                                {/*        position: 'absolute',*/}
-                                                                {/*        textTransform: 'uppercase'*/}
-                                                                {/*    }}*/}
-                                                                {/*>*/}
-                                                                {/*   123*/}
-                                                                {/*</Label>*/}
-
-                                                                <ProductImgStyle src={item?.image} />
-                                                            </Box>
-
-                                                            <Stack spacing={2} sx={{ p: 3 }}>
-                                                                <Link to="#" color="inherit" underline="hover" component={RouterLink}>
-                                                                    <Typography variant="subtitle2" noWrap>
-                                                                        {item?.name}}
-                                                                    </Typography>
-                                                                </Link>
-
-                                                                <Stack direction="row" alignItems="center" justifyContent="space-between">
-
-                                                                    <Typography variant="subtitle1">
-                                                                        {/*<Typography*/}
-                                                                        {/*    component="span"*/}
-                                                                        {/*    variant="body1"*/}
-                                                                        {/*    sx={{*/}
-                                                                        {/*        color: 'text.disabled',*/}
-                                                                        {/*        textDecoration: 'line-through'*/}
-                                                                        {/*    }}*/}
-                                                                        {/*>*/}
-                                                                        {/*   123*/}
-                                                                        {/*</Typography>*/}
-                                                                        &nbsp;
-                                                                        $ {item?.price}
-                                                                    </Typography>
-                                                                </Stack>
-                                                            </Stack>
-                                                        </Card>
-                                                    </Grid>
-                                                )
-                                            })
-                                        }
-
-                                    </Grid>
-                                    {/*<div key={index} className="col-xl-4 col-lg-4 col-md-6 col-sm-6">*/}
-                                    {/*    <div className="single-popular-items mb-50 text-center">*/}
-                                    {/*        <div className="popular-img" style={{*/}
-                                    {/*            backgroundImage: `url(${value.image})`,*/}
-                                    {/*            width: 360,*/}
-                                    {/*            height: 360,*/}
-                                    {/*            overFlow: "hidden",*/}
-                                    {/*            backgroundSize: "cover",*/}
-                                    {/*            backgroundRepeat: "no-repeat",*/}
-                                    {/*            backgroundPosition: "center"*/}
-                                    {/*        }}>*/}
-                                    {/*            /!*<div className="img-cap">*!/*/}
-                                    {/*            /!*    <span >Thêm vào giỏ hàng</span>*!/*/}
-                                    {/*            /!*</div>*!/*/}
-                                    {/*        </div>*/}
-                                    {/*        <button onClick={() => toDetailProduct(value)}*/}
-                                    {/*                className="btn-danger">*/}
-                                    {/*            <h4>*/}
-                                    {/*                <span color={'white'}>{value.name}</span>*/}
-
-                                    {/*            </h4>*/}
-                                    {/*            <span>${value.price}</span>*/}
-                                    {/*        </button>*/}
-                                    {/*    </div>*/}
-                                    {/*</div>*/}
-
+                                    <div className="row justify-content-around">
+                                        {filterSP?.data && filterSP?.data.map((value, index) => {
+                                            return (
+                                                <div key={index} className="col-xl-3 popular-img">
+                                                    <div className="single-popular-items mb-25">
+                                                        <div className="popular-img" style={{
+                                                            width: '100%',
+                                                            height: '100%',
+                                                            overFlow: "hidden",
+                                                            borderWidth: 0
+                                                        }}>
+                                                            <img src={value.image}/>
+                                                        </div>
+                                                        <button style={{
+                                                            borderWidth: 0,
+                                                            backgroundColor: 'white',
+                                                            textAlign: 'left',
+                                                            fontWeight: 'bold'
+                                                        }} onClick={() => toDetailProduct(value)}>
+                                                            <h5>
+                                                                <span className={'threeDot'} color={'white'}>{value.name}</span>
+                                                            </h5>
+                                                            <span style={{
+                                                                color: 'darkRed',
+                                                                fontSize: 18
+                                                            }} >{value.price}<span style={{textDecoration: 'underline', fontSize: 14}}>đ</span></span>
+                                                        </button>
+                                                        <div className="popular-img" style={{
+                                                            width: '100%',
+                                                            height: 35,
+                                                            overflow: 'unset',
+                                                            borderBottom: 0
+                                                        }}>
+                                                            <div>
+                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, left: 0}}>
+                                                                    <span style={{padding: '10px 0', borderRight: '1px solid'}}>Thêm vào giỏ hàng</span>
+                                                                </div>
+                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, right: 0}}>
+                                                                    <span onClick={() => toDetailProduct(value)} style={{padding: '10px 0'}}>Xem chi tiết</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
                                 </div>
                                 <Pagination
                                     count={totalPage}

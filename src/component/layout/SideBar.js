@@ -57,7 +57,7 @@ function SideBar() {
 
     return (
         <div className={classes.root}>
-            <div className="position-fixed h-100 hidescroll" style={{ overflowY: "scroll" }}>
+            <div className="position-fixed h-100 hidescroll" style={{ overflowY: "scroll", marginTop: -50}}>
                 <div className={classes.bg}>
                     <List style={{ width: '250px' }} component="nav" className="h-100" aria-label="main mailbox folders">
                         <div className="border border-light" style={{ margin: 30 }}>

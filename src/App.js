@@ -33,9 +33,6 @@ import DetailProductForUpdate from "./component/products/DetailProductForUpdate"
 import CategoryChild from "./component/categoryChild/CategoryChild";
 import Categories from "./component/categories/Categories";
 import Sizes from "./component/sizes/Sizes"
-import Event from "./component/admin/Event";
-
-import Register from "./component/views/register/Register";
 import Colors from "./component/colors/Colors"
 import 'antd/dist/antd.css';
 
