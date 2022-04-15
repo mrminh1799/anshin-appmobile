@@ -1,6 +1,6 @@
-import {Link, useHistory} from "react-router-dom";
+import { Link, useHistory} from "react-router-dom";
 import {useAuth} from "../../context";
-import {Button, Menu, MenuItem, TextField} from "@material-ui/core";
+import { Button,  Menu, MenuItem, TextField} from "@material-ui/core";
 import * as PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
 import Storage from "../../utils/Storage";
@@ -37,11 +37,11 @@ function Header() {
     const [openChangePass, setOpenChangePass] = useState(false)
     const [statusConfirm, setStatusConfirm] = useState()
     const categoryNav = useGetParentCate({})
-    const [openModal, setOpenModal] = useState(false)
-    const [textInfo, setTextInfo] = useState({
-        name: "",
-        phone: "",
-        email: "",
+    const [openModal,setOpenModal] = useState(false)
+    const [textInfo,setTextInfo] = useState({
+        name: userInfo?.fullname,
+        phone:userInfo?.username,
+        email:userInfo?.email,
     })
     const [password, setPassword] = useState({
         oldPass: '',
@@ -59,7 +59,10 @@ function Header() {
 
     const updateInforUser = () => {
         updateInfo.refetch().then(
-            alert('Cap nhat thanh cong')
+            (res)=>{
+                setUserInfo(res?.data)
+                alert('Cap nhat thanh cong')
+            }
         )
     }
     const onChangeOldPass = (value) => {
@@ -97,6 +100,7 @@ function Header() {
     const handleChangeTextInfo = (value) => {
 
     }
+
 
     useEffect(() => {
         if (confirmPass?.data) {
@@ -312,8 +316,8 @@ function Header() {
             }} className="px-5 pt-4">
                 <form style={{
                     backgroundColor: 'white',
-                    marginLeft: 500,
-                    marginRight: 500,
+                    marginLeft: 300,
+                    marginRight:300,
                 }} className="border rounded p-4 shadow" autoComplete="off">
                     <div>
                         <p>Họ và tên: {userInfo?.fullname}</p>
@@ -343,8 +347,8 @@ function Header() {
             }} className="px-5 pt-4">
                 <form style={{
                     backgroundColor: 'white',
-                    marginLeft: 500,
-                    marginRight: 500,
+                    marginLeft: 400,
+                    marginRight:400,
                 }} className="border rounded p-4 shadow" autoComplete="off">
                     <div>
                         <div>
@@ -353,6 +357,7 @@ function Header() {
                                     ...prev,
                                     name: value.target.value
                                 })))}
+                                value={textInfo?.fullname}
                                 name="name"
                                 fullWidth
                                 label="Tên khách hàng"
@@ -360,7 +365,8 @@ function Header() {
                             />
                             <TextField
                                 name="name"
-                                onChange={(value) => handleChangeTextInfo(setTextInfo((prev) => ({
+                                value={textInfo?.phone}
+                                onChange={(value)=>handleChangeTextInfo(setTextInfo((prev)=>({
                                     ...prev,
                                     phone: value.target.value
                                 })))}
@@ -370,7 +376,8 @@ function Header() {
                             />
                             <TextField
                                 name="name"
-                                onChange={(value) => handleChangeTextInfo(setTextInfo((prev) => ({
+                                value={textInfo?.email}
+                                onChange={(value)=>handleChangeTextInfo(setTextInfo((prev)=>({
                                     ...prev,
                                     email: value.target.value
                                 })))}

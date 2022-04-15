@@ -1,11 +1,30 @@
-import {Link} from "react-router-dom";
-import {useGetTop10, useGetTop10Sell} from "../../../service/product";
+import {Link, Link as RouterLink, useHistory} from "react-router-dom";
+import {useGetDetailProduct, useGetTop10, useGetTop10Sell} from "../../../service/product";
 import React, {useEffect, useState} from "react";
 import {Button, Drawer} from "@mui/material";
 
 
 function Home() {
+    let detail = useHistory();
     const top10Products = useGetTop10({})
+    const [idProduct, setIdProduct] = useState()
+    const detailProduct = useGetDetailProduct({
+        id: idProduct
+    })
+    const toDetailProduct = (item) => {
+        setIdProduct(item?.id)
+    }
+    useEffect(() => {
+        if (idProduct) {
+            detailProduct.refetch().then(res => {
+                if (res) {
+                    detail.push(`/detail/${idProduct}`, {
+                        item: res?.data
+                    })
+                }
+            })
+        }
+    }, [idProduct])
 
     useEffect(() => {
         top10Products.refetch()
@@ -27,13 +46,9 @@ function Home() {
                 </div>
                 <div className="popular-items pt-5">
                     <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-xl-7 col-lg-8 col-md-10">
                                 <div className="section-tittle mb-70 text-center">
                                     <h2 style={{textTransform: 'uppercase', fontSize: 40, marginTop: 20}}>sản phẩm yêu thích</h2>
                                 </div>
-                            </div>
-                        </div>
                         <div className="row justify-content-around">
                             {
                                 top10Products?.data?.map((item, index) => {

@@ -80,7 +80,7 @@ function FormEvent({
     })
     const addEvent = useCreateEvent({
         nameEvent: selectedDate?.nameEvent,
-        startTime:selectedDate?.startTime,
+        startTime: selectedDate?.startTime,
         endTime: selectedDate?.endTime
     })
     const updateEvents = useUpdateEvent({
@@ -88,28 +88,28 @@ function FormEvent({
         startTime: selectedDate?.startTime,
         endTime: selectedDate?.endTime
     })
-    const buttonAddEvent=()=>{
-        addEvent.refetch().then((res)=>{
-            if(res){
-                setEvents(prev=>(
-                    [...prev,res?.data]
+    const buttonAddEvent = () => {
+        addEvent.refetch().then((res) => {
+            if (res) {
+                setEvents(prev => (
+                    [...prev, res?.data]
                 ))
             }
-           alert('Thêm sự kiện thành công')
+            alert('Thêm sự kiện thành công')
         })
     }
 
-    const buttonUpdateEvent=()=>{
-        if(selectedDate.startTime==''){
+    const buttonUpdateEvent = () => {
+        if (selectedDate.startTime == '') {
             alert('Chọn ngày bắt đầu')
             return
         }
-        if(selectedDate.endTime==''){
+        if (selectedDate.endTime == '') {
             alert('Chọn ngày kết thúc')
             return
         }
-        updateEvents.refetch(res=>
-            console.log('êwwee',res)
+        updateEvents.refetch(res =>
+            console.log('êwwee', res)
         )
     }
 
@@ -237,7 +237,7 @@ function FormEvent({
         addProductDiscount.refetch().then(res => {
             if (res) {
                 setProduct((prev) => (
-                    [...prev,res?.data?.product]
+                    [...prev, res?.data?.product]
                 ))
 
                 alert('Thêm thành công')
@@ -293,7 +293,6 @@ function FormEvent({
         }
     }, [updateDiscount?.data])
 
-    console.log('assa', moment(detailsEvent?.startTime).format('YYYY-MM-DD'))
     return (
         <div>
             <Box>
@@ -332,9 +331,13 @@ function FormEvent({
 
                         }
 
-                        <Text>Ngày bắt đầu: {moment(detailsEvent?.startTime).format('DD-MM-YYYY')}</Text>
+                        {
+                            table ?
+                                <Text>Ngày bắt
+                                    đầu: {moment(detailsEvent?.startTime).format('DD-MM-YYYY')}</Text> : <></>
 
-                        <form className={classes.container} >
+                        }
+                        <form className={classes.container}>
                             <TextField
                                 id="date"
                                 label="Ngày bắt đầu"
@@ -350,7 +353,10 @@ function FormEvent({
                                 }))}
                             />
                         </form>
-                        <Text>Ngày kết thúc: {moment(detailsEvent?.endTime).format('DD-MM-YYYY')}</Text>
+                        {
+                            table ?
+                                <Text>Ngày kết
+                                    thúc: {moment(detailsEvent?.endTime).format('DD-MM-YYYY')}</Text> : <></>}
 
                         <form className={classes.container}>
                             <TextField
@@ -372,7 +378,8 @@ function FormEvent({
                             table ?
                                 <></>
                                 :
-                                <Button style={{display: "inline-block", marginTop: 20}} onClick={buttonAddEvent} className="mr-2"
+                                <Button style={{display: "inline-block", marginTop: 20}} onClick={buttonAddEvent}
+                                        className="mr-2"
                                         variant="outlined">
                                     Tạo Sự kiện
                                 </Button>
@@ -390,7 +397,8 @@ function FormEvent({
                         }
                         {
                             table ?
-                                <Button onClick={buttonUpdateEvent} style={{display: "inline-block", marginTop: 20}} className="mr-2"
+                                <Button onClick={buttonUpdateEvent} style={{display: "inline-block", marginTop: 20}}
+                                        className="mr-2"
                                         variant="outlined">
                                     Cập nhật
                                 </Button>

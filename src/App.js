@@ -32,6 +32,11 @@ import "react-toastify/dist/ReactToastify.css";
 import DetailProductForUpdate from "./component/products/DetailProductForUpdate";
 import CategoryChild from "./component/categoryChild/CategoryChild";
 import Categories from "./component/categories/Categories";
+import Sizes from "./component/sizes/Sizes"
+import Event from "./component/admin/Event";
+
+import Register from "./component/views/register/Register";
+import Colors from "./component/colors/Colors"
 import 'antd/dist/antd.css';
 
 import Event from "./component/admin/Event";
@@ -48,7 +53,8 @@ function App() {
     const userData = Storage.get('userData')
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
-
+    const [size, setSize] = useState([]);
+    const [color, setColor] = useState([]);
     useEffect(() => {
         let userData = Storage.get('userData')
         if (userData) {
@@ -117,6 +123,21 @@ function App() {
                                         </Route>
                                         <Route path="/admin/event">
                                             <Event/>
+                                        </Route>
+                                        <Route path="/admin/sizes">
+                                            <Sizes
+                                            
+                                           
+                                            />
+                                        </Route>
+                                        <Route path="/admin/colors">
+                                            <Colors
+                                            
+                                            // color={color}
+                                            // setColor={setColor}
+                                            // loading={loading}
+                                            // setLoading={setLoading}
+                                            />
                                         </Route>
                                     </div>
                                     :
