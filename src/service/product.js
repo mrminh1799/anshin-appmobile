@@ -1,6 +1,8 @@
 import {useQuery, useQueryClient, useMutation, useQueries} from 'react-query';
 import {_custom, _get, _put, _post} from '../../src/component/callAPI/index';
 import {useEffect, useState} from "react";
+import axiosHelper from "../common/axiosHelper";
+
 import axios from "axios";
 
 //getallproduct
@@ -22,7 +24,7 @@ export const useGetAllProducts = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_all_product', params], () => _get('product/findByPage?currenPage=' + params.currenPage + '&sizePage=' + params.sizePage));
+    } = useQuery(['get_all_product', params], () => _get('product/findAll'),{enabled:false});
     return {
         status, error, data, refetch
     }
@@ -236,7 +238,7 @@ export const useUpdateInfor = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_update_infor', params], () => _put('test/updateAcountUser'),{enabled:false});
+    } = useQuery(['get_update_infor', params], () => _post('test/updateAcount',params),{enabled:false});
     return {
         status, error, data, refetch
     }
@@ -299,7 +301,7 @@ export const useAddCart = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['add_cart', params], () => _get('/cart/createForAcount/'+params?.id+'/'+params?.idProduct+'/'+params?.quantity),{enabled:false});
+    } = useQuery(['add_cart', params], () => _post('/cart/createForAcount/'+params?.id+'/'+params?.idProduct+'/'+params?.quantity),{enabled:false});
     return {
         status, error, data, refetch
     }

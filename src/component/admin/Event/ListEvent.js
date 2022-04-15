@@ -1,10 +1,43 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, Switch} from "@material-ui/core";
-import {ToggleButton} from "@mui/material";
+import {useChangeStatusEvent, useGetAllEvents} from "../../../service/event";
 
 
-function ListEvent({setOpen, setTable }) {
+function ListEvent({setOpen, setTable, setDetailsEvent,events, setEvents}) {
+    const [currEvent, setCurrEvent] = useState(null)
+    const allEvents = useGetAllEvents()
+    const changeStatus = useChangeStatusEvent({
+        id: currEvent
+    })
 
+    function onChangeStatus(item) {
+        setCurrEvent(item?.id)
+        if(item?.status ===true){
+            item.status=false
+        }else {
+            item.status=true
+        }
+    }
+
+    function showModalDetailEvent(e) {
+        setDetailsEvent(e)
+        setOpen(true)
+        setTable(true)
+    }
+
+    useEffect(() => {
+        if(currEvent){
+            changeStatus.refetch()
+            setCurrEvent(null)
+        }
+    },[currEvent])
+
+    useEffect(() => {
+        allEvents.refetch()
+    }, [])
+    useEffect(() => {
+        setEvents(allEvents?.data)
+    }, [allEvents.data])
     return (
         <div className="pt-5 px-5 m-auto">
             <table className="table table-striped table-bordered table-hover shadow">
@@ -20,29 +53,35 @@ function ListEvent({setOpen, setTable }) {
                 </thead>
                 <tbody>
 
-                        <tr>
-                            <td>1</td>
-                            <td>Ten su kien</td>
-                            <td>1/1/1111</td>
-                            <td>1/1/1111</td>
-                            <td><Switch  defaultChecked /></td>
-                            <td>
-                                <Button
-                                    onClick={() =>{
-                                        setOpen(true)
-                                        setTable(true)
-                                    }}
-                                    variant="contained"
-                                    color="secondary"
-                                >
-                                    Chi tiết
-                                </Button>
-                            </td>
-                        </tr>
+
+                {
+                    events?.map((item, i) => {
+                        return (
+                            <tr>
+                                <td>{item?.id}</td>
+                                <td>{item?.nameEvent}</td>
+                                <td>{item?.startTime}</td>
+                                <td>{item?.endTime}</td>
+                                <td><Switch onChange={() => onChangeStatus(item)} checked={item?.status}/></td>
+                                <td>
+                                    <Button
+                                        onClick={() => showModalDetailEvent(item)}
+                                        variant="contained"
+                                        color="secondary"
+                                    >
+                                        Chi tiết
+                                    </Button>
+                                </td>
+                            </tr>
+                        )
+                    })
+                }
+
 
                 </tbody>
             </table>
         </div>
     )
 }
+
 export default ListEvent;

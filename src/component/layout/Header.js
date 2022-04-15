@@ -1,14 +1,13 @@
-import {BrowserRouter, Switch, Route, Link, useHistory} from "react-router-dom";
+import { Link, useHistory} from "react-router-dom";
 import {useAuth} from "../../context";
-import {Avatar, Box, Button, IconButton, ListItemIcon, Menu, MenuItem, TextField, Tooltip} from "@material-ui/core";
-import Divider from "@material-ui/core/Divider";
+import { Button,  Menu, MenuItem, TextField} from "@material-ui/core";
 import * as PropTypes from "prop-types";
 import React, {useEffect, useState} from "react";
 import Storage from "../../utils/Storage";
 import {
     useChangePass,
     useConfirmPass,
-    useGetDetailProduct, useGetInforUser,
+    useGetDetailProduct,
     useGetParentCate,
     useGetProducts, useUpdateInfor
 } from "../../service/product";
@@ -37,15 +36,16 @@ function Header() {
     const categoryNav = useGetParentCate({})
     const [openModal,setOpenModal] = useState(false)
     const [textInfo,setTextInfo] = useState({
-        name:"",
-        phone:"",
-        email:"",
+        name: userInfo?.fullname,
+        phone:userInfo?.username,
+        email:userInfo?.email,
     })
     const [password, setPassword] = useState({
         oldPass:'',
         newPass1:'',
         newPass2:'',
     })
+
     const updateInfo=useUpdateInfor({
         id: userInfo?.id,
         phoneNumber: textInfo?.phone,
@@ -54,8 +54,14 @@ function Header() {
         photo:"123wwwd"
     })
 
+
     const updateInforUser =()=>{
-        updateInfo.refetch()
+        updateInfo.refetch().then(
+            (res)=>{
+                setUserInfo(res?.data)
+                alert('Cap nhat thanh cong')
+            }
+        )
     }
     const onChangeOldPass = (value)=>{
         setPassword((prev)=>({
@@ -92,6 +98,7 @@ function Header() {
     const handleChangeTextInfo=(value)=>{
 
     }
+
 
     useEffect(() => {
             if(confirmPass?.data){
@@ -207,7 +214,6 @@ function Header() {
 
                                     <li><Link to="/">Home</Link></li>
                                     <li><Link to="/shop">Shop</Link></li>
-                                    <li><Link to="/cart">Cart</Link></li>
                                     <li onClick={toOrder}><Link >My Order</Link></li>
                                     <li onClick={toDiscount}><Link>Discount</Link></li>
                                     <DanhMuc data={categoryNav?.data}/>
@@ -275,8 +281,8 @@ function Header() {
                 open={openModal} onClose={()=>{setOpenModal(false)}} className="px-5 pt-4">
                 <form style={{
                     backgroundColor: 'white',
-                    marginLeft: 700,
-                    marginRight:700,
+                    marginLeft: 300,
+                    marginRight:300,
                 }} className="border rounded p-4 shadow" autoComplete="off">
                     <div >
                         <p>Họ và tên:  {userInfo?.fullname}</p>
@@ -302,8 +308,8 @@ function Header() {
                 open={openCNTT} onClose={()=>{setOpenCNTT(false)}} className="px-5 pt-4">
                 <form style={{
                     backgroundColor: 'white',
-                    marginLeft: 700,
-                    marginRight: 700,
+                    marginLeft: 400,
+                    marginRight:400,
                 }} className="border rounded p-4 shadow" autoComplete="off">
                     <div>
                         <div>
@@ -312,6 +318,7 @@ function Header() {
                                     ...prev,
                                     name: value.target.value
                                 })))}
+                                value={textInfo?.fullname}
                                 name="name"
                                 fullWidth
                                 label="Tên khách hàng"
@@ -319,6 +326,7 @@ function Header() {
                             />
                             <TextField
                                 name="name"
+                                value={textInfo?.phone}
                                 onChange={(value)=>handleChangeTextInfo(setTextInfo((prev)=>({
                                     ...prev,
                                     phone: value.target.value
@@ -329,6 +337,7 @@ function Header() {
                             />
                             <TextField
                                 name="name"
+                                value={textInfo?.email}
                                 onChange={(value)=>handleChangeTextInfo(setTextInfo((prev)=>({
                                     ...prev,
                                     email: value.target.value

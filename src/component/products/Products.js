@@ -3,8 +3,14 @@ import FormProduct from "./FormProduct"
 import ListProduct from "./ListProduct"
 import callApi from "../callAPI/apiCaller";
 import { useParams } from "react-router-dom";
-import { Backdrop, CircularProgress, makeStyles, TextField } from "@material-ui/core";
+import { Backdrop, Box, CircularProgress, ListItem, ListItemIcon, ListItemText, makeStyles, TextField } from "@material-ui/core";
 import { Pagination } from "@material-ui/lab";
+import { Button } from "semantic-ui-react";
+import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
+import AllInboxIcon from '@material-ui/icons/AllInbox';
+
+
 
 function Products({ product, setProduct, loading, setLoading }) {
     const formDataInItValue = {
@@ -15,6 +21,7 @@ function Products({ product, setProduct, loading, setLoading }) {
         image: "",
         createDate: ""
     };
+    //let useHistory = useHistory();
     const [clickedRow, setClickedRow] = useState(-1);
     const [formData, setFormData] = useState(formDataInItValue);
     const { id } = useParams();
@@ -24,46 +31,22 @@ function Products({ product, setProduct, loading, setLoading }) {
     const onChangePage = (event, newPage) => {
         setPage(newPage);
     };
-    // const getTotalPage = () => {
-    //     callApi(`product`, "GET", null)
-    //         .then((response) => {
-    //             const { data } = response;
-    //             setTotalPage(Math.ceil(data.length / limit))
-    //         })
-    // }
-    // const getListProduct = () => {
-    //     callApi(`product`, "GET", null)
-    //         .then((response) => {
-    //             console.log(response)
-    //             setLoading(false)
-    //             const { data } = response;
-    //             setProduct(data);
-    //         })
-    // }
-    // useEffect(() => {
-    //     setLoading(true)
-    //     getListProduct();
-    // }, [id, page]);
+  
 
     return (
         <div className="justify-content-center flex-fill">
-            {/* <Backdrop open={loading} style={{ zIndex: "1000" }}>
-                <CircularProgress />
-            </Backdrop> */}
-            <FormProduct
-                formData={formData}
-                setProduct={setProduct}
-                product={product}
-                setFormData={setFormData}
-                setClickedRow={setClickedRow}
-                clickedRow={clickedRow}
-                categoriesId={id}
-                page={page}
-                setPage={setPage}
-                totalPage={totalPage}
-                setTotalPage={setTotalPage}
-                formDataInItValue={formDataInItValue}
-            />
+            <Box>
+                <Button>
+                <Link to="/admin/productDetail/Create" >
+                    <ListItem button className="pl-3">
+                        <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>
+                            <AllInboxIcon style={{ color: 'black' }} />
+                        </ListItemIcon>
+                        <ListItemText secondary="Tạo mới sản phẩm"/>
+                    </ListItem>
+                </Link>
+                </Button>
+            </Box>
             <ListProduct
                 formData={formData}
                 setFormData={setFormData}
@@ -74,7 +57,7 @@ function Products({ product, setProduct, loading, setLoading }) {
                 categoriesId={id}
                 page={page}
                 setPage={setPage}
-                
+
             />
             <Pagination
                 count={totalPage}

@@ -1,25 +1,11 @@
-import {Button, TextField} from "@material-ui/core";
+import {Button} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
-import {
-    BrowserRouter as Router,
-    Route,
-    Link,
-    NavLink,
-    BrowserRouter,
-    Switch,
-    useParams,
-    useHistory
-} from "react-router-dom";
-import callApi from "../../callAPI/apiCaller";
-import {useGetDetailProduct, useGetListOrder} from "../../../service/product";
-import Storage from "../../../utils/Storage";
-import axios from "axios";
+import { useGetListOrder} from "../../../service/product";
 import {useAuth} from "../../../context";
+import moment from "moment";
 
 const Order = () => {
-    const {userInfo, setUserInfo} = useAuth()
-    const checkout = useHistory()
-    const [cart, setCart] = useState([])
+    const {userInfo} = useAuth()
     const [order, setOrder] = useState([])
 
     const getListOrder = useGetListOrder({
@@ -39,84 +25,10 @@ const Order = () => {
 
     const total = (value) => {
         let a = 0
-
         value?.map((item, index) => {
-            a += item?.price
+            a += item?.price  * item?.quantity
         })
-
-        console.log('s232ss', a)
-
         return a
-    }
-
-// const total= order.reduce((total,item)=> {
-//     return total += item?.idProduct
-// })
-    console.log('userInfo', getListOrder?.data)
-    const onChangeHandler = (event) => {
-        console.log('event', event.target.value)
-        // if (event.target.value < 1) {
-        //
-        // } else {
-        //     setCart(prev => {
-        //         return [
-        //             ...prev,
-        //             {
-        //                 quantity: event.target.value,
-        //             }
-        //         ]
-        //
-        //     })
-        // }
-
-    }
-
-    const getDetailProduct = (id, quantity) => {
-        axios.get(`http://localhost:8080/product/findById/${id}`)
-            .then(res => {
-                const data = res.data;
-                setCart(prev => {
-                    return [
-                        ...prev,
-                        {
-                            quantity: quantity,
-                            productName: data?.name,
-                            image: data?.image,
-                            price: data?.price,
-                            productId: id
-                        }
-                    ]
-
-                })
-            })
-            .catch(error => console.log(error));
-    }
-
-    const toCheckout = () => {
-        if (cart) {
-            checkout.push("/checkout", {
-                item: cart
-            })
-        }
-    }
-
-    useEffect(() => {
-        if (Storage.get('cart')) {
-            Storage.get('cart')?.map((item, index) => {
-                getDetailProduct(item?.productId, item?.quantity)
-            })
-        }
-    }, [])
-
-    useEffect(() => {
-        Storage.save('cart', cart)
-    }, [cart])
-    const onHandleDelete = (id) => {
-        setCart(cart.filter((value, index) => {
-            return value.productId != id
-        }))
-        // Storage.delete('cart',id)
-
     }
 
     return (
@@ -127,7 +39,7 @@ const Order = () => {
                         <div className="row">
                             <div className="col-xl-12">
                                 <div className="hero-cap text-center">
-                                    <h2>Cart List</h2>
+                                    <h2>Order</h2>
                                 </div>
                             </div>
                         </div>
@@ -141,7 +53,11 @@ const Order = () => {
                             <table className="table">
                                 <thead>
                                 <tr>
+                                    <th scope="col">Ngày mua</th>
                                     <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col">Màu</th>
+                                    <th scope="col">Size</th>
+                                    <th scope="col">Số lượng</th>
                                     <th scope="col">Giá</th>
                                     <th scope="col">Tổng</th>
                                     <th scope="col">Trạng thái</th>
@@ -149,8 +65,16 @@ const Order = () => {
                                 </thead>
                                 <tbody>
                                 {order?.map((value, index) => {
+                                    console.log('order',order)
                                     return (
                                         <tr key={index}>
+                                            <td>
+                                                <div className="product_count">
+
+                                                            <p>{moment(value?.createDate).format('DD/MM/YYYY, h:mm:ss a')}</p>
+
+                                                </div>
+                                            </td>
                                             <td>
                                                 <div className="product_count">
                                                     {value?.listOrderDetailDTO?.map((item, index) => {
@@ -161,10 +85,37 @@ const Order = () => {
                                                 </div>
                                             </td>
                                             <td>
+                                                <div className="product_count">
+                                                    {value?.listOrderDetailDTO?.map((item, index) => {
+                                                        return (
+                                                            <p>{item?.colorName}</p>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="product_count">
+                                                    {value?.listOrderDetailDTO?.map((item, index) => {
+                                                        return (
+                                                            <p>{item?.sizeName}</p>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div className="product_count">
+                                                    {value?.listOrderDetailDTO?.map((item, index) => {
+                                                        return (
+                                                            <p>{item?.quantity}</p>
+                                                        )
+                                                    })}
+                                                </div>
+                                            </td>
+                                            <td>
                                                 <h5>
                                                     {value?.listOrderDetailDTO?.map((item, index) => {
                                                         return (
-                                                            <p>$ {item?.price}</p>
+                                                            <p>$ {item?.price * item?.quantity}</p>
                                                         )
                                                     })}
                                                 </h5>
@@ -195,9 +146,7 @@ const Order = () => {
                                                 </p>
                                             </td>
                                             <td>
-                                                <Button onClick={() => {
-                                                    onHandleDelete(value.productId)
-                                                }} style={{float: "right"}}>X</Button>
+                                                <Button style={{float: "right"}}>X</Button>
                                             </td>
                                         </tr>
                                     )
@@ -206,11 +155,6 @@ const Order = () => {
 
                                 </tbody>
                             </table>
-                            {/*<div className="checkout_btn_inner float-right">*/}
-                            {/*    <Link className="btn_1 mr-2" to="/shop">Continue Shopping</Link>*/}
-                            {/*    <button onClick={toCheckout} className="btn_1 checkout_btn_1">Proceed to checkout*/}
-                            {/*    </button>*/}
-                            {/*</div>*/}
                         </div>
                     </div>
                 </div>

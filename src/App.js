@@ -5,13 +5,13 @@ import {
     Redirect,
     useHistory
 } from "react-router-dom";
-import {Provider} from 'react-redux';
-import {store} from './store';
+import { Provider } from 'react-redux';
+import { store } from './store';
 import Home from "./component/views/home/Home"
 import Shop from "./component/views/shop/Shop"
 import SideBar from "./component/layout/SideBar"
 import Products from "./component/products/Products"
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./component/layout/Header";
 import Footer from "./component/layout/Footer";
 import Detail from "./component/views/detail/Detail";
@@ -19,13 +19,17 @@ import Cart from "./component/views/cart/Cart";
 import Checkout from "./component/views/checkout/Checkout";
 import Users from "./component/users/Users";
 import Login from "./component/views/login/Login";
-import {QueryClient, QueryClientProvider} from 'react-query'
-import {useAuth} from "./context";
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { useAuth } from "./context";
 import Storage from "./utils/Storage";
 import Order from "./component/views/Order";
 import Orders from "./component/orders/Orders";
 import ProductDiscount from "./component/views/ProductDiscount";
 import ListProductFindByCate from "./component/views/ListProductFindByCate";
+import DetailProduct from "./component/products/DetailProduct";
+import {ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import DetailProductForUpdate from "./component/products/DetailProductForUpdate";
 import CategoryChild from "./component/categoryChild/CategoryChild";
 import Categories from "./component/categories/Categories";
 import Sizes from "./component/sizes/Sizes"
@@ -33,11 +37,19 @@ import Event from "./component/admin/Event";
 
 import Register from "./component/views/register/Register";
 import Colors from "./component/colors/Colors"
+import 'antd/dist/antd.css';
+
+import Event from "./component/admin/Event";
+
+import Register from "./component/views/register/Register";
+import AdminCreateOrder from "./component/orders/AdminCreateOrder";
+import { ConfirmProvider } from "material-ui-confirm";
+import HeaderAdmin from "./component/layout/HeaderAdmin";
 
 const queryClient = new QueryClient()
 
 function App() {
-    const {userInfo, setUserInfo} = useAuth()
+    const { userInfo, setUserInfo } = useAuth()
     const userData = Storage.get('userData')
     const [product, setProduct] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -52,15 +64,28 @@ function App() {
 
     return (
         <Provider store={store}>
+            <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
             <QueryClientProvider client={queryClient}>
+                <ConfirmProvider>
                 <BrowserRouter>
                     <Switch>
                         <Route path="/admin">
                             {
                                 !!userData && userData?.roles.includes('Admin')
                                     ?
-                                    <div className="App d-flex h-100">
+                                    <div className="App d-flex h-100" style={{paddingTop: 50}}>
                                         <SideBar/>
+                                        <HeaderAdmin/>
                                         <Route path="/admin/orders/:id">
                                             <Orders/>
                                         </Route>
@@ -71,6 +96,21 @@ function App() {
                                                 loading={loading}
                                                 setLoading={setLoading}
                                             />
+                                        </Route>
+
+                                        <Route path="/admin/productDetail/:id">
+                                            <DetailProduct></DetailProduct>
+                                        </Route>
+                                        <Route path="/admin/productDetailUD/:id">
+                                            <DetailProductForUpdate/>
+                                        </Route>
+                                        <Route path="/admin/createOrder">
+                                                <AdminCreateOrder></AdminCreateOrder>
+                                            </Route>
+                                        
+
+                                        <Route path="/abc">
+                                            <DetailProduct/>
                                         </Route>
                                         <Route path="/admin/users">
                                             <Users/>
@@ -114,10 +154,12 @@ function App() {
                                     <Shop/>
                                 </Route>
                                 <Route path="/login" exact>
-                                    {!userData ? <Login/> : (userData?.roles?.[0] === 'Admin' ? <Redirect to={'/admin'}/> : <Redirect to={'/'}/>) }
+                                    {!userData ? <Login/> : (userData?.roles?.[0] === 'Admin' ?
+                                        <Redirect to={'/admin'}/> : <Redirect to={'/'}/>)}
                                 </Route>
                                 <Route path="/register" exact>
-                                    {!userData ? <Register/> : (userData?.roles?.[0] === 'Admin' ? <Redirect to={'/admin'}/> : <Redirect to={'/'}/>) }
+                                    {!userData ? <Register/> : (userData?.roles?.[0] === 'Admin' ?
+                                        <Redirect to={'/admin'}/> : <Redirect to={'/'}/>)}
                                 </Route>
                                 <Route path="/detail/:id" exact>
                                     <Detail/>
@@ -129,20 +171,21 @@ function App() {
                                     <Order/>
                                 </Route>
 
-                                <Route path="/discount" exact>
-                                    <ProductDiscount/>
-                                </Route>
-                                <Route path="/checkout" exact>
-                                    <Checkout/>
-                                </Route>
-                                <Route path="/findProduct" exact>
-                                    <ListProductFindByCate/>
-                                </Route>
-                            </Switch>
-                            <Footer/>
-                        </Route>
-                    </Switch>
-                </BrowserRouter>
+                                    <Route path="/discount" exact>
+                                        <ProductDiscount />
+                                    </Route>
+                                    <Route path="/checkout" exact>
+                                        <Checkout />
+                                    </Route>
+                                    <Route path="/findProduct" exact>
+                                        <ListProductFindByCate />
+                                    </Route>
+                                </Switch>
+                                <Footer />
+                            </Route>
+                        </Switch>
+                    </BrowserRouter>
+                </ConfirmProvider>
             </QueryClientProvider>
         </Provider>
 

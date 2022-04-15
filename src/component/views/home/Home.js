@@ -1,11 +1,38 @@
-import {BrowserRouter, Switch, Route, Link} from "react-router-dom";
-import {useGetInforUser, useGetTop10, useGetTop10Sell} from "../../../service/product";
-import {useEffect} from "react";
-import {useAuth} from "../../../context";
+import {Link, Link as RouterLink, useHistory} from "react-router-dom";
+import {useGetDetailProduct, useGetTop10, useGetTop10Sell} from "../../../service/product";
+import {useEffect, useState} from "react";
+import { styled } from '@mui/material/styles';
+import {Card, Grid, Typography,Box,Stack} from "@mui/material";
 
+const ProductImgStyle = styled('img')({
+    top: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    position: 'absolute'
+});
 
 function Home() {
+    let detail = useHistory();
     const top10Products = useGetTop10({})
+    const [idProduct, setIdProduct] = useState()
+    const detailProduct = useGetDetailProduct({
+        id: idProduct
+    })
+    const toDetailProduct = (item) => {
+        setIdProduct(item?.id)
+    }
+    useEffect(() => {
+        if (idProduct) {
+            detailProduct.refetch().then(res => {
+                if (res) {
+                    detail.push(`/detail/${idProduct}`, {
+                        item: res?.data
+                    })
+                }
+            })
+        }
+    }, [idProduct])
 
     useEffect(() => {
         top10Products.refetch()
@@ -18,79 +45,73 @@ function Home() {
 
     return (
         <div>
-            <div className="section">
-                <div className="slider-area ">
-                    <div className="slider-active">
-                        <div className="single-slider slider-height d-flex align-items-center slide-bg">
-                            <div className="container">
-                                <div className="row justify-content-between align-items-center">
-                                    <div className="col-xl-8 col-lg-8 col-md-8 col-sm-8">
-                                        <div className="hero__caption">
-                                            <h1 data-animation="fadeInLeft" data-delay=".4s"
-                                                data-duration="2000ms">Select Your
-                                                New Perfect Style</h1>
-                                            <p data-animation="fadeInLeft" data-delay=".7s" data-duration="2000ms">Ut
-                                                enim ad
-                                                minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                                ex ea
-                                                commodo consequat is aute irure.</p>
-                                            <div className="hero__btn" data-animation="fadeInLeft" data-delay=".8s"
-                                                 data-duration="2000ms">
-                                                <Link style={{color: "white"}} href="industries.html"
-                                                      className="btn hero-btn">Shop Now</Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-xl-3 col-lg-3 col-md-4 col-sm-4 d-none d-sm-block">
-                                        <div className="hero__img" data-delay=".4s">
-                                            <img src="./assets/img/hero/watch.png"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="popular-items section-padding30">
+            <div >
+                <div className="popular-items section-padding30" style={{marginLeft:50}}>
                     <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-xl-7 col-lg-8 col-md-10">
+
+
                                 <div className="section-tittle mb-70 text-center">
                                     <h2>Top 10 sản phẩm yêu thích</h2>
-                                    <p>Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                                        magna
-                                        aliqua. Quis ipsum suspendisse ultrices gravida.</p>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div className="row">
+                        <Grid container spacing={3}>
+
                             {
                                 top10Products?.data?.map((item, index) => {
                                     return (
-                                        <div className="col-lg-2">
-                                            <div className="single-popular-items mb-50 text-center">
-                                                <div className="popular-img">
-                                                    <img src={item?.image}/>
-                                                    <div className="favorit-items">
-                                                        <span className="flaticon-heart"></span>
-                                                    </div>
-                                                </div>
-                                                <div className="popular-caption">
+                                        <Grid  key={item?.id} item xs={12} sm={6} md={2.2} onClick={() => toDetailProduct(item)}>
+                                                <Card>
+                                                    <Box sx={{ pt: '100%', position: 'relative' }}>
 
-                                                    <span>$ {item?.name}</span>
-                                                    <span>$ {item?.price}</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                            {/*<Label*/}
+                                                            {/*    variant="filled"*/}
+                                                            {/*    // color={(status === 'sale' && 'error') || 'info'}*/}
+                                                            {/*    sx={{*/}
+                                                            {/*        zIndex: 9,*/}
+                                                            {/*        top: 16,*/}
+                                                            {/*        right: 16,*/}
+                                                            {/*        position: 'absolute',*/}
+                                                            {/*        textTransform: 'uppercase'*/}
+                                                            {/*    }}*/}
+                                                            {/*>*/}
+                                                            {/*   123*/}
+                                                            {/*</Label>*/}
+
+                                                        <ProductImgStyle src={item?.image} />
+                                                    </Box>
+
+                                                    <Stack spacing={2} sx={{ p: 3 }}>
+                                                        <Link to="#" color="inherit" underline="hover" component={RouterLink}>
+                                                            <Typography variant="subtitle2" noWrap>
+                                                                {item?.name}}
+                                                            </Typography>
+                                                        </Link>
+
+                                                        <Stack direction="row" alignItems="center" justifyContent="space-between">
+
+                                                            <Typography variant="subtitle1">
+                                                                {/*<Typography*/}
+                                                                {/*    component="span"*/}
+                                                                {/*    variant="body1"*/}
+                                                                {/*    sx={{*/}
+                                                                {/*        color: 'text.disabled',*/}
+                                                                {/*        textDecoration: 'line-through'*/}
+                                                                {/*    }}*/}
+                                                                {/*>*/}
+                                                                {/*   123*/}
+                                                                {/*</Typography>*/}
+                                                                &nbsp;
+                                                                $ {item?.price}
+                                                            </Typography>
+                                                        </Stack>
+                                                    </Stack>
+                                                </Card>
+                                        </Grid>
                                     )
                                 })
                             }
 
-
-
-
-                        </div>
+                        </Grid>
                         <div className="row justify-content-center">
                             <div className="room-btn pt-70">
                                 <Link style={{color: "white"}} href="catagori.html" className="btn view-btn1">View More
@@ -99,79 +120,73 @@ function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="gallery-area">
-                    <div className="container-fluid p-0 fix">
-                        <div className="row">
-                            <div className="col-xl-6 col-lg-4 col-md-6 col-sm-6">
-                                <div className="single-gallery mb-30">
-                                    <div className="gallery-img big-img"
-                                         style={{backgroundImage: `url("assets/img/gallery/gallery1.png")`}}></div>
 
-                                </div>
-                            </div>
-                            <div className="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-                                <div className="single-gallery mb-30">
-                                    <div className="gallery-img big-img"
-                                         style={{backgroundImage: `url("assets/img/gallery/gallery2.png")`}}></div>
-
-                                </div>
-                            </div>
-                            <div className="col-xl-3 col-lg-4 col-md-12">
-                                <div className="row">
-                                    <div className="col-xl-12 col-lg-12 col-md-6 col-sm-6">
-                                        <div className="single-gallery mb-30">
-                                            <div className="gallery-img small-img"
-                                                 style={{backgroundImage: `url("assets/img/gallery/gallery3.png")`}}></div>
-
-                                        </div>
-                                    </div>
-                                    <div className="col-xl-12 col-lg-12  col-md-6 col-sm-6">
-                                        <div className="single-gallery mb-30">
-                                            <div className="gallery-img small-img"
-                                                 style={{backgroundImage: `url("assets/img/gallery/gallery3.png")`}}></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="popular-items section-padding30">
+                <div className="popular-items section-padding30" style={{marginLeft:50}}>
                     <div className="container">
-                        <div className="row justify-content-center">
-                            <div className="col-xl-7 col-lg-8 col-md-10">
-                                <div className="section-tittle mb-70 text-center">
-                                    <h2>Top 10 sản phẩm bán chạy</h2>
-                                    <p>Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-                                        magna
-                                        aliqua. Quis ipsum suspendisse ultrices gravida.</p>
-                                </div>
-                            </div>
+
+
+                        <div className="section-tittle mb-70 text-center">
+                            <h2>Top 10 sản phẩm bán chạy</h2>
                         </div>
-                        <div className="row">
+
+                        <Grid container spacing={3}>
+
                             {
                                 top10ProductsSell?.data?.map((item, index) => {
                                     return (
-                                        <div className="col-lg-2">
-                                            <div className="single-popular-items mb-50 text-center">
-                                                <div className="popular-img">
-                                                    <img src={item?.image}/>
-                                                    <div className="favorit-items">
-                                                        <span className="flaticon-heart"></span>
-                                                    </div>
-                                                </div>
-                                                <div className="popular-caption">
+                                        <Grid  key={item?.id} item xs={12} sm={6} md={2.2}>
+                                            <Card>
+                                                <Box sx={{ pt: '100%', position: 'relative' }}>
 
-                                                    <span>$ {item?.name}</span>
-                                                    <span>$ {item?.price}</span>
-                                                </div>
-                                            </div>
-                                        </div>
+                                                    {/*<Label*/}
+                                                    {/*    variant="filled"*/}
+                                                    {/*    // color={(status === 'sale' && 'error') || 'info'}*/}
+                                                    {/*    sx={{*/}
+                                                    {/*        zIndex: 9,*/}
+                                                    {/*        top: 16,*/}
+                                                    {/*        right: 16,*/}
+                                                    {/*        position: 'absolute',*/}
+                                                    {/*        textTransform: 'uppercase'*/}
+                                                    {/*    }}*/}
+                                                    {/*>*/}
+                                                    {/*   123*/}
+                                                    {/*</Label>*/}
+
+                                                    <ProductImgStyle src={item?.image} />
+                                                </Box>
+
+                                                <Stack spacing={2} sx={{ p: 3 }}>
+                                                    <Link to="#" color="inherit" underline="hover" component={RouterLink}>
+                                                        <Typography variant="subtitle2" noWrap>
+                                                            {item?.name}}
+                                                        </Typography>
+                                                    </Link>
+
+                                                    <Stack direction="row" alignItems="center" justifyContent="space-between">
+
+                                                        <Typography variant="subtitle1">
+                                                            {/*<Typography*/}
+                                                            {/*    component="span"*/}
+                                                            {/*    variant="body1"*/}
+                                                            {/*    sx={{*/}
+                                                            {/*        color: 'text.disabled',*/}
+                                                            {/*        textDecoration: 'line-through'*/}
+                                                            {/*    }}*/}
+                                                            {/*>*/}
+                                                            {/*   123*/}
+                                                            {/*</Typography>*/}
+                                                            &nbsp;
+                                                            $ {item?.price}
+                                                        </Typography>
+                                                    </Stack>
+                                                </Stack>
+                                            </Card>
+                                        </Grid>
                                     )
                                 })
                             }
 
-                        </div>
+                        </Grid>
                         <div className="row justify-content-center">
                             <div className="room-btn pt-70">
                                 <Link style={{color: "white"}} href="catagori.html" className="btn view-btn1">View More
@@ -180,138 +195,9 @@ function Home() {
                         </div>
                     </div>
                 </div>
-                <div className="video-area">
-                </div>
-                <div className="watch-area section-padding30">
-                    <div className="container">
-                        <div className="row align-items-center justify-content-between padding-130">
-                            <div className="col-lg-5 col-md-6">
-                                <div className="watch-details mb-40">
-                                    <h2>Watch of Choice</h2>
-                                    <p>Enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        ex ea
-                                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-                                        esse.</p>
-                                    <Link style={{color: "white"}} href="shop.html" className="btn">Show Watches</Link>
-                                </div>
-                            </div>
-                            <div className="col-lg-6 col-md-6 col-sm-10">
-                                <div className="choice-watch-img mb-40">
-                                    <img src="assets/img/gallery/choce_watch1.png"/>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="row align-items-center justify-content-between">
-                            <div className="col-lg-6 col-md-6 col-sm-10">
-                                <div className="choice-watch-img mb-40">
-                                    <img src="assets/img/gallery/choce_watch2.png"/>
-                                </div>
-                            </div>
-                            <div className="col-lg-5 col-md-6">
-                                <div className="watch-details mb-40">
-                                    <h2>Watch of Choice</h2>
-                                    <p>Enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                                        ex ea
-                                        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit
-                                        esse.</p>
-                                    <Link style={{color: "white"}} href="shop.html" className="btn">Show Watches</Link>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="shop-method-area">
-                    <div className="container">
-                        <div className="method-wrapper">
-                            <div className="row d-flex justify-content-between">
-                                <div className="col-xl-4 col-lg-4 col-md-6">
-                                    <div className="single-method mb-40">
-                                        <i className="ti-package"></i>
-                                        <h6>Free Shipping Method</h6>
-                                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6">
-                                    <div className="single-method mb-40">
-                                        <i className="ti-unlock"></i>
-                                        <h6>Secure Payment System</h6>
-                                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                                    </div>
-                                </div>
-                                <div className="col-xl-4 col-lg-4 col-md-6">
-                                    <div className="single-method mb-40">
-                                        <i className="ti-reload"></i>
-                                        <h6>Secure Payment System</h6>
-                                        <p>aorem ixpsacdolor sit ameasecur adipisicing elitsf edasd.</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
-            <div className="footer-area footer-padding">
-                <div className="container">
-                    <div className="row d-flex justify-content-between">
-                        <div className="col-xl-3 col-lg-3 col-md-5 col-sm-6">
-                            <div className="single-footer-caption mb-50">
-                                <div className="single-footer-caption mb-30">
-                                    <div className="footer-logo">
-                                        <Link style={{color: "white"}} to="/"><img
-                                            src="assets/img/logo/logo2_footer.png"/></Link>
-                                    </div>
-                                    <div className="footer-tittle">
-                                        <div className="footer-pera">
-                                            <p>Asorem ipsum adipolor sdit amet, consectetur adipisicing elitcf sed do
-                                                eiusmod tem.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-xl-2 col-lg-3 col-md-3 col-sm-5">
-                            <div className="single-footer-caption mb-50">
-                                <div className="footer-tittle">
-                                    <h4>Quick Links</h4>
-                                    <ul>
-                                        <li><Link style={{color: "white"}} href="#">About</Link></li>
-                                        <li><Link style={{color: "white"}} href="#"> Offers & Discounts</Link></li>
-                                        <li><Link style={{color: "white"}} href="#"> Get Coupon</Link></li>
-                                        <li><Link style={{color: "white"}} href="#"> Contact Us</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-xl-3 col-lg-3 col-md-4 col-sm-7">
-                            <div className="single-footer-caption mb-50">
-                                <div className="footer-tittle">
-                                    <h4>New Products</h4>
-                                    <ul>
-                                        <li><Link style={{color: "white"}} href="#">Woman Cloth</Link></li>
-                                        <li><Link style={{color: "white"}} href="#">Fashion Accessories</Link></li>
-                                        <li><Link style={{color: "white"}} href="#"> Man Accessories</Link></li>
-                                        <li><Link style={{color: "white"}} href="#"> Rubber made Toys</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-xl-3 col-lg-3 col-md-5 col-sm-7">
-                            <div className="single-footer-caption mb-50">
-                                <div className="footer-tittle">
-                                    <h4>Support</h4>
-                                    <ul>
-                                        <li><Link style={{color: "white"}} href="#">Frequently Asked Questions</Link>
-                                        </li>
-                                        <li><Link style={{color: "white"}} href="#">Terms & Conditions</Link></li>
-                                        <li><Link style={{color: "white"}} href="#">Privacy Policy</Link></li>
-                                        <li><Link style={{color: "white"}} href="#">Report a Payment Issue</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
     )
 }
