@@ -47,7 +47,6 @@ function Products({ product, setProduct, loading, setLoading }) {
                 </Link>
                 </Button>
             </Box>
-            
             <ListProduct
                 formData={formData}
                 setFormData={setFormData}
