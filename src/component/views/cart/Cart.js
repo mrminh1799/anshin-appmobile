@@ -14,6 +14,7 @@ import {useAuth} from "../../../context";
 function Cart() {
     const checkout = useHistory()
     const [cart, setCart] = useState([])
+    const [cartAccount, setCartAccount] = useState([])
     const {userInfo, setUserInfo} = useAuth()
     const listCart = useGetListCart({
         id: userInfo?.id
@@ -23,19 +24,36 @@ function Cart() {
         axios.get(`http://localhost:8080/product/findById/${id}`)
             .then(res => {
                 const data = res.data;
-                setCart(prev => {
-                    return [
-                        ...prev,
-                        {
-                            quantity: quantity,
-                            productName: data?.name,
-                            image: data?.image,
-                            price: data?.price,
-                            productId: id
-                        }
-                    ]
+                if(userInfo){
+                    setCartAccount(prev => {
+                        return [
+                            ...prev,
+                            {
+                                quantity: quantity,
+                                productName: data?.name,
+                                image: data?.image,
+                                price: data?.price,
+                                productId: id
+                            }
+                        ]
 
-                })
+                    })
+                }else {
+                    setCart(prev => {
+                        return [
+                            ...prev,
+                            {
+                                quantity: quantity,
+                                productName: data?.name,
+                                image: data?.image,
+                                price: data?.price,
+                                productId: id
+                            }
+                        ]
+
+                    })
+                }
+
             })
             .catch(error => console.log(error));
     }
@@ -49,12 +67,12 @@ function Cart() {
     useEffect(() => {
         if (userInfo) {
             if (listCart?.data) {
-                setCart(listCart?.data)
+                setCartAccount(listCart?.data)
             }
         }
     }, [listCart?.data])
 
-
+    console.log('listCart?.data',cartAccount)
     const onChangeHandler = (event) => {
         // if (event.target.value < 1) {
         //
@@ -74,9 +92,9 @@ function Cart() {
 
 
     const toCheckout = () => {
-        if (cart) {
+        if (cart || cartAccount) {
             checkout.push("/checkout", {
-                item: cart
+                item: userInfo?cartAccount: cart
             })
         }
     }
@@ -131,7 +149,7 @@ function Cart() {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {cart?.map((value, index) => {
+                                    {cartAccount?.map((value, index) => {
                                         return (
                                             <tr key={index}>
                                                 <td>
@@ -178,8 +196,8 @@ function Cart() {
                                             <h5>Subtotal</h5>
                                         </td>
                                         <td>
-                                            <h5>${cart.reduce((total, cart) => {
-                                                return total += Number(cart.quantity) * Number(cart.price);
+                                            <h5>${cartAccount.reduce((total, cartAccount) => {
+                                                return total += Number(cartAccount.quantity) * Number(cartAccount.price);
                                             }, 0)}</h5>
                                         </td>
                                     </tr>

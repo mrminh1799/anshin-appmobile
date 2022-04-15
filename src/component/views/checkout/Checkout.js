@@ -1,17 +1,11 @@
 import {Button, TextField} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
 import {
-    BrowserRouter as Router,
-    Route,
     Link,
-    NavLink,
-    BrowserRouter,
-    Switch,
-    useParams,
     useLocation
 } from "react-router-dom";
 import {useAuth} from "../../../context";
-import {useOrder} from "../../../service/product";
+import {useGetInforUser, useOrder} from "../../../service/product";
 import Storage from "../../../utils/Storage";
 
 
@@ -21,13 +15,16 @@ const Checkout = () => {
     const [stateDetails,setSateDetails]=useState([])
     const location = useLocation()
     const {item} = location.state
-    console.log('par',item)
+    const getInfoUser = useGetInforUser({
+        id: userInfo?.id
+    })
+    // const
     const [product, setProduct] = useState([])
     const [formData, setFormData] = useState({
-        fullname: "",
+        fullname: userInfo?userInfo?.fullname:"",
         address1: "",
         address2: "",
-        phone: "",
+        phone: userInfo?userInfo?.username:"",
     });
 
     const order = useOrder({
@@ -38,7 +35,12 @@ const Checkout = () => {
         phoneNumber: formData?.phone,
         listOrderProductDetailDTO: stateDetails
     })
-    console.log('order', order)
+    useEffect(() => {
+        if(userInfo){
+            getInfoUser.refetch()
+        }
+    },[])
+
     useEffect(() => {
         if(item){
             item?.map((item)=>{
@@ -112,7 +114,8 @@ const Checkout = () => {
                                             }
                                             }
                                             fullWidth
-                                            label="Full name"
+                                            value={userInfo?formData?.fullname:""}
+                                            label={"Full name"}
                                             className="my-2"
                                             type="text"
                                             id="lastname"
@@ -128,8 +131,9 @@ const Checkout = () => {
                                                 }))
                                             }
                                             }
+                                            value={userInfo?formData?.phone:""}
                                             fullWidth
-                                            label="Phone number"
+                                            label={"Phone Number"}
                                             className="my-2"
                                             type="text"
                                             id="phone"
@@ -200,7 +204,7 @@ const Checkout = () => {
                                         </li>
                                     </ul>
                                     <Button variant="contained" color="primary" className="mt-5 w-100"
-                                            onClick={onSubmitHandler}>Proceed to Paypal</Button>
+                                            onClick={onSubmitHandler}>Đặt hàng</Button>
                                 </div>
                             </div>
                         </div>

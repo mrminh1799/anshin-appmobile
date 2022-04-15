@@ -3,8 +3,6 @@ import {useEffect, useState} from "react";
 import styles from '../../../style/productStyle.module.css'
 
 import {
-    Link,
-    useParams,
     useLocation, useHistory
 } from "react-router-dom";
 import {useAddCart, useGetCheckProduct, useGetColorProduct, useGetSizeProduct} from "../../../service/product";
@@ -20,7 +18,7 @@ const Detail = () => {
     const {item} = location.state
     const checkout = useHistory()
     const [cart, setCart] = useState(null)
-
+    console.log('item?.id',item?.id)
     const [product, setProduct] = useState({
         productId: item?.id,
         colorId: "",
@@ -29,13 +27,14 @@ const Detail = () => {
         size: "",
         quantity: 1,
         image: item?.image,
-        name: item?.name
+        name: item?.name,
+        price: item?.price
     });
-    // const addToCartApi = useAddCart({
-    //     id:userInfo?.id,
-    //     idProduct:,
-    //     quantity:
-    // })
+    const addToCartApi = useAddCart({
+        id:userInfo?.id,
+        idProduct:item?.id,
+        quantity:product?.quantity
+    })
     const checkProduct = useGetCheckProduct({
         idColor: product?.colorId,
         idSize: product?.sizeId,
@@ -57,6 +56,7 @@ const Detail = () => {
     const size = useGetSizeProduct({
         id: item?.id
     })
+
     const color = useGetColorProduct({
         id: item?.id
     })
@@ -143,28 +143,34 @@ const Detail = () => {
         // }else {
         //
         // }
-        if (!!Storage.get('cart')) {
-            let check = true
-            let cart = Storage.get('cart')?.map((item, i) => {
-                if (item.id == product.productId) {
-                    check = false
-                    item.quantity = Number(item.quantity) + Number(product.quantity)
+        if(userInfo){
+            addToCartApi.refetch((res)=>{
+                console.log('res',res)})
+        }else {
+            if (!!Storage.get('cart')) {
+                let check = true
+                let cart = Storage.get('cart')?.map((item, i) => {
+                    if (item.id == product.productId) {
+                        check = false
+                        item.quantity = Number(item.quantity) + Number(product.quantity)
+                    }
+                    return item
+                })
+
+                if (check) {
+                    Storage.save('cart', [...Storage.get('cart'), product])
+                } else {
+                    Storage.save('cart', cart)
                 }
-                return item
-            })
-
-            if (check) {
-                Storage.save('cart', [...Storage.get('cart'), product])
             } else {
-                Storage.save('cart', cart)
+                Storage.save('cart', [product])
             }
-        } else {
-            Storage.save('cart', [product])
+            // Storage.delete('cart')
+            alert("Sản phầm đã thêm vào giỏ hàng");
         }
-        // Storage.delete('cart')
-        alert("Sản phầm đã thêm vào giỏ hàng");
-    }
 
+    }
+    console.log('addToCart',addToCartApi)
     return (
         <div>
             <div className="slider-area ">
@@ -200,10 +206,11 @@ const Detail = () => {
                                 {/*    <span className="review-no">41 reviews</span>*/}
                                 {/*</div>*/}
 
-                                <h4 className={styles.price}>current price: <span>{product.price} $</span></h4>
+                                <h4 className={styles.price}>Giá: <span>{item?.price} $</span></h4>
                                 <h5 className={styles.sizes}>size:
                                     {
                                         size?.data?.map((item, index) => {
+                                            console.log('ád',item)
                                             return (
                                                 <input className="btn btn-primary ml-1"
                                                        onClick={() => handleClickSizes(item)} type="button"
