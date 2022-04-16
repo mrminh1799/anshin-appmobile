@@ -1,23 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, {useState} from 'react';
 import List from '@material-ui/core/List';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import WatchOutlinedIcon from '@material-ui/icons/WatchOutlined';
 import CategoryOutlinedIcon from '@material-ui/icons/CategoryOutlined';
-import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
-import Product from "../products/Products"
-import TreeView from "@material-ui/lab/TreeView";
+import {Link, useHistory} from "react-router-dom";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
-import TreeItem from "@material-ui/lab/TreeItem";
-import { Category, ExpandLess, StarBorder } from '@material-ui/icons';
-import callApi from '../callAPI/apiCaller';
-import { Collapse, ListItemButton } from "@mui/material";
+import {ExpandLess} from '@material-ui/icons';
+import {Collapse, ListItemButton} from "@mui/material";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -45,6 +37,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function SideBar() {
+
+    const history = useHistory()
+
     const classes = useStyles();
 
     const [open, setOpen] = useState(true);
@@ -57,121 +52,108 @@ function SideBar() {
 
     return (
         <div className={classes.root}>
-            <div className="position-fixed h-100 hidescroll" style={{ overflowY: "scroll" }}>
+            <div className="position-fixed h-100 hidescroll" style={{overflowY: "scroll", marginTop: -50}}>
                 <div className={classes.bg}>
-                    <List style={{ width: '250px' }} component="nav" className="h-100" aria-label="main mailbox folders">
-                        <div className="border border-light" style={{ margin: 30 }}>
-                            <h1 className={"text-center m-4 text-white"}><Link to="/">SHOP</Link></h1>
+                    <List style={{width: '250px'}} component="nav" className="h-100" aria-label="main mailbox folders">
+                        <div className="border border-light" style={{margin: 30}}>
+                            <h1 onClick={()=>history.push('/')} className={"text-center m-4 text-white"}>SHOP</h1>
                         </div>
                         <div className={classes.bgList}>
-
-                            <Link to="/admin/dashboard">
-                                <ListItem button className="pl-3">
-                                    <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>
-                                        <AllInboxIcon style={{ color: 'white' }} />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Tổng quan" />
-                                </ListItem>
-                            </Link>
-                            <Link to="/admin/createOrder">
-                                <ListItem button className="pl-3">
-                                    <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>
-                                        <AllInboxIcon style={{ color: 'white' }} />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Bán hàng" />
-                                </ListItem>
-                            </Link>
-                            <ListItem button className="pl-3" onClick={handleClick}>
-                                <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>
-                                    <CategoryOutlinedIcon style={{ color: 'white' }} />
+                            <ListItem onClick={() => history.push('/admin/dashboard')} button className="pl-3">
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <AllInboxIcon style={{color: 'white'}}/>
                                 </ListItemIcon>
-                                <ListItemText primary="Đơn hàng" />
-                                {open ? <ExpandLess /> : <ExpandMoreIcon />}
+                                <ListItemText primary="Tổng quan"/>
+                            </ListItem>
+                            <ListItem onClick={() => history.push('/admin/createOrder')} button className="pl-3">
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <AllInboxIcon style={{color: 'white'}}/>
+                                </ListItemIcon>
+                                <ListItemText primary="Bán hàng"/>
+                            </ListItem>
+                            <ListItem button className="pl-3" onClick={handleClick}>
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <CategoryOutlinedIcon style={{color: 'white'}}/>
+                                </ListItemIcon>
+                                <ListItemText primary="Đơn hàng"/>
+                                {open ? <ExpandLess/> : <ExpandMoreIcon/>}
                             </ListItem>
                             <Collapse in={open} timeout="auto" unmountOnExit>
-                                <Link to="/admin/orders/1">
-                                    <List component="div" disablePadding>
-                                        <ListItemButton sx={{ pl: 9 }}>
-                                            <ListItemText primary="Chờ xử lý" />
-                                        </ListItemButton>
-                                    </List>
-                                </Link>
-                                <Link to="/admin/orders/2">
-                                    <List component="div" disablePadding>
-                                        <ListItemButton sx={{ pl: 9 }}>
-                                            <ListItemText primary="Đã xử lý" />
-                                        </ListItemButton>
-                                    </List>
-                                </Link>
-                                <Link to="/admin/orders/6">
-                                    <List component="div" disablePadding>
-                                        <ListItemButton sx={{pl: 9}}>
-                                            <ListItemText primary="Đã đổi trả"/>
-                                        </ListItemButton>
-                                    </List>
-                                </Link>
-                                <Link to="/admin/orders/3">
-                                    <List component="div" disablePadding>
-                                        <ListItemButton sx={{ pl: 9 }}>
-                                            <ListItemText primary="Hoàn thành" />
-                                        </ListItemButton>
-                                    </List>
-                                </Link>
-                                <Link to="/admin/orders/0">
-                                    <List component="div" disablePadding>
-                                        <ListItemButton sx={{ pl: 9 }}>
-                                            <ListItemText primary="Thất bại" />
-                                        </ListItemButton>
-                                    </List>
-                                </Link>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/orders/1')} sx={{pl: 9}}>
+                                        <ListItemText primary="Chờ xử lý"/>
+                                    </ListItemButton>
+                                </List>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/orders/2')} sx={{pl: 9}}>
+                                        <ListItemText primary="Đã xử lý"/>
+                                    </ListItemButton>
+                                </List>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/orders/3')} sx={{pl: 9}}>
+                                        <ListItemText primary="Hoàn thành"/>
+                                    </ListItemButton>
+                                </List>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/orders/6')} sx={{pl: 9}}>
+                                        <ListItemText primary="Đã đổi trả"/>
+                                    </ListItemButton>
+                                </List>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/orders/0')} sx={{pl: 9}}>
+                                        <ListItemText primary="Thất bại"/>
+                                    </ListItemButton>
+                                </List>
                             </Collapse>
                             <ListItem button className="pl-3" onClick={() => setOpenCate(!openCate)}>
-                                <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>
-                                    <CategoryOutlinedIcon style={{ color: 'white' }} />
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <CategoryOutlinedIcon style={{color: 'white'}}/>
                                 </ListItemIcon>
-                                <ListItemText primary="Danh mục" />
-                                {openCate ? <ExpandLess /> : <ExpandMoreIcon />}
+                                <ListItemText primary="Danh mục"/>
+                                {openCate ? <ExpandLess/> : <ExpandMoreIcon/>}
                             </ListItem>
                             <Collapse in={openCate} timeout="auto" unmountOnExit>
-                                <Link to="/admin/categories">
-                                    <List component="div" disablePadding>
-                                        <ListItemButton sx={{ pl: 9 }}>
-                                            <ListItemText primary="Danh mục cha" />
-                                        </ListItemButton>
-                                    </List>
-                                </Link>
-                                <Link to="/admin/childCategory">
-                                    <List component="div" disablePadding>
-                                        <ListItemButton sx={{ pl: 9 }}>
-                                            <ListItemText primary="Danh mục con" />
-                                        </ListItemButton>
-                                    </List>
-                                </Link>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/categories')} sx={{pl: 9}}>
+                                        <ListItemText primary="Danh mục cha"/>
+                                    </ListItemButton>
+                                </List>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/childCategory')} sx={{pl: 9}}>
+                                        <ListItemText primary="Danh mục con"/>
+                                    </ListItemButton>
+                                </List>
                             </Collapse>
-                            <Link to="/admin/products">
-                                <ListItem button className="pl-3">
-                                    <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>
-                                        <AllInboxIcon style={{ color: 'white' }} />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Sản phẩm" />
-                                </ListItem>
-                            </Link>
-                            <Link to="/admin/event">
-                                <ListItem button className="pl-3">
-                                    <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>
-                                        <AllInboxIcon style={{ color: 'white' }} />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Sự kiện" />
-                                </ListItem>
-                            </Link>
-                            <Link to="/admin/users">
-                                <ListItem button className="pl-3">
-                                    <ListItemIcon className="pl-1" style={{ minWidth: 45 }}>
-                                        <AllInboxIcon style={{ color: 'white' }} />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Tài khoản" />
-                                </ListItem>
-                            </Link>
+                            <ListItem onClick={() => history.push('/admin/products')} button className="pl-3">
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <AllInboxIcon style={{color: 'white'}}/>
+                                </ListItemIcon>
+                                <ListItemText primary="Sản phẩm"/>
+                            </ListItem>
+                            <ListItem onClick={() => history.push('/admin/event')} button className="pl-3">
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <AllInboxIcon style={{color: 'white'}}/>
+                                </ListItemIcon>
+                                <ListItemText primary="Sự kiện"/>
+                            </ListItem>
+                            <ListItem onClick={() => history.push('/admin/users')} button className="pl-3">
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <AllInboxIcon style={{color: 'white'}}/>
+                                </ListItemIcon>
+                                <ListItemText primary="Tài khoản"/>
+                            </ListItem>
+                            <ListItem onClick={() => history.push('/admin/sizes')} button className="pl-3">
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <AllInboxIcon style={{color: 'white'}}/>
+                                </ListItemIcon>
+                                <ListItemText primary="Size"/>
+                            </ListItem>
+                            <ListItem onClick={() => history.push('/admin/colors')} button className="pl-3">
+                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
+                                    <AllInboxIcon style={{color: 'white'}}/>
+                                </ListItemIcon>
+                                <ListItemText primary="Color"/>
+                            </ListItem>
                         </div>
                     </List>
                 </div>

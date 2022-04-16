@@ -1,19 +1,26 @@
 import {FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
 import React, {useEffect, useState} from "react";
-import {useHistory} from "react-router-dom";
+import {Link as RouterLink, Link, useHistory} from "react-router-dom";
 import {
     useGetAllProducts,
     useGetDetailProduct, useGetFilterProduct,
     useGetListColor,
     useGetListSize
 } from "../../../service/product";
+import './style.css'
 
-
+import { styled } from '@mui/material/styles';
+import {Card, Grid, Typography,Box,Stack} from "@mui/material";
+const ProductImgStyle = styled('img')({
+    top: 0,
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    position: 'absolute'
+});
 function Shop() {
     let detail = useHistory();
-    const [product, setProduct] = useState([]);
-    const [category, setCategory] = useState();
     const [page, setPage] = useState(1);
     const [totalPage, setTotalPage] = useState(1);
     const [idProduct, setIdProduct] = useState()
@@ -22,8 +29,12 @@ function Shop() {
     const listColor = useGetListColor({})
     const listSize = useGetListSize({})
     const [checkFilter,setCheckFilter] = useState(true)
-
-
+    const [pagination, setPagination] = useState({
+        index: 0,
+        size: 8
+    });
+    const [order, setOrder] = useState([])
+    const [listOrder, setListOrder] = useState([])
     const [filterProduct, setFilterProduct] = useState({
         size: 0,
         priceFrom: 0,
@@ -60,10 +71,7 @@ function Shop() {
             priceTo: 100000000
         }
     ]
-    const allProducts = useGetAllProducts({
-        currenPage: 1,
-        sizePage: 9
-    })
+    const allProducts = useGetAllProducts({})
     const detailProduct = useGetDetailProduct({
         id: idProduct
     })
@@ -74,7 +82,6 @@ function Shop() {
         priceFrom: filterProduct?.priceFrom,
         priceTo: filterProduct?.priceTo
     })
-
     const toDetailProduct = (item) => {
         setIdProduct(item?.id)
     }
@@ -82,11 +89,24 @@ function Shop() {
     const handleFilter = () =>{
 
     }
+    useEffect(() => {allProducts.refetch()},[])
+    useEffect(() => {
+        if(allProducts?.data){
+                setTotalPage(Math.ceil(allProducts?.data?.length / pagination.size))
+                setPagination({
+                    ...pagination,
+                    index: 0
+                })
+                setListOrder(allProducts?.data)
+                setOrder(allProducts?.data.slice(0, pagination.size))
 
+        }
+    },[allProducts.data])
+
+    console.log('allProducts',order)
     useEffect(() => {
         filterSP.refetch()
-        setCheckFilter(false)
-    },[filterProduct])
+    },[checkFilter])
 
     useEffect(() => {
         listColor.refetch()
@@ -117,13 +137,34 @@ function Shop() {
             })
         }
     }, [idProduct])
+    useEffect(() => {
+        if (listOrder) {
+            let lastIndex = (pagination.index + 1) * pagination.size
+            let firstIndex = lastIndex - pagination.size
+            // console.log('1121321',lastIndex,firstIndex)
+            setOrder(listOrder.slice(firstIndex, lastIndex))
+        }
+    }, [listOrder])
+
+
+    useEffect(() => {
+        if (listOrder) {
+            let lastIndex = (pagination.index + 1) * pagination.size
+            let firstIndex = lastIndex - pagination.size
+            // setTotalPage(Math.ceil(listOrder.length / pagination.size))
+            setOrder(listOrder.slice(firstIndex, lastIndex))
+        }
+    }, [pagination.index])
 
     const onChangePage = (event, newPage) => {
-        setPage(newPage);
+        setPagination({
+            ...pagination,
+            index: newPage - 1
+        });
     };
     return (
         <div>
-            <div className="slider-area ">
+            <div className="slider-area">
                 <div className="single-slider slider-height2 d-flex align-items-center">
                     <div className="container">
                         <div className="row">
@@ -137,7 +178,7 @@ function Shop() {
                 </div>
             </div>
             <section className="popular-items latest-padding">
-                <div className="container">
+                <div className="container" style={{maxWidth: '95%'}}>
                     <FormControl style={{width: 200}}>
                         <InputLabel id="demo-simple-select-label">Màu sắc</InputLabel>
                         <Select
@@ -147,6 +188,7 @@ function Shop() {
                             label={filterProduct.labelColor}
                             defaultValue={filterProduct.labelColor}
                             onChange={(event) => {
+                                setCheckFilter(false)
                                 setFilterProduct(prev => ({
                                     ...prev,
                                     color: event.target.value.id,
@@ -175,7 +217,7 @@ function Shop() {
                             label={filterProduct.labelSize}
                             defaultValue={filterProduct.labelSize}
                             onChange={(event) => {
-                                console.log('ưewe', event.target.value)
+                                setCheckFilter(false)
                                 setFilterProduct(prev => ({
                                     ...prev,
                                     size: event.target.value.id,
@@ -204,6 +246,7 @@ function Shop() {
                             label={filterProduct.labelPrice}
                             defaultValue={filterProduct.labelPrice}
                             onChange={(event) => {
+                                setCheckFilter(false)
                                 setFilterProduct(prev => ({
                                     ...prev,
                                     priceFrom: event.target.value.priceFrom,
@@ -230,39 +273,57 @@ function Shop() {
                             <div className="tab-content" id="nav-tabContent" style={{marginTop: 50}}>
                                 <div className="tab-pane fade show active" id="nav-home" role="tabpanel"
                                      aria-labelledby="nav-home-tab">
-                                    <div className="row">
-                                        {allProducts?.data && allProducts?.data.map((value, index) => {
+                                    <div className="row justify-content-around">
+                                        {order?.map((value, index) => {
                                             return (
-                                                <div key={index} className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                                    <div className="single-popular-items mb-50 text-center">
+                                                <div key={index} className="col-xl-3 popular-img">
+                                                    <div className="single-popular-items mb-25">
                                                         <div className="popular-img" style={{
-                                                            backgroundImage: `url(${value.image})`,
-                                                            width: 360,
-                                                            height: 360,
+                                                            width: '100%',
+                                                            height: '100%',
                                                             overFlow: "hidden",
-                                                            backgroundSize: "cover",
-                                                            backgroundRepeat: "no-repeat",
-                                                            backgroundPosition: "center"
+                                                            borderWidth: 0
                                                         }}>
-                                                            {/*<div className="img-cap">*/}
-                                                            {/*    <span >Thêm vào giỏ hàng</span>*/}
-                                                            {/*</div>*/}
+                                                            <img src={value.image}/>
                                                         </div>
-                                                        <button onClick={() => toDetailProduct(value)}
-                                                                className="btn-danger">
-                                                            <h4>
-                                                                <span color={'white'}>{value.name}</span>
-
-                                                            </h4>
-                                                            <span>${value.price}</span>
+                                                        <button style={{
+                                                            borderWidth: 0,
+                                                            backgroundColor: 'white',
+                                                            textAlign: 'left',
+                                                            fontWeight: 'bold'
+                                                        }} onClick={() => toDetailProduct(value)}>
+                                                            <h5>
+                                                                <span className={'threeDot'} color={'white'}>{value.name}</span>
+                                                            </h5>
+                                                            <span style={{
+                                                                color: 'darkRed',
+                                                                fontSize: 18
+                                                            }} >{value.price}<span style={{textDecoration: 'underline', fontSize: 14}}>đ</span></span>
                                                         </button>
+                                                        <div className="popular-img" style={{
+                                                            width: '100%',
+                                                            height: 35,
+                                                            overflow: 'unset',
+                                                            borderBottom: 0
+                                                        }}>
+                                                            <div>
+                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, left: 0}}>
+                                                                    <span style={{padding: '10px 0', borderRight: '1px solid'}}>Thêm vào giỏ hàng</span>
+                                                                </div>
+                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, right: 0}}>
+                                                                    <span onClick={() => toDetailProduct(value)} style={{padding: '10px 0'}}>Xem chi tiết</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )
                                         })}
                                     </div>
                                 </div>
+
                                 <Pagination
+                                    page={pagination.index + 1}
                                     count={totalPage}
                                     onChange={onChangePage}
                                     className="py-4 d-flex justify-content-center"
@@ -272,32 +333,48 @@ function Shop() {
                             <div className="tab-content" id="nav-tabContent" style={{marginTop: 50}}>
                                 <div className="tab-pane fade show active" id="nav-home" role="tabpanel"
                                      aria-labelledby="nav-home-tab">
-                                    <div className="row">
+                                    <div className="row justify-content-around">
                                         {filterSP?.data && filterSP?.data.map((value, index) => {
                                             return (
-                                                <div key={index} className="col-xl-4 col-lg-4 col-md-6 col-sm-6">
-                                                    <div className="single-popular-items mb-50 text-center">
+                                                <div key={index} className="col-xl-3 popular-img">
+                                                    <div className="single-popular-items mb-25">
                                                         <div className="popular-img" style={{
-                                                            backgroundImage: `url(${value.image})`,
-                                                            width: 360,
-                                                            height: 360,
+                                                            width: '100%',
+                                                            height: '100%',
                                                             overFlow: "hidden",
-                                                            backgroundSize: "cover",
-                                                            backgroundRepeat: "no-repeat",
-                                                            backgroundPosition: "center"
+                                                            borderWidth: 0
                                                         }}>
-                                                            {/*<div className="img-cap">*/}
-                                                            {/*    <span >Thêm vào giỏ hàng</span>*/}
-                                                            {/*</div>*/}
+                                                            <img src={value.image}/>
                                                         </div>
-                                                        <button onClick={() => toDetailProduct(value)}
-                                                                className="btn-danger">
-                                                            <h4>
-                                                                <span color={'white'}>{value.name}</span>
-
-                                                            </h4>
-                                                            <span>${value.price}</span>
+                                                        <button style={{
+                                                            borderWidth: 0,
+                                                            backgroundColor: 'white',
+                                                            textAlign: 'left',
+                                                            fontWeight: 'bold'
+                                                        }} onClick={() => toDetailProduct(value)}>
+                                                            <h5>
+                                                                <span className={'threeDot'} color={'white'}>{value.name}</span>
+                                                            </h5>
+                                                            <span style={{
+                                                                color: 'darkRed',
+                                                                fontSize: 18
+                                                            }} >{value.price}<span style={{textDecoration: 'underline', fontSize: 14}}>đ</span></span>
                                                         </button>
+                                                        <div className="popular-img" style={{
+                                                            width: '100%',
+                                                            height: 35,
+                                                            overflow: 'unset',
+                                                            borderBottom: 0
+                                                        }}>
+                                                            <div>
+                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, left: 0}}>
+                                                                    <span style={{padding: '10px 0', borderRight: '1px solid'}}>Thêm vào giỏ hàng</span>
+                                                                </div>
+                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, right: 0}}>
+                                                                    <span onClick={() => toDetailProduct(value)} style={{padding: '10px 0'}}>Xem chi tiết</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             )
