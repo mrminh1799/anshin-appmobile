@@ -90,7 +90,7 @@ function ListProduct({ setLoading, product, setClickedRow, setFormData, setProdu
     return (
 
 
-        <div className="pt-5 px-5 m-auto">
+        <div className="pt-1 px-5 m-auto">
             <table className="table table-striped table-bordered table-hover shadow">
 
                 <thead className="thead-dark">
