@@ -164,19 +164,6 @@ function Shop() {
     };
     return (
         <div>
-            <div className="slider-area">
-                <div className="single-slider slider-height2 d-flex align-items-center">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-xl-12">
-                                <div className="hero-cap text-center">
-                                    <h2>Shop</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <section className="popular-items latest-padding">
                 <div className="container" style={{maxWidth: '95%'}}>
                     <FormControl style={{width: 200}}>
@@ -276,7 +263,7 @@ function Shop() {
                                     <div className="row justify-content-around">
                                         {order?.map((value, index) => {
                                             return (
-                                                <div key={index} className="col-xl-3 popular-img">
+                                                <div  onClick={() => toDetailProduct(value)} key={index} className="col-xl-3 popular-img">
                                                     <div className="single-popular-items mb-25">
                                                         <div className="popular-img" style={{
                                                             width: '100%',
@@ -306,16 +293,10 @@ function Shop() {
                                                             overflow: 'unset',
                                                             borderBottom: 0
                                                         }}>
-                                                            <div>
-                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, left: 0}}>
-                                                                    <span style={{padding: '10px 0', borderRight: '1px solid'}}>Thêm vào giỏ hàng</span>
-                                                                </div>
-                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, right: 0}}>
-                                                                    <span onClick={() => toDetailProduct(value)} style={{padding: '10px 0'}}>Xem chi tiết</span>
-                                                                </div>
-                                                            </div>
+                                                            
                                                         </div>
                                                     </div>
+                                                    
                                                 </div>
                                             )
                                         })}
@@ -336,7 +317,7 @@ function Shop() {
                                     <div className="row justify-content-around">
                                         {filterSP?.data && filterSP?.data.map((value, index) => {
                                             return (
-                                                <div key={index} className="col-xl-3 popular-img">
+                                                <div onClick={() => toDetailProduct(value)}  key={index} className="col-xl-3 popular-img">
                                                     <div className="single-popular-items mb-25">
                                                         <div className="popular-img" style={{
                                                             width: '100%',
@@ -366,14 +347,7 @@ function Shop() {
                                                             overflow: 'unset',
                                                             borderBottom: 0
                                                         }}>
-                                                            <div>
-                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, left: 0}}>
-                                                                    <span style={{padding: '10px 0', borderRight: '1px solid'}}>Thêm vào giỏ hàng</span>
-                                                                </div>
-                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, right: 0}}>
-                                                                    <span onClick={() => toDetailProduct(value)} style={{padding: '10px 0'}}>Xem chi tiết</span>
-                                                                </div>
-                                                            </div>
+                                                        
                                                         </div>
                                                     </div>
                                                 </div>

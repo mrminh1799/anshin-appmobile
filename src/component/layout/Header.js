@@ -239,9 +239,10 @@ function Header() {
                     <div className="menu-wrapper">
                         <div className="logo" style={{flex: 1}}>
                             <Link to="/">
-                                <span style={{fontSize: 28, fontWeight: "bold", color: "black"}}>
+                                {/* <span style={{fontSize: 28, fontWeight: "bold", color: "black"}}>
                                     Anshin <span style={{color: "red"}}>Zone</span>
-                                </span>
+                                </span> */}
+                                <img width="200px" src="https://firebasestorage.googleapis.com/v0/b/anshin-b910b.appspot.com/o/1.png?alt=media&token=907b5d48-6704-4735-80a8-3d39b7ba6b19"></img>
                             </Link>
                         </div>
                         <div className="main-menu d-none d-lg-block" style={{flex: 2}}>

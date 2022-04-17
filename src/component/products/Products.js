@@ -47,7 +47,7 @@ function Products({ product, setProduct, loading, setLoading }) {
                             </ListItem> */}
                             Tạo mới sản phẩm
                         </Link>
-                    </Button> <input placeholder="Tìm kiếm theo tên" ></input></div>
+                    </Button> <input className="" placeholder="Tìm kiếm theo tên" ></input></div>
             </Box>
             <ListProduct
                 formData={formData}

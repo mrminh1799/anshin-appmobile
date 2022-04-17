@@ -1,24 +1,25 @@
-import {TextField} from "@material-ui/core";
-import {useEffect, useState} from "react";
+import { TextField } from "@material-ui/core";
+import { useEffect, useState } from "react";
 import styles from '../../../style/productStyle.module.css'
 
 import {
     useLocation, useHistory
 } from "react-router-dom";
-import {useAddCart, useGetCheckProduct, useGetColorProduct, useGetSizeProduct} from "../../../service/product";
+import { useAddCart, useGetCheckProduct, useGetColorProduct, useGetSizeProduct } from "../../../service/product";
 import Storage from "../../../utils/Storage";
 import axios from "axios";
-import {useAuth} from "../../../context";
+import { useAuth } from "../../../context";
+import { Button, InputNumber } from "antd";
 
 
 const Detail = () => {
     const location = useLocation()
-    const {userInfo, setUserInfo} = useAuth()
+    const { userInfo, setUserInfo } = useAuth()
 
-    const {item} = location.state
+    const { item } = location.state
     const checkout = useHistory()
     const [cart, setCart] = useState(null)
-    console.log('item?.id',item?.id)
+    console.log('item?.id', item?.id)
     const [product, setProduct] = useState({
         productId: item?.id,
         colorId: "",
@@ -31,9 +32,9 @@ const Detail = () => {
         price: item?.price
     });
     const addToCartApi = useAddCart({
-        id:userInfo?.id,
-        idProduct:item?.id,
-        quantity:product?.quantity
+        id: userInfo?.id,
+        idProduct: item?.id,
+        quantity: product?.quantity
     })
     const checkProduct = useGetCheckProduct({
         idColor: product?.colorId,
@@ -86,12 +87,12 @@ const Detail = () => {
         }
 
         setCart([{
-                quantity: product?.quantity,
-                productName: product?.name,
-                image: product?.image,
-                price: product?.price ? product?.price : 0,
-                productId: product?.productId
-            }]
+            quantity: product?.quantity,
+            productName: product?.name,
+            image: product?.image,
+            price: product?.price ? product?.price : 0,
+            productId: product?.productId
+        }]
         )
     }
     useEffect(() => {
@@ -143,10 +144,11 @@ const Detail = () => {
         // }else {
         //
         // }
-        if(userInfo){
-            addToCartApi.refetch((res)=>{
-                console.log('res',res)})
-        }else {
+        if (userInfo) {
+            addToCartApi.refetch((res) => {
+                console.log('res', res)
+            })
+        } else {
             if (!!Storage.get('cart')) {
                 let check = true
                 let cart = Storage.get('cart')?.map((item, i) => {
@@ -170,22 +172,9 @@ const Detail = () => {
         }
 
     }
-    console.log('addToCart',addToCartApi)
+    console.log('addToCart', addToCartApi)
     return (
         <div>
-            <div className="slider-area ">
-                <div className="single-slider slider-height2 d-flex align-items-center">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-xl-12">
-                                <div className="hero-cap text-center">
-                                    <h2>Anshin Shop</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div className="container">
 
                 <div className={styles.card}>
@@ -194,7 +183,7 @@ const Detail = () => {
                             <div className="preview col-md-7">
                                 <div className="preview-pic tab-content">
                                     <div id="pic-1">
-                                        <img width={'500px'} src={item?.image}/>
+                                        <img width={'500px'} src={item?.image} />
                                     </div>
                                 </div>
 
@@ -206,67 +195,72 @@ const Detail = () => {
                                 {/*    <span className="review-no">41 reviews</span>*/}
                                 {/*</div>*/}
 
-                                <h4 className={styles.price}>Giá: <span>{item?.price} $</span></h4>
-                                <h5 className={styles.sizes}>size:
+                                <h4 className={styles.price}>Giá: <span>{item?.price} đ</span></h4>
+                                <h4 className={styles.sizes}>Size
+                                    <br></br>
                                     {
                                         size?.data?.map((item, index) => {
-                                            console.log('ád',item)
                                             return (
-                                                <input className="btn btn-primary ml-1"
-                                                       onClick={() => handleClickSizes(item)} type="button"
-                                                       value={item?.size_name}></input>
+                                                <Button onClick={() => handleClickSizes(item)} type="button">{item?.size_name}</Button>
+
                                             )
                                         })
                                     }
 
-
-                                </h5>
-                                <h5 className={styles.colors}>colors:
-
-                                    {
-                                        color?.data?.map((item, index) => {
-                                            return (
-                                                <input type="button" onClick={() => handleClickColors(item)}
-                                                       value={item?.color_name}></input>
-                                            )
-                                        })
-                                    }
-                                </h5>
+                                </h4>
+                                <div className="boder">
+                                    <h5 className={styles.colors}>colors
+                                        <br></br>
+                                        {
+                                            color?.data?.map((item, index) => {
+                                                return (
+                                                    <Button className="btn btn-dark" onClick={() => handleClickColors(item)}
+                                                    >{item?.color_name}</Button>
+                                                )
+                                            })
+                                        }
+                                    </h5>
+                                </div>
 
                                 <br></br>
                                 <div className="action">
-                                    <div>
-                                        Size: <span>{product?.size}</span>
-                                        <br/>
-                                        Màu sắc: <span>{product?.color}</span>
-                                        <br/>
-                                        <div className="product_count_area">
-                                            <TextField
+                                    <div className="border">
+                                        <h5 className={styles.sizes}>Size: <span>{product?.size}</span></h5>
+
+                                        <h5 className={styles.colors}>Màu sắc: <span>{product?.color}</span></h5>
+                                        <h5 className={styles.sizes}>Số lượng: 
+                                        <input
                                                 onChange={onChangeHandler}
+                                                InputProps={{ inputProps: { min: 0, max: 10 } }}
                                                 name="quantity"
                                                 value={product?.quantity}
                                                 label="Số lượng"
                                                 className="mb-2"
                                                 type="number"
-                                            />
+                                           /> </h5>
+                                        
+                                        <div className="product_count_area">
+                                        
+                                            
+                                             {/* <InputNumber  name="quantity" onChange={onChangeHandler} value={product?.quantity} ></InputNumber> */}
                                         </div>
 
 
                                     </div>
-                                    <br/>
+                                    <br />
                                     <div>
-                                        <button className="btn btn-primary ml-1" onClick={toCheckout} type="button">Mua
+                                        <Button type="primary" className="btn btn-primary ml-1" onClick={toCheckout}>Mua
                                             ngay
-                                        </button>
-                                        <button onClick={addToCart} className="btn btn-primary ml-1" type="button">Thêm
+                                        </Button>
+                                        <Button type="primary" onClick={addToCart} className="btn btn-primary ml-1" >Thêm
                                             vào giỏ hàng
-                                        </button>
+                                        </Button>
                                         {/*<button className='btn btn-primary ml-1' type="button">Thích</button>*/}
                                     </div>
                                 </div>
 
-                                <br/>
-                                <h2>Description</h2>
+                                <br />
+                                <h2>Mô tả</h2>
                                 <p className={styles.productDescription}>{item?.description}
                                 </p>
                             </div>
