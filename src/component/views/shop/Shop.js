@@ -271,7 +271,7 @@ function Shop() {
                                                             overFlow: "hidden",
                                                             borderWidth: 0
                                                         }}>
-                                                            <img src={value.image}/>
+                                                            <img src={value.image} style={{height:400, width:300}}/>
                                                         </div>
                                                         <button style={{
                                                             borderWidth: 0,
@@ -325,7 +325,7 @@ function Shop() {
                                                             overFlow: "hidden",
                                                             borderWidth: 0
                                                         }}>
-                                                            <img src={value.image}/>
+                                                            <img src={value.image} style={{height:400, width:300}}/>
                                                         </div>
                                                         <button style={{
                                                             borderWidth: 0,

@@ -5,7 +5,13 @@ import styles from '../../../style/productStyle.module.css'
 import {
     useLocation, useHistory
 } from "react-router-dom";
-import { useAddCart, useGetCheckProduct, useGetColorProduct, useGetSizeProduct } from "../../../service/product";
+import {
+    useAddCart,
+    useGetCheckProduct,
+    useGetColorProduct,
+    useGetImageProduct,
+    useGetSizeProduct
+} from "../../../service/product";
 import Storage from "../../../utils/Storage";
 import axios from "axios";
 import { useAuth } from "../../../context";
@@ -19,7 +25,8 @@ const Detail = () => {
     const { item } = location.state
     const checkout = useHistory()
     const [cart, setCart] = useState(null)
-    console.log('item?.id', item?.id)
+    const [checkImage, setCheckImage] = useState(true)
+
     const [product, setProduct] = useState({
         productId: item?.id,
         colorId: "",
@@ -29,7 +36,8 @@ const Detail = () => {
         quantity: 1,
         image: item?.image,
         name: item?.name,
-        price: item?.price
+        price: item?.price,
+        imageDetail: ""
     });
     const addToCartApi = useAddCart({
         id: userInfo?.id,
@@ -41,6 +49,10 @@ const Detail = () => {
         idSize: product?.sizeId,
         idProduct: product?.productId
     })
+    // const findImage = useGetImageProduct({
+    //     idProduct:item?.id,
+    //     idColor:product?.colorId
+    // })
 
     const onChangeHandler = (event) => {
         if (event.target.value < 1) {
@@ -69,10 +81,13 @@ const Detail = () => {
         }))
     }
     const handleClickColors = (item) => {
+        console.log('ádasd',item)
+        setCheckImage(false)
         setProduct(prev => ({
             ...prev,
             colorId: item?.id,
-            color: item?.color_name
+            color: item?.color_name,
+            imageDetail:  item?.image
         }))
     }
 
@@ -113,6 +128,12 @@ const Detail = () => {
         }
     }, [cart])
 
+    // useEffect(() => {
+    //     if(product?.colorId){
+    //         findImage.refetch()
+    //     }
+    // },[product.colorId])
+    // console.log('findImage',findImage)
     const addToCart = () => {
         if (product?.colorId === '') {
             alert("Vui lòng chọn màu sắc");
@@ -183,7 +204,7 @@ const Detail = () => {
                             <div className="preview col-md-7">
                                 <div className="preview-pic tab-content">
                                     <div id="pic-1">
-                                        <img width={'500px'} src={item?.image} />
+                                        <img width={'500px'} src={checkImage?item?.image:product?.imageDetail} />
                                     </div>
                                 </div>
 
@@ -213,6 +234,7 @@ const Detail = () => {
                                         <br></br>
                                         {
                                             color?.data?.map((item, index) => {
+                                                console.log('color',color)
                                                 return (
                                                     <Button className="btn btn-dark" onClick={() => handleClickColors(item)}
                                                     >{item?.color_name}</Button>

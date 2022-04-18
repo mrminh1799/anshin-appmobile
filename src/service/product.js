@@ -1,5 +1,5 @@
 import {useQuery, useQueryClient, useMutation, useQueries} from 'react-query';
-import {_custom, _get, _put, _post} from '../../src/component/callAPI/index';
+import {_custom, _get, _put, _post, _delete} from '../../src/component/callAPI/index';
 import {useEffect, useState} from "react";
 import axiosHelper from "../common/axiosHelper";
 
@@ -302,6 +302,33 @@ export const useAddCart = (params) => {
         error,
         refetch
     } = useQuery(['add_cart', params], () => _post('/cart/createForAcount/'+params?.id+'/'+params?.idProduct+'/'+params?.quantity),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
+
+//lấy ảnh theo product
+
+    export const useGetImageProduct = (params) => {
+        const {
+            status,
+            data,
+            error,
+            refetch
+        } = useQuery(['get_image_product', params], () => _get('/productDetail/findImage/'+params?.idProduct+"/"+params?.idColor),{enabled:false});
+        return {
+            status, error, data, refetch
+        }
+    }
+
+    //xoa sp trong cart theo acc
+export const useDeleteCartProduct = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['delete_cart_product', params], () => _delete('/cart/deleteByidProduct/'+params?.idAcount+"/"+params?.idProduct),{enabled:false});
     return {
         status, error, data, refetch
     }

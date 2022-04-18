@@ -33,6 +33,7 @@ function Login() {
         .then(res => {
             if(res?.data){
                 Storage.save('userData', res?.data)
+                Storage.delete('cart')
                 setUserInfo(res.data)
             }
         })

@@ -60,7 +60,7 @@ function Home() {
                                         className="col-xl-3 popular-img">
                                             <div className="single-popular-items mb-50 text-center">
                                                 <div className="popular-img">
-                                                    <img src={item?.image}/>
+                                                    <img src={item?.image} style={{height:400, width:300}}/>
                                                     <div className="favorit-items">
                                                         <span className="flaticon-heart"></span>
                                                     </div>
@@ -103,10 +103,10 @@ function Home() {
                             {
                                 top10ProductsSell?.data?.map((item, index) => {
                                     return index < 8 && (
-                                        <div className="col-xl-3 popular-img">
+                                        <div  onClick={() => toDetailProduct(item)} className="col-xl-3 popular-img">
                                             <div className="single-popular-items mb-50 text-center">
                                                 <div className="popular-img">
-                                                    <img src={item?.image}/>
+                                                    <img src={item?.image}  style={{height:400, width:300}}/>
                                                     <div className="favorit-items">
                                                         <span className="flaticon-heart"></span>
                                                     </div>
