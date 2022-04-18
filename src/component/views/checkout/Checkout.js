@@ -101,7 +101,7 @@ const Checkout = () => {
                 <div className="container">
                     <div className="billing_details">
                         <div className="row">
-                            <div className="col-lg-8">
+                            <div className="col-lg-6">
                                 <h3>Billing Details</h3>
                                 <form className="row contact_form">
                                     <div className="col-md-6">
@@ -114,7 +114,7 @@ const Checkout = () => {
                                             }
                                             }
                                             fullWidth
-                                            value={userInfo?formData?.fullname:""}
+                                            value={formData?.fullname}
                                             label={"Full name"}
                                             className="my-2"
                                             type="text"
@@ -131,7 +131,7 @@ const Checkout = () => {
                                                 }))
                                             }
                                             }
-                                            value={userInfo?formData?.phone:""}
+                                            value={formData?.phone}
                                             fullWidth
                                             label={"Phone Number"}
                                             className="my-2"
@@ -176,20 +176,24 @@ const Checkout = () => {
                                     </div>
                                 </form>
                             </div>
-                            <div className="col-lg-4">
+                            <div className="col-lg-7" style={{marginTop:100}}>
                                 <div className="order_box">
                                     <h2>Your Order</h2>
                                     <ul className="list">
                                         <li>
-                                            <Link href="#">Product
-                                                <span>Total</span>
+                                            <Link href="#">Sản phẩm
+                                                <span  className="last">Giá</span>
                                             </Link>
                                         </li>
+
                                         {item.map((value, index) => {
+                                            console.log('qewqw',value)
                                             return (
                                                 <li key={index}>
                                                     <Link>{value.productName}
                                                         <span className="middle">x {value.quantity}</span>
+                                                        <span className="middle" style={{marginLeft:50}}>{userInfo?value?.colorName:value.color}</span>
+                                                        <span className="middle" style={{marginLeft:50}}>{userInfo?value?.sizeName:value.size}</span>
                                                         <span className="last">${value.price}</span>
                                                     </Link>
                                                 </li>

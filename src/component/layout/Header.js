@@ -307,6 +307,7 @@ function Header() {
                 }
                 <MenuItem onClick={() => {
                     Storage.delete('userData')
+                    Storage.delete('cart')
                     setUserInfo(null)
                 }}>
                     Đăng xuất

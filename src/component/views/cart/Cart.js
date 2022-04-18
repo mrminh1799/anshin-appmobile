@@ -5,7 +5,7 @@ import {
     useHistory
 } from "react-router-dom";
 
-import { useGetListCart} from "../../../service/product";
+import {useDeleteCartProduct, useGetListCart} from "../../../service/product";
 import Storage from "../../../utils/Storage";
 import axios from "axios";
 import {useAuth} from "../../../context";
@@ -15,12 +15,17 @@ function Cart() {
     const checkout = useHistory()
     const [cart, setCart] = useState([])
     const [cartAccount, setCartAccount] = useState([])
+    const [idProDel, setIdProDel] = useState([])
     const {userInfo, setUserInfo} = useAuth()
+
     const listCart = useGetListCart({
         id: userInfo?.id
     })
-
-    const getDetailProduct = (id, quantity) => {
+    const delProductCart = useDeleteCartProduct({
+        idAcount: userInfo?.id,
+        idProduct: idProDel
+    })
+    const getDetailProduct = (id, quantity, color,size) => {
         axios.get(`http://localhost:8080/product/findById/${id}`)
             .then(res => {
                 const data = res.data;
@@ -33,7 +38,9 @@ function Cart() {
                                 productName: data?.name,
                                 image: data?.image,
                                 price: data?.price,
-                                productId: id
+                                productId: id,
+                                color: color,
+                                size: size
                             }
                         ]
 
@@ -47,7 +54,9 @@ function Cart() {
                                 productName: data?.name,
                                 image: data?.image,
                                 price: data?.price,
-                                productId: id
+                                productId: id,
+                                color: color,
+                                size: size
                             }
                         ]
 
@@ -72,7 +81,6 @@ function Cart() {
         }
     }, [listCart?.data])
 
-    console.log('listCart?.data',cartAccount)
     const onChangeHandler = (event) => {
         // if (event.target.value < 1) {
         //
@@ -102,7 +110,7 @@ function Cart() {
     useEffect(() => {
         if (Storage.get('cart')) {
             Storage.get('cart')?.map((item, index) => {
-                getDetailProduct(item?.productId, item?.quantity)
+                getDetailProduct(item?.productId, item?.quantity, item?.color, item?.size)
             })
         }
     }, [])
@@ -112,13 +120,31 @@ function Cart() {
     }, [cart])
 
     const onHandleDelete = (id) => {
-        setCart(cart.filter((value, index) => {
-            return value.productId != id
-        }))
-        // Storage.delete('cart',id)
+        if(userInfo){
+            setIdProDel(id?.idProduct)
+        }else {
+            setCart(cart.filter((value, index) => {
+                return value.productId != id
+            }))
+            if (Storage.get('cart')) {
+                Storage.save('cart',  Storage.get('cart')?.filter((item, index) => {
+                    return item.productId != id
+                }))
 
+
+            }
+
+        }
     }
 
+useEffect(() => {
+    if(idProDel){
+        delProductCart.refetch()
+        setCartAccount(cartAccount?.filter((value,index)=>{
+            return value.idProduct != idProDel
+        }))
+    }
+},[idProDel])
     return (
         <div>
             <div className="slider-area ">
@@ -142,10 +168,12 @@ function Cart() {
                                 <table className="table">
                                     <thead>
                                     <tr>
-                                        <th scope="col">Product</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Totasssl</th>
+                                        <th scope="col">Sản phẩm</th>
+                                        <th scope="col">Giá</th>
+                                        <th scope="col">Màu sắc</th>
+                                        <th scope="col">Size</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Tổng tiền</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -165,6 +193,13 @@ function Cart() {
                                                 <td>
                                                     <h5>${value.price}</h5>
                                                 </td>
+
+                                                <td>
+                                                    <h5>{value.colorName}</h5>
+                                                </td>
+                                                <td>
+                                                    <h5>{value.sizeName}</h5>
+                                                </td>
                                                 <td>
                                                     <div className="product_count">
                                                         <TextField
@@ -182,7 +217,7 @@ function Cart() {
                                                         ${Number(value.quantity) * Number(value.price)}
                                                     </h5>
                                                     <Button onClick={() => {
-                                                        onHandleDelete(value.productId)
+                                                        onHandleDelete(value)
                                                     }} style={{float: "right"}}>X</Button>
                                                 </td>
                                             </tr>
@@ -207,14 +242,17 @@ function Cart() {
                                 <table className="table">
                                     <thead>
                                     <tr>
-                                        <th scope="col">Product</th>
-                                        <th scope="col">Price</th>
-                                        <th scope="col">Quantity</th>
-                                        <th scope="col">Total</th>
+                                        <th scope="col">Sản phẩm</th>
+                                        <th scope="col">Giá</th>
+                                        <th scope="col">Màu sắc</th>
+                                        <th scope="col">Size</th>
+                                        <th scope="col">Số lượng</th>
+                                        <th scope="col">Tổng tiền</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     {cart?.map((value, index) => {
+
                                         return (
                                             <tr key={index}>
                                                 <td>
@@ -229,6 +267,12 @@ function Cart() {
                                                 </td>
                                                 <td>
                                                     <h5>${value.price}</h5>
+                                                </td>
+                                                <td>
+                                                    <h5>{value.color}</h5>
+                                                </td>
+                                                <td>
+                                                    <h5>{value.size}</h5>
                                                 </td>
                                                 <td>
                                                     <div className="product_count">
