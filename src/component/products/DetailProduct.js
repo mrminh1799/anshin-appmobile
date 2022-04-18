@@ -7,7 +7,9 @@ import { storage } from "../firebase/firebase"
 import { Editor } from '@tinymce/tinymce-react';
 import * as productService from '../../service/productService2'
 import * as toast from '../../common/ToastHelper'
-import { useHistory } from 'react-router-dom'; 
+import { useHistory } from 'react-router-dom';
+import { Upload, message } from 'antd';
+import { UploadOutlined } from '@ant-design/icons';
 
 
 
@@ -149,7 +151,7 @@ function DetailProduct() {
         setFormData({
             ...formData,
             //[name]: category.find(item => item.id === value)
-         //   idCategory: value,
+            //   idCategory: value,
             categoryId: name
         })
 
@@ -238,7 +240,7 @@ function DetailProduct() {
     console.log(listProductDetail)
     const handleInsertAll = (e) => {
         e.preventDefault();
-       
+
 
         const body = {
             name: formData.name,
@@ -258,7 +260,7 @@ function DetailProduct() {
             })
         }
 
-     
+
         productService.createProductAndProductDetail(body).then(res => {
             toast.toastSuccess("Tạo mới thành công")
             history.push(`/admin/productDetailUD/${res.data}`)
@@ -270,18 +272,37 @@ function DetailProduct() {
 
 
 
+    const handlerQuantityProductDetail = (e, index) => {
+        const newList = listProductDetail.map(x => {
+            if (x.index === index) {
+                x.quantity = e.target.value;
+            }
+            return x;
+
+        })
+
+        setListProductDetail(newList)
+
+    }
+
+
+
     return (
         <div>
 
-            <h1>Thêm mới</h1>
-
-
+            
             <div className="container ml-5">
+                <br></br>
+               
+            <h1 className="ml-200">Thêm mới</h1>
+
+
                 <form autoComplete="off" style={{ flex: 1 }}>
 
 
-                    <input type="file" onChange={onChangeUploadFile}></input>
+                    <input title="Ảnh" type="file" onChange={onChangeUploadFile}/>
                     <img height="200" src={formData.image} />
+                    
 
                     <TextField
                         required
@@ -302,6 +323,8 @@ function DetailProduct() {
                         className="mb-2"
                         type="number"
                     />
+                    <br></br>
+                    <br></br>
                     <InputLabel id="demo-simple-select-label">Thể loại</InputLabel>
                     <select className='form-control js-example-basic-single' name="idCategory" onChange={onChangeHandler} value={formData.idCategory}>
 
@@ -421,12 +444,13 @@ function DetailProduct() {
                                         <td>{value.index}</td>
                                         <td>{value.nameColor}</td>
                                         <td>{value.nameSize}</td>
-                                        <td><input type="number" value={value.quantity}></input></td>
+                                        <td><input type="number" value={value.quantity} onChange={e => handlerQuantityProductDetail(e, value.index)}></input></td>
+                                        <td><Button onClick={() => onDeleteProductDetail(value.index)} type="button" className="btn btn-danger">Xóa</Button></td>
                                         <td><label style={{ display: "block", width: 0 }} className="mb-3" htmlFor="contained-button-file">
                                             <input name={value.nameColor} type="file" onChange={onChangeUploadFileProductDetail}></input>
                                             <img height="50" src={value.image} />
                                         </label></td>
-                                        <td><Button onClick={() => onDeleteProductDetail(value.index)} type="button" className="btn btn-danger">Xóa</Button></td>
+                                        
                                     </tr>
                                 );
                             })}
