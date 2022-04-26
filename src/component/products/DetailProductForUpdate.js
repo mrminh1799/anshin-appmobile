@@ -298,10 +298,11 @@ function DetailProductForUpdate() {
     return (
         <div>
 
+           
+
+
+            <div className="container ml-200 mt-5">
             <h1>{formData.name}</h1>
-
-
-            <div className="container ml-5">
                 <form autoComplete="off" style={{ flex: 1 }}>
 
 
@@ -354,82 +355,8 @@ function DetailProductForUpdate() {
                         <Editor onEditorChange={onChangeDescription} value={formData.description} />
                     </div>
                     <br />
-                    <div>
-                        <div className="form-check form-check-inline">
-                            <InputLabel id="demo-simple-select-labelr5">Màu</InputLabel>
-
-
-                        </div>
-                        {listColor.map(x => {
-                            return (
-                                <div key={x.id} className="form-check form-check-inline">
-                                    <input onChange={(e)=>onCheckBoxColor(e, x.idColor, x.nameColor)} checked={x.isSelected} className="form-check-input" type="checkbox" id={x.idColor} value={x.nameColor} disabled={x.isSelected}></input>
-                                    <label className="form-check-label" for="inlineCheckbox1">{x.nameColor}</label>
-                                </div>
-                            )
-                        })}
-                        <Button type="button" className="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-                            Thêm mới
-                        </Button>
-                        <div className="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                            <div className="modal-dialog" role="document">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Thêm mới màu</h5>
-                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div className="modal-body">
-                                        Tên màu: <input className="form-control"></input>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <Button type="button" className="btn btn-secondary" data-dismiss="modal">Đóng</Button>
-                                        <Button type="button" className="btn btn-primary">Thêm</Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <div className="form-check form-check-inline">
-                            <InputLabel id="demo-simple-select-label53">Size</InputLabel>
-
-                        </div>
-                        {listSize.map(x => {
-                            return (
-
-                                <div key={x.id} className="form-check form-check-inline">
-                                    <input onChange={onCheckBoxSize} className="form-check-input" type="checkbox" id={x.idSize} value={x.nameSize} checked={x.isSelected}
-                                    disabled={x.isSelected}></input>
-                                    <label className="form-check-label" for="inlineCheckbox1">{x.nameSize}</label>
-                                </div>
-                            )
-                        })}
-                        <Button type="button" className="btn btn-primary" data-toggle="modal" data-target="#exampleModal2">
-                            Thêm mới
-                        </Button>
-                        <div className="modal fade" id="exampleModal2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-                            <div className="modal-dialog" role="document">
-                                <div className="modal-content">
-                                    <div className="modal-header">
-                                        <h5 className="modal-title" id="exampleModalLabel">Thêm mới Size</h5>
-                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div className="modal-body">
-                                        Tên size: <input className="form-control" ></input>
-                                    </div>
-                                    <div className="modal-footer">
-                                        <Button type="button" className="btn btn-secondary" data-dismiss="modal">Đóng</Button>
-                                        <Button type="button" className="btn btn-primary">Thêm</Button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    
+        
                     <div className={'d-flex'}>
                         <div className={'ml-40'}>
                             <Button onClick={createProductDetail} style={{ display: "inline-block" }} className="mr-2" type="submit" variant="outlined">
@@ -457,11 +384,11 @@ function DetailProductForUpdate() {
                                         <td>{value.nameColor}</td>
                                         <td>{value.nameSize}</td>
                                         <td><input type="number" value={value.quantity}></input></td>
+                                        <td><Button onClick={() => onDeleteProductDetail(value.index, value.id)} type="button" className="btn btn-danger">Xóa</Button></td>
                                         <td><label style={{ display: "block", width: 0 }} className="mb-3" htmlFor="contained-button-file">
                                             <input name={value.nameColor} type="file" onChange={onChangeUploadFileProductDetail}></input>
                                             <img height="50" src={value.image} />
                                         </label></td>
-                                        <td><Button onClick={() => onDeleteProductDetail(value.index, value.id)} type="button" className="btn btn-danger">Xóa</Button></td>
                                     </tr>
                                 );
                             })}

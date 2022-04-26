@@ -9,6 +9,10 @@ import { useHistory } from "react-router-dom";
 import { Link } from "react-router-dom";
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import { Input } from "antd";
+import * as service from '../../service/productService2'
+import * as toast from '../../common/ToastHelper'
+
+
 
 
 
@@ -32,6 +36,14 @@ function Products({ product, setProduct, loading, setLoading }) {
         setPage(newPage);
     };
 
+    const onChangeHandlerFindByName=(e)=>{
+        service.findProductByName(e.target.value).then(res=>{
+            setProduct(res.data)
+        }).catch(err=>{
+            toast.toastError("Có lỗi xảy ra")
+        })
+    }
+
 
     return (
         <div className="justify-content-center flex-fill">
@@ -47,7 +59,7 @@ function Products({ product, setProduct, loading, setLoading }) {
                             </ListItem> */}
                             Tạo mới sản phẩm
                         </Link>
-                    </Button> <input className="" placeholder="Tìm kiếm theo tên" ></input></div>
+                    </Button> <input onChange={onChangeHandlerFindByName}  className="" placeholder="Tìm kiếm theo tên" ></input></div>
             </Box>
             <ListProduct
                 formData={formData}
