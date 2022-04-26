@@ -66,14 +66,14 @@ const ListProductFindByCate =()=>{
                                                             overflow: 'unset',
                                                             borderBottom: 0
                                                         }}>
-                                                            <div>
-                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, left: 0}}>
-                                                                    <span style={{padding: '10px 0', borderRight: '1px solid'}}>Thêm vào giỏ hàng</span>
-                                                                </div>
-                                                                <div className="img-cap w-50" style={{textAlign: 'center', height: 25, right: 0}}>
-                                                                    <span onClick={() => toDetailProduct(value)} style={{padding: '10px 0'}}>Xem chi tiết</span>
-                                                                </div>
-                                                            </div>
+                                                            {/*<div>*/}
+                                                            {/*    <div className="img-cap w-50" style={{textAlign: 'center', height: 25, left: 0}}>*/}
+                                                            {/*        <span style={{padding: '10px 0', borderRight: '1px solid'}}>Thêm vào giỏ hàng</span>*/}
+                                                            {/*    </div>*/}
+                                                            {/*    <div className="img-cap w-50" style={{textAlign: 'center', height: 25, right: 0}}>*/}
+                                                            {/*        <span onClick={() => toDetailProduct(value)} style={{padding: '10px 0'}}>Xem chi tiết</span>*/}
+                                                            {/*    </div>*/}
+                                                            {/*</div>*/}
                                                         </div>
                                                     </div>
                                                 </div>
