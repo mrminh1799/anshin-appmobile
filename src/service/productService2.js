@@ -88,3 +88,8 @@ export const paymentOrder = (idOrder)=>{
     return axiosHelper.get(`http://localhost:8080/Order/updateStatus/${idOrder}/2`)
 }
 
+
+
+export const deleteSoftProduct = (idProduct)=>{
+    return axiosHelper.delete(`http://localhost:8080/admin/product/delete/${idProduct}`)
+}
