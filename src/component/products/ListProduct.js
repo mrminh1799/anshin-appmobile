@@ -5,6 +5,8 @@ import { useGetProducts } from "../../service/product";
 import { useHistory } from 'react-router-dom';
 import * as productService from '../../service/productService2'
 import * as toast from '../../common/ToastHelper'
+import {useConfirm} from 'material-ui-confirm'
+import * as service from '../../service/productService2'
 
 
 
@@ -22,6 +24,7 @@ function ListProduct({ setLoading, product, setClickedRow, setFormData, setProdu
     };
 
     const history = useHistory()
+    const  confirm = useConfirm();
 
 
 
@@ -43,22 +46,35 @@ function ListProduct({ setLoading, product, setClickedRow, setFormData, setProdu
     };
 
     const onDeleteProduct = (event, value, index) => {
-        if (window.confirm("Bạn muốn xóa sản phẩm này?")) {
-            setLoading(true)
-            callApi(`product`, 'DELETE', value.id)
-                .then((response) => {
-                    setProduct((oldState) => {
-                        let newState = oldState.filter((value, idx) => {
-                            return idx != index;
-                        });
-                        return newState;
-                    });
-                    setLoading(false)
-                    // if (product.length == 1) {
-                    //     setPage(page - 1);
-                    // }
-                })
-        }
+        // if (window.confirm("Bạn muốn xóa sản phẩm này?")) {
+        //     setLoading(true)
+        //     callApi(`product`, 'DELETE', value.id)
+        //         .then((response) => {
+        //             setProduct((oldState) => {
+        //                 let newState = oldState.filter((value, idx) => {
+        //                     return idx != index;
+        //                 });
+        //                 return newState;
+        //             });
+        //             setLoading(false)
+                 
+        //         })
+        // }
+
+
+        confirm({
+            description: "Bạn có chắc xóa sản phẩm?",
+            title: 'Xác nhận xóa'
+        }).then(() => {
+            const newList = product.filter(x=>x.id !== value.id)
+            setProduct(newList)
+            service.deleteSoftProduct(value.id).then(res => {
+
+                toast.toastSuccess("Xóa thành công")
+            }).catch(err => {
+                toast.toastError("Có lỗi xảy ra")
+            })
+        })
     }
 
     const onUpdateHandle = (event, value, index) => {
@@ -114,8 +130,6 @@ function ListProduct({ setLoading, product, setClickedRow, setFormData, setProdu
                                 <td className="text-center"><img style={{ width: 100 }} src={value.image} /></td>
                                 <td>{value.name}</td>
                                 <td>{value.price}$</td>
-
-                               
                                 <td>
                                     <Button
                                         onClick={(event) => {
