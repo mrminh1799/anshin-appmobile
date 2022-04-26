@@ -114,7 +114,6 @@ function ListProduct({ setLoading, product, setClickedRow, setFormData, setProdu
                         <th>Ảnh</th>
                         <th>Tên sản phẩm</th>
                         <th>Đơn giá</th>
-                        {/* <th>Trạng thái</th> */}
                         <th>Thao tác</th>
 
                     </tr>
@@ -131,13 +130,6 @@ function ListProduct({ setLoading, product, setClickedRow, setFormData, setProdu
                                 <td className="text-center"><img style={{ width: 100 }} src={value.image} /></td>
                                 <td>{value.name}</td>
                                 <td>{value.price}$</td>
-
-                                {/* <td>
-                                    <FormControlLabel label={value.status === 1 ? "Đang kinh doanh" : "Ngừng kinh doanh"}
-                                        control={
-                                            <Switch checked={value.status === 1} onChange={(event) => { onChangeActive(value, event) }} />}
-                                    />
-                                </td> */}
                                 <td>
                                     <Button
                                         onClick={(event) => {
