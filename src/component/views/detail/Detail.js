@@ -16,15 +16,18 @@ import Storage from "../../../utils/Storage";
 import axios from "axios";
 import { useAuth } from "../../../context";
 import { Button, InputNumber } from "antd";
+import {useConfirm} from "material-ui-confirm";
 
 
 const Detail = () => {
     const location = useLocation()
     const { userInfo, setUserInfo } = useAuth()
+    const  confirm = useConfirm();
 
     const { item } = location.state
     const checkout = useHistory()
     const [cart, setCart] = useState(null)
+    const [idProduct, setIdProduct] = useState('')
     const [checkImage, setCheckImage] = useState(true)
 
     const [product, setProduct] = useState({
@@ -49,7 +52,7 @@ const Detail = () => {
         idSize: product?.sizeId,
         idProduct: product?.productId
     })
-    console.log('product',product)
+
     const onChangeHandler = (event) => {
         if (event.target.value < 1) {
 
@@ -77,7 +80,6 @@ const Detail = () => {
         }))
     }
     const handleClickColors = (item) => {
-        console.log('ad',item)
         setCheckImage(false)
         setProduct(prev => ({
             ...prev,
@@ -136,11 +138,14 @@ const Detail = () => {
         }
         checkProduct.refetch().then((res) => {
             console.log('re',res)
-
             if(res.data){
+                // setIdProduct(res?.id)
                 if (userInfo) {
                     addToCartApi.refetch((res) => {
                         console.log('res', res)
+                        if(res){
+                            alert('ok')
+                        }
                     })
                 } else {
                     if (!!Storage.get('cart')) {
@@ -213,7 +218,7 @@ const Detail = () => {
                                         <br></br>
                                         {
                                             color?.data?.map((item, index) => {
-                                                console.log('color',color)
+                                                // console.log('color',color)
                                                 return (
                                                     <Button className="btn btn-dark" onClick={() => handleClickColors(item)}
                                                     >{item?.color_name}</Button>

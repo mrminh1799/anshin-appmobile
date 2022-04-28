@@ -333,3 +333,15 @@ export const useDeleteCartProduct = (params) => {
         status, error, data, refetch
     }
 }
+//cap nhat trang thai order
+export const useUpdateStatusOrder = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch
+    } = useQuery(['update_status_order', params], () => _get('Order/updateStatus/'+params?.idOrder+"/"+params?.status),{enabled:false});
+    return {
+        status, error, data, refetch
+    }
+}
