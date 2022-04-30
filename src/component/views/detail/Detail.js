@@ -16,15 +16,18 @@ import Storage from "../../../utils/Storage";
 import axios from "axios";
 import { useAuth } from "../../../context";
 import { Button, InputNumber } from "antd";
+import {useConfirm} from "material-ui-confirm";
 
 
 const Detail = () => {
     const location = useLocation()
     const { userInfo, setUserInfo } = useAuth()
+    const  confirm = useConfirm();
 
     const { item } = location.state
     const checkout = useHistory()
     const [cart, setCart] = useState(null)
+    const [idProduct, setIdProduct] = useState('')
     const [checkImage, setCheckImage] = useState(true)
 
     const [product, setProduct] = useState({
@@ -49,10 +52,6 @@ const Detail = () => {
         idSize: product?.sizeId,
         idProduct: product?.productId
     })
-    // const findImage = useGetImageProduct({
-    //     idProduct:item?.id,
-    //     idColor:product?.colorId
-    // })
 
     const onChangeHandler = (event) => {
         if (event.target.value < 1) {
@@ -81,7 +80,6 @@ const Detail = () => {
         }))
     }
     const handleClickColors = (item) => {
-        console.log('ádasd',item)
         setCheckImage(false)
         setProduct(prev => ({
             ...prev,
@@ -128,12 +126,7 @@ const Detail = () => {
         }
     }, [cart])
 
-    // useEffect(() => {
-    //     if(product?.colorId){
-    //         findImage.refetch()
-    //     }
-    // },[product.colorId])
-    // console.log('findImage',findImage)
+
     const addToCart = () => {
         if (product?.colorId === '') {
             alert("Vui lòng chọn màu sắc");
@@ -143,57 +136,48 @@ const Detail = () => {
             alert("Vui lòng chọn size");
             return;
         }
-        // checkProduct.refetch().then((res) => {
-        //     if(res.data){
-        //         if (localStorage.getItem(item.id) == null) localStorage.setItem(item.id, product?.quantity);
-        //         else {
-        //             localStorage.setItem(item.id, 0)
-        //             localStorage.setItem(item.id, Number(localStorage.getItem(item.id)) + Number(product?.quantity))
-        //         }
-        //         alert("Sản phầm đã thêm vào giỏ hàng");
-        //     }else {
-        //         alert("Sản phầm này đã hết");
-        //     }
-        // })
-        // if (localStorage.getItem(item.id) == null) localStorage.setItem(item.id, product?.quantity, product?.productId, product?.colorId, product?.sizeId);
-        // else {
-        //     localStorage.setItem(item.id, 0)
-        //     localStorage.setItem(item.id, Number(localStorage.getItem(item.id)) + Number(product?.quantity), product?.productId, product?.colorId, product?.sizeId)
-        // }
-        // if(userInfo){
-        //
-        // }else {
-        //
-        // }
-        if (userInfo) {
-            addToCartApi.refetch((res) => {
-                console.log('res', res)
-            })
-        } else {
-            if (!!Storage.get('cart')) {
-                let check = true
-                let cart = Storage.get('cart')?.map((item, i) => {
-                    if (item.id == product.productId) {
-                        check = false
-                        item.quantity = Number(item.quantity) + Number(product.quantity)
-                    }
-                    return item
-                })
-
-                if (check) {
-                    Storage.save('cart', [...Storage.get('cart'), product])
+        checkProduct.refetch().then((res) => {
+            console.log('re',res)
+            if(res.data){
+                // setIdProduct(res?.id)
+                if (userInfo) {
+                    addToCartApi.refetch((res) => {
+                        console.log('res', res)
+                        if(res){
+                            alert('ok')
+                        }
+                    })
                 } else {
-                    Storage.save('cart', cart)
+                    if (!!Storage.get('cart')) {
+                        let check = true
+                        let cart = Storage.get('cart')?.map((item, i) => {
+                            if (item.id == product.productId) {
+                                check = false
+                                item.quantity = Number(item.quantity) + Number(product.quantity)
+                            }
+                            return item
+                        })
+
+                        if (check) {
+                            Storage.save('cart', [...Storage.get('cart'), product])
+                        } else {
+                            Storage.save('cart', cart)
+                        }
+                    } else {
+                        Storage.save('cart', [product])
+                    }
+                    // Storage.delete('cart')
+                    alert("Sản phầm đã thêm vào giỏ hàng");
                 }
-            } else {
-                Storage.save('cart', [product])
+            }else {
+                alert("Sản phầm này đã hết");
             }
-            // Storage.delete('cart')
-            alert("Sản phầm đã thêm vào giỏ hàng");
-        }
+        })
+
+
 
     }
-    console.log('addToCart', addToCartApi)
+
     return (
         <div>
             <div className="container">
@@ -234,7 +218,7 @@ const Detail = () => {
                                         <br></br>
                                         {
                                             color?.data?.map((item, index) => {
-                                                console.log('color',color)
+                                                // console.log('color',color)
                                                 return (
                                                     <Button className="btn btn-dark" onClick={() => handleClickColors(item)}
                                                     >{item?.color_name}</Button>

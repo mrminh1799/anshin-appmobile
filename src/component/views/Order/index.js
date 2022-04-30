@@ -1,17 +1,22 @@
 import {Button} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
-import { useGetListOrder} from "../../../service/product";
+import {useGetListOrder, useUpdateStatusOrder} from "../../../service/product";
 import {useAuth} from "../../../context";
 import moment from "moment";
+import {useConfirm} from 'material-ui-confirm'
 
 const Order = () => {
     const {userInfo} = useAuth()
     const [order, setOrder] = useState([])
-
+    const [orderId, setOrderId] = useState()
+    const  confirm = useConfirm();
     const getListOrder = useGetListOrder({
         id: userInfo?.id
     })
-
+    const updateStatus = useUpdateStatusOrder({
+        idOrder: orderId,
+        status: 4
+    })
     useEffect(() => {
         if (userInfo) {
             getListOrder.refetch()
@@ -30,6 +35,35 @@ const Order = () => {
         })
         return a
     }
+
+    // console.log('id',order.map((item,id)=> item))
+    const changeStatus =(item)=>{
+        if(item?.status===1){
+            setOrderId(item?.orderId)
+            confirm({
+                description: "Bạn có chắc huỷ đơn hàng?",
+                title: 'Xác nhận huỷ'
+            }).then(() => {
+                updateStatus.refetch()
+
+            })
+        }else {
+            confirm({
+                title: 'Huỷ thất bại',
+                description: "Bạn không thể huỷ đơn hàng",
+            })
+        }
+
+    }
+
+
+    useEffect(() => {
+        if(orderId&&updateStatus?.data){
+            let a= order.filter((item,id)=> item?.orderId===orderId)
+          return   a[0].status=4
+        }
+
+    },[updateStatus?.data])
 
     return (
         <div>
@@ -65,7 +99,7 @@ const Order = () => {
                                 </thead>
                                 <tbody>
                                 {order?.map((value, index) => {
-                                    console.log('order',order)
+
                                     return (
                                         <tr key={index}>
                                             <td>
@@ -136,7 +170,7 @@ const Order = () => {
                                                                     (value?.status == 3 ?
                                                                             <p>Đã nhận</p> :
                                                                             (value?.status == 4) ?
-                                                                                <p>Không nhận hàng</p>
+                                                                                <p>Huỷ</p>
                                                                                 : (value?.status == 0) ?
                                                                                     <p>Bị huỷ</p> :
                                                                                     <></>
@@ -146,7 +180,7 @@ const Order = () => {
                                                 </p>
                                             </td>
                                             <td>
-                                                <Button style={{float: "right"}}>X</Button>
+                                                <Button onClick={()=>changeStatus(value)} style={{float: "right"}}>X</Button>
                                             </td>
                                         </tr>
                                     )

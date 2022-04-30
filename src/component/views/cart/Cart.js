@@ -21,6 +21,7 @@ function Cart() {
     const listCart = useGetListCart({
         id: userInfo?.id
     })
+    console.log('listCart',listCart)
     const delProductCart = useDeleteCartProduct({
         idAcount: userInfo?.id,
         idProduct: idProDel
