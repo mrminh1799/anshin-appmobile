@@ -26,7 +26,7 @@ const ListProductFindByCate =()=>{
     }, [idProduct])
     return(
         <div >
-            <section className="popular-items latest-padding">
+            <section className="popular-items">
                 <div className="container">
                     {
                         item?.length>0 ?

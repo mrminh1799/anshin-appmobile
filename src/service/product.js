@@ -327,10 +327,11 @@ export const useDeleteCartProduct = (params) => {
         status,
         data,
         error,
-        refetch
+        refetch,
+        remove
     } = useQuery(['delete_cart_product', params], () => _delete('/cart/deleteByidProduct/'+params?.idAcount+"/"+params?.idProduct),{enabled:false});
     return {
-        status, error, data, refetch
+        status, error, data, refetch, remove
     }
 }
 //cap nhat trang thai order
@@ -339,9 +340,10 @@ export const useUpdateStatusOrder = (params) => {
         status,
         data,
         error,
-        refetch
+        refetch,
+        remove
     } = useQuery(['update_status_order', params], () => _get('Order/updateStatus/'+params?.idOrder+"/"+params?.status),{enabled:false});
     return {
-        status, error, data, refetch
+        status, error, data, refetch,remove
     }
 }

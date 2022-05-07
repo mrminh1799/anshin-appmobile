@@ -7,6 +7,7 @@ import {
 import {useAuth} from "../../../context";
 import {useGetInforUser, useOrder} from "../../../service/product";
 import Storage from "../../../utils/Storage";
+import Text from "antd/es/typography/Text";
 
 
 const Checkout = () => {
@@ -15,6 +16,7 @@ const Checkout = () => {
     const [stateDetails,setSateDetails]=useState([])
     const location = useLocation()
     const {item} = location.state
+    console.log('item',item)
     const getInfoUser = useGetInforUser({
         id: userInfo?.id
     })
@@ -69,11 +71,11 @@ const Checkout = () => {
             return false
         }
         if(formData.address1==''){
-            alert('Không bỏ trống địa chỉ 1')
+            alert('Không bỏ trống địa chỉ ')
             return false
         }
         if(formData.address2==''){
-            alert('Không bỏ trống địa chỉ 2')
+            alert('Không bỏ trống địa chỉ chi tiết')
             return false
         }
        order.refetch().then((res)=>{
@@ -84,27 +86,15 @@ const Checkout = () => {
 
     return (
         <div>
-            <div className="slider-area ">
-                <div className="single-slider slider-height2 d-flex align-items-center">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-xl-12">
-                                <div className="hero-cap text-center">
-                                    <h2>Checkout</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <section className="checkout_area section_padding">
+            <section>
                 <div className="container">
                     <div className="billing_details">
                         <div className="row">
                             <div className="col-lg-6">
-                                <h3>Billing Details</h3>
+                                <h3>Chi tiết hoá đơn</h3>
                                 <form className="row contact_form">
                                     <div className="col-md-6">
+                                        <Text>Họ và tên <Text style={{color:"red"}}>*</Text></Text>
                                         <TextField
                                             onChange={(item) => {
                                                 setFormData(prev=>({
@@ -115,14 +105,17 @@ const Checkout = () => {
                                             }
                                             fullWidth
                                             value={formData?.fullname}
-                                            label={"Full name"}
                                             className="my-2"
                                             type="text"
                                             id="lastname"
                                             name="lastname"
                                         />
+                                        {
+                                            formData?.fullname===''? <Text style={{color:"red"}}>Không bỏ trống tên</Text>:<></>
+                                        }
                                     </div>
                                     <div className="col-md-6">
+                                        <Text>Số điện thoại <Text style={{color:"red"}}>*</Text></Text>
                                         <TextField
                                             onChange={(item) => {
                                                 setFormData(prev=>({
@@ -133,14 +126,17 @@ const Checkout = () => {
                                             }
                                             value={formData?.phone}
                                             fullWidth
-                                            label={"Phone Number"}
                                             className="my-2"
                                             type="text"
                                             id="phone"
                                             name="phone"
                                         />
+                                        {
+                                            formData?.phone===''? <Text style={{color:"red"}}>Không bỏ trống số điện thoại</Text>:<></>
+                                        }
                                     </div>
                                     <div className="col-md-12">
+                                        <Text>Địa chỉ <Text style={{color:"red"}}>*</Text></Text>
                                         <TextField
                                             onChange={(item) => {
                                                 setFormData(prev=>({
@@ -150,14 +146,17 @@ const Checkout = () => {
                                             }
                                             }
                                             fullWidth
-                                            label="Address1"
                                             className="my-2"
                                             type="text"
                                             id="address"
                                             name="address"
                                         />
+                                        {
+                                            formData?.address1===''? <Text style={{color:"red"}}>Không bỏ trống địa chỉ</Text>:<></>
+                                        }
                                     </div>
                                     <div className="col-md-12">
+                                        <Text>Địa chi tiết <Text style={{color:"red"}}>*</Text></Text>
                                         <TextField
                                             onChange={(item) => {
                                                 setFormData(prev=>({
@@ -167,18 +166,20 @@ const Checkout = () => {
                                             }
                                             }
                                             fullWidth
-                                            label="Address2"
                                             className="my-2"
                                             type="text"
                                             id="address"
                                             name="address"
                                         />
+                                        {
+                                            formData?.address2===''? <Text style={{color:"red"}}>Không bỏ trống địa chỉ chi tiết</Text>:<></>
+                                        }
                                     </div>
                                 </form>
                             </div>
                             <div className="col-lg-7" style={{marginTop:100}}>
                                 <div className="order_box">
-                                    <h2>Your Order</h2>
+                                    <h2>Đơn hàng của bạn</h2>
                                     <ul className="list">
                                         <li>
                                             <Link href="#">Sản phẩm
@@ -187,14 +188,13 @@ const Checkout = () => {
                                         </li>
 
                                         {item.map((value, index) => {
-                                            console.log('qewqw',value)
                                             return (
                                                 <li key={index}>
                                                     <Link>{value.productName}
                                                         <span className="middle">x {value.quantity}</span>
                                                         <span className="middle" style={{marginLeft:50}}>{userInfo?value?.colorName:value.color}</span>
                                                         <span className="middle" style={{marginLeft:50}}>{userInfo?value?.sizeName:value.size}</span>
-                                                        <span className="last">${value.price}</span>
+                                                        <span className="last">{value.price}đ</span>
                                                     </Link>
                                                 </li>
                                             )
@@ -202,8 +202,8 @@ const Checkout = () => {
                                     </ul>
                                     <ul className="list list_2 mb-5">
                                         <li>
-                                            <Link href="#">Total
-                                                <span>${total}</span>
+                                            <Link href="#">Tổng
+                                                <span>{total}đ</span>
                                             </Link>
                                         </li>
                                     </ul>

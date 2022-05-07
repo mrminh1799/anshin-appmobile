@@ -164,7 +164,7 @@ function Shop() {
     };
     return (
         <div>
-            <section className="popular-items latest-padding">
+            <section >
                 <div className="container" style={{maxWidth: '95%'}}>
                     <FormControl style={{width: 200}}>
                         <InputLabel id="demo-simple-select-label">Màu sắc</InputLabel>

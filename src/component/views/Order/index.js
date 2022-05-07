@@ -9,7 +9,8 @@ const Order = () => {
     const {userInfo} = useAuth()
     const [order, setOrder] = useState([])
     const [orderId, setOrderId] = useState()
-    const  confirm = useConfirm();
+    const confirm = useConfirm();
+    console.log('order', order)
     const getListOrder = useGetListOrder({
         id: userInfo?.id
     })
@@ -19,7 +20,11 @@ const Order = () => {
     })
     useEffect(() => {
         if (userInfo) {
-            getListOrder.refetch()
+            getListOrder.refetch().then((res) => {
+                if (res?.data) {
+                    updateStatus.remove()
+                }
+            })
 
         }
     }, [])
@@ -31,14 +36,14 @@ const Order = () => {
     const total = (value) => {
         let a = 0
         value?.map((item, index) => {
-            a += item?.price  * item?.quantity
+            a += item?.price * item?.quantity
         })
         return a
     }
 
-    // console.log('id',order.map((item,id)=> item))
-    const changeStatus =(item)=>{
-        if(item?.status===1){
+
+    const changeStatus = (item) => {
+        if (item?.status === 1) {
             setOrderId(item?.orderId)
             confirm({
                 description: "Bạn có chắc huỷ đơn hàng?",
@@ -47,7 +52,7 @@ const Order = () => {
                 updateStatus.refetch()
 
             })
-        }else {
+        } else {
             confirm({
                 title: 'Huỷ thất bại',
                 description: "Bạn không thể huỷ đơn hàng",
@@ -58,29 +63,15 @@ const Order = () => {
 
 
     useEffect(() => {
-        if(orderId&&updateStatus?.data){
-            let a= order.filter((item,id)=> item?.orderId===orderId)
-          return   a[0].status=4
+        if (orderId) {
+            const a = order?.filter((item, id) => item?.orderId === orderId)
+            return a[0].status = 4
         }
-
-    },[updateStatus?.data])
+    }, [orderId])
 
     return (
         <div>
-            <div className="slider-area ">
-                <div className="single-slider slider-height2 d-flex align-items-center">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-xl-12">
-                                <div className="hero-cap text-center">
-                                    <h2>Order</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="cart_area section_padding">
+            <div >
                 <div className="container">
                     <div className="cart_inner">
                         <div className="table-responsive">
@@ -105,7 +96,7 @@ const Order = () => {
                                             <td>
                                                 <div className="product_count">
 
-                                                            <p>{moment(value?.createDate).format('DD/MM/YYYY, h:mm:ss a')}</p>
+                                                    <p>{moment(value?.createDate).format('DD/MM/YYYY, h:mm:ss a')}</p>
 
                                                 </div>
                                             </td>
@@ -149,15 +140,14 @@ const Order = () => {
                                                 <h5>
                                                     {value?.listOrderDetailDTO?.map((item, index) => {
                                                         return (
-                                                            <p>$ {item?.price * item?.quantity}</p>
+                                                            <p>{item?.price * item?.quantity}đ</p>
                                                         )
                                                     })}
                                                 </h5>
                                             </td>
 
                                             <td>
-                                                <p style={{display: "inline-block", marginRight: 10}}>
-                                                    $ {total(value?.listOrderDetailDTO)}
+                                                <p style={{display: "inline-block", marginRight: 10}}>{total(value?.listOrderDetailDTO)}đ
                                                 </p>
                                             </td>
                                             <td>
@@ -180,7 +170,8 @@ const Order = () => {
                                                 </p>
                                             </td>
                                             <td>
-                                                <Button onClick={()=>changeStatus(value)} style={{float: "right"}}>X</Button>
+                                                <Button onClick={() => changeStatus(value)}
+                                                        style={{float: "right"}}>X</Button>
                                             </td>
                                         </tr>
                                     )
