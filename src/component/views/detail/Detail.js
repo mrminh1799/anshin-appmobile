@@ -50,7 +50,7 @@ const Detail = () => {
     const checkProduct = useGetCheckProduct({
         idColor: product?.colorId,
         idSize: product?.sizeId,
-        idProduct: product?.productId
+        idProduct: product?.productId,
     })
 
     const onChangeHandler = (event) => {
@@ -98,30 +98,32 @@ const Detail = () => {
             alert("Vui lòng chọn màu sắc");
             return;
         }
+                setCart([{
+                        quantity: product?.quantity,
+                        productName: product?.name,
+                        image: product?.image,
+                        price: product?.price ? product?.price : 0,
+                        productId: product?.productId,
+                        color: product?.color,
+                        size: product?.size,
+                        colorName: product?.color,
+                        sizeName: product?.size
+                    }]
+                )
 
-        setCart([{
-            quantity: product?.quantity,
-            productName: product?.name,
-            image: product?.image,
-            price: product?.price ? product?.price : 0,
-            productId: product?.productId
-        }]
-        )
+
     }
     useEffect(() => {
         if (cart !== null) {
-            checkout.push('/checkout', {
-                item: cart
+            checkProduct.refetch().then(res => {
+                if (res?.data) {
+                    checkout.push('/checkout', {
+                        item: cart
+                    })
+                } else {
+                    alert("Sản phầm này đã hết");
+                }
             })
-            // checkProduct.refetch().then(res => {
-            //     if (res?.data) {
-            //         checkout.push('/checkout', {
-            //             item: cart
-            //         })
-            //     } else {
-            //         alert("Sản phầm này đã hết");
-            //     }
-            // })
 
         }
     }, [cart])
@@ -214,7 +216,7 @@ const Detail = () => {
 
                                 </h4>
                                 <div className="boder">
-                                    <h5 className={styles.colors}>colors
+                                    <h5 className={styles.colors}>Màu sắc
                                         <br></br>
                                         {
                                             color?.data?.map((item, index) => {
@@ -234,7 +236,7 @@ const Detail = () => {
                                         <h5 className={styles.sizes}>Size: <span>{product?.size}</span></h5>
 
                                         <h5 className={styles.colors}>Màu sắc: <span>{product?.color}</span></h5>
-                                        <h5 className={styles.sizes}>Số lượng: 
+                                        <h5 className={styles.sizes}>Số lượng:
                                         <input
                                                 onChange={onChangeHandler}
                                                 InputProps={{ inputProps: { min: 0, max: 10 } }}

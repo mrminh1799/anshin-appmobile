@@ -227,7 +227,6 @@ function Header() {
                                 <li><Link to="/">Trang chủ</Link></li>
                                 <li><Link to="/shop">Shop</Link></li>
                                 <li onClick={toOrder}><Link>Đơn hàng của bạn</Link></li>
-                                <li onClick={toDiscount}><Link>Sự kiện giảm giá</Link></li>
                             </ul>
                         </nav>
                     </div>

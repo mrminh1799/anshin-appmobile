@@ -49,7 +49,7 @@ function Home() {
                 <div className="popular-items pt-5">
                     <div className="container">
                                 <div className="section-tittle mb-70 text-center">
-                                    <h2 style={{textTransform: 'uppercase', fontSize: 40, marginTop: 20}}>sản phẩm yêu thích</h2>
+                                    <h2 style={{textTransform: 'uppercase', fontSize: 40, marginTop: 20}}>sản phẩm mới ra mắt</h2>
                                 </div>
                         <div className="row justify-content-around">
                             {
