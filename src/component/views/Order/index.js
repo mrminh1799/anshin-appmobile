@@ -10,7 +10,7 @@ const Order = () => {
     const [order, setOrder] = useState([])
     const [orderId, setOrderId] = useState()
     const confirm = useConfirm();
-    console.log('order', order)
+
     const getListOrder = useGetListOrder({
         id: userInfo?.id
     })

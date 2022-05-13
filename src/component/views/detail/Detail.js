@@ -17,6 +17,7 @@ import axios from "axios";
 import { useAuth } from "../../../context";
 import { Button, InputNumber } from "antd";
 import {useConfirm} from "material-ui-confirm";
+import {toast} from "react-toastify";
 
 
 const Detail = () => {
@@ -91,11 +92,11 @@ const Detail = () => {
 
     const toCheckout = () => {
         if (product?.sizeId === '') {
-            alert("Vui lòng chọn size");
+            toast.warn("Vui lòng chọn size")
             return;
         }
         if (product?.colorId === '') {
-            alert("Vui lòng chọn màu sắc");
+            toast.warn("Vui lòng chọn màu sắc")
             return;
         }
                 setCart([{
@@ -111,7 +112,6 @@ const Detail = () => {
                     }]
                 )
 
-
     }
     useEffect(() => {
         if (cart !== null) {
@@ -121,7 +121,7 @@ const Detail = () => {
                         item: cart
                     })
                 } else {
-                    alert("Sản phầm này đã hết");
+                    toast.error("Sản phẩm này đã hết")
                 }
             })
 
@@ -131,24 +131,27 @@ const Detail = () => {
 
     const addToCart = () => {
         if (product?.colorId === '') {
-            alert("Vui lòng chọn màu sắc");
+            toast.warn("Vui lòng chọn màu sắc")
             return;
         }
         if (product?.sizeId === '') {
-            alert("Vui lòng chọn size");
+            toast.warn("Vui lòng chọn size")
             return;
         }
         checkProduct.refetch().then((res) => {
-            console.log('re',res)
             if(res.data){
                 // setIdProduct(res?.id)
                 if (userInfo) {
-                    addToCartApi.refetch((res) => {
-                        console.log('res', res)
-                        if(res){
-                            alert('ok')
+
+                    addToCartApi.refetch().then(
+                        (res) => {
+                            if(res?.data){
+
+                                toast.success("Thêm vào giỏ hàng thành công")
+
+                            }
                         }
-                    })
+                    )
                 } else {
                     if (!!Storage.get('cart')) {
                         let check = true
@@ -169,10 +172,11 @@ const Detail = () => {
                         Storage.save('cart', [product])
                     }
                     // Storage.delete('cart')
-                    alert("Sản phầm đã thêm vào giỏ hàng");
+                    toast.success("Thêm vào giỏ hàng thành công")
                 }
             }else {
-                alert("Sản phầm này đã hết");
+                toast.error("Sản phẩm này đã hết")
+
             }
         })
 
