@@ -103,7 +103,7 @@ function Shop() {
         }
     },[allProducts.data])
 
-    console.log('allProducts',order)
+
     useEffect(() => {
         filterSP.refetch()
     },[checkFilter])

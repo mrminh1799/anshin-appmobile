@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {useHistory, useLocation} from "react-router-dom";
-import {Pagination} from "@material-ui/lab";
 import {useGetDetailProduct} from "../../../service/product";
 const ListProductFindByCate =()=>{
     const location = useLocation()
@@ -44,7 +43,7 @@ const ListProductFindByCate =()=>{
                                                             overFlow: "hidden",
                                                             borderWidth: 0
                                                         }}>
-                                                            <img src={value.image}/>
+                                                            <img src={value.image} style={{height:400, width:300}}/>
                                                         </div>
                                                         <button style={{
                                                             borderWidth: 0,
@@ -66,14 +65,6 @@ const ListProductFindByCate =()=>{
                                                             overflow: 'unset',
                                                             borderBottom: 0
                                                         }}>
-                                                            {/*<div>*/}
-                                                            {/*    <div className="img-cap w-50" style={{textAlign: 'center', height: 25, left: 0}}>*/}
-                                                            {/*        <span style={{padding: '10px 0', borderRight: '1px solid'}}>Thêm vào giỏ hàng</span>*/}
-                                                            {/*    </div>*/}
-                                                            {/*    <div className="img-cap w-50" style={{textAlign: 'center', height: 25, right: 0}}>*/}
-                                                            {/*        <span onClick={() => toDetailProduct(value)} style={{padding: '10px 0'}}>Xem chi tiết</span>*/}
-                                                            {/*    </div>*/}
-                                                            {/*</div>*/}
                                                         </div>
                                                     </div>
                                                 </div>
@@ -81,11 +72,6 @@ const ListProductFindByCate =()=>{
                                         })}
                                     </div>
                                 </div>
-                                {/*<Pagination*/}
-                                {/*    count={totalPage}*/}
-                                {/*    onChange={onChangePage}*/}
-                                {/*    className="py-4 d-flex justify-content-center"*/}
-                                {/*/>*/}
                             </div>
                             :
                             <div className="tab-content" id="nav-tabContent" style={{marginTop: 50}}>

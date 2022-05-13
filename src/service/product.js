@@ -347,3 +347,20 @@ export const useUpdateStatusOrder = (params) => {
         status, error, data, refetch,remove
     }
 }
+//xoa tat ca sp trong gio hang
+export const useDeleteProductAllCart = (params) => {
+    const {
+        status,
+        data,
+        error,
+        refetch,
+        remove
+    } = useQuery(['delete_all_product_cart', params], () => _delete('cart/deleteAllByIdAccount/'+params?.id),{enabled:false});
+    return {
+        status, error, data, refetch,remove
+    }
+}
+//lay tinh thanh phố
+export const findCity = ()=>{
+    return axiosHelper.get("https://provinces.open-api.vn/api/?depth=3");
+}

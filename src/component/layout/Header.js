@@ -17,6 +17,7 @@ import Text from "antd/es/typography/Text";
 import DanhMuc from "./DanhMuc";
 import Select, {components, DropdownIndicatorProps} from "react-select";
 import './style.css'
+import {useConfirm} from "material-ui-confirm";
 
 function Logout(props) {
     return null;
@@ -25,10 +26,11 @@ function Logout(props) {
 Logout.propTypes = {fontSize: PropTypes.string};
 
 function Header() {
-
+    const confirm = useConfirm();
     const [openDrawer, setOpen] = useState()
     const {userInfo, setUserInfo} = useAuth()
     const history = useHistory()
+    const login = useHistory()
     const navigateOrder = useHistory()
     const navigateDiscount = useHistory()
     const [anchorEl, setAnchorEl] = useState(null);
@@ -305,11 +307,20 @@ function Header() {
                     </MenuItem>
                 }
                 <MenuItem onClick={() => {
-                    Storage.delete('userData')
-                    Storage.delete('cart')
-                    setUserInfo(null)
+                    confirm({
+                        description: "Bạn có muốn đăng xuất?",
+                        title: 'Xác nhận'
+                    }).then(() => {
+                        login.push("/login")
+                        Storage.delete('userData')
+                        Storage.delete('cart')
+                        setUserInfo(null)
+
+                    })
+
                 }}>
                     Đăng xuất
+
                 </MenuItem>
             </Menu>
             <Modal
