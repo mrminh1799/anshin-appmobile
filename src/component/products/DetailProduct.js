@@ -249,12 +249,15 @@ function DetailProduct() {
             categoryId: formData.idCategory,
             description: formData.description,
             listDetail: listProductDetail.map(x => {
+               
                 return (
+                    
                     {
                         quantity: x.quantity,
                         idSize: x.idSize,
                         idColor: x.idColor,
                         image: x.image
+                        
                     }
                 )
             })
