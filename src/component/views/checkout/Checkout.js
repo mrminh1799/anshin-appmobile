@@ -20,7 +20,7 @@ const Checkout = () => {
     const {item} = location.state
     const confirm = useConfirm();
     const home = useHistory()
-
+    console.log('item',item)
     const getInfoUser = useGetInforUser({
         id: userInfo?.id
     })
@@ -70,7 +70,7 @@ const Checkout = () => {
                         ...prev,
                         {
                             quantity:vale?.quantity,
-                            idProductDetail: vale?.idProduct
+                            idProductDetail: userInfo? vale?.idProduct:vale?.productId
                         }
                     ]
                 })
@@ -82,16 +82,19 @@ const Checkout = () => {
     }, 0)
     const onSubmitHandler = (quantity,productId) => {
         if(formData.fullname==''){
-            alert('Không bỏ trống tên')
+            toast.warn('Không bỏ trống tên')
             return false
         }
         if(formData.phone==''){
-            alert('Không bỏ trống số điện thoại')
+            toast.warn('Không bỏ trống số điện thoại')
             return false
         }
-
+        if(formData.phone.length<10|| formData.phone.length>11){
+            toast.warn('Số điện thoại không hợp lệ')
+            return false
+        }
         if(formData.address2==''){
-            alert('Không bỏ trống địa chỉ chi tiết')
+            toast.warn('Không bỏ trống địa chỉ chi tiết')
             return false
         }
         order.refetch().then((res)=>{
@@ -101,7 +104,7 @@ const Checkout = () => {
             toast.success("Đặt hàng thành công")
         })
         deleteCart.refetch()
-      
+
     }
 
     return (
@@ -140,7 +143,7 @@ const Checkout = () => {
                                             onChange={(item) => {
                                                 setFormData(prev=>({
                                                     ...prev,
-                                                    phone: item?.target?.value
+                                                    phone: item?.target?.value?.replace(/\D/g, '')
                                                 }))
                                             }
                                             }
@@ -151,8 +154,9 @@ const Checkout = () => {
                                             id="phone"
                                             name="phone"
                                         />
+
                                         {
-                                            formData?.phone===''? <Text style={{color:"red"}}>Không bỏ trống số điện thoại</Text>:<></>
+                                            (formData.phone.length<10|| formData.phone.length>11)&&<Text style={{color:"red"}}>Số điện thoại không hợp lệ</Text>
                                         }
                                     </div>
                                     {/*<div className="col-md-12">*/}
