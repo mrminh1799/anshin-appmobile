@@ -147,7 +147,7 @@ const Checkout = () => {
                                                 }))
                                             }
                                             }
-                                            value={formData?.phone}
+                                            value={formData?.phone?.replace(/\D/g, '')}
                                             fullWidth
                                             className="my-2"
                                             type="text"
