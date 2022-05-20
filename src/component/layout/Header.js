@@ -243,7 +243,7 @@ function Header() {
                                 {/* <span style={{fontSize: 28, fontWeight: "bold", color: "black"}}>
                                     Anshin <span style={{color: "red"}}>Zone</span>
                                 </span> */}
-                                <img width="200px" src="https://firebasestorage.googleapis.com/v0/b/anshin-b910b.appspot.com/o/1.png?alt=media&token=907b5d48-6704-4735-80a8-3d39b7ba6b19"></img>
+                                <img width="200px" src="https://firebasestorage.googleapis.com/v0/b/anshin-b910b.appspot.com/o/images%2F1-removebg-preview.png?alt=media&token=5b68e872-12d6-4096-a655-4f3fe40fd9ca"></img>
                             </Link>
                         </div>
                         <div className="main-menu d-none d-lg-block" style={{flex: 2}}>
