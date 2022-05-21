@@ -93,3 +93,16 @@ export const paymentOrder = (idOrder)=>{
 export const deleteSoftProduct = (idProduct)=>{
     return axiosHelper.delete(`http://localhost:8080/admin/product/delete/${idProduct}`)
 }
+
+export const updateProduct = ( productDTO)=>{
+    return axiosHelper.post("http://localhost:8080/product/udpateProduct", productDTO);
+}
+
+export const checkInsertProductDetail=(idColor, idSize, idProduct)=>{
+    return axiosHelper.get(`http://localhost:8080/productDetail/finByColorSizeProduct/${idColor}/${idSize}/${idProduct}`);
+}
+
+export const insertProductDetail =(dto)=>{
+    return axiosHelper.post("http://localhost:8080/product/insertProductDetail", dto);
+}
+

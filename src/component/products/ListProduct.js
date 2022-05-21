@@ -131,6 +131,7 @@ function ListProduct({ setLoading, product, setClickedRow, setFormData, setProdu
                                 <td>{value.name}</td>
                                 <td>{value.price}$</td>
                                 <td>
+                                    
                                     <Button
                                         onClick={(event) => {
                                             onDeleteProduct(event, value, index);
@@ -138,16 +139,16 @@ function ListProduct({ setLoading, product, setClickedRow, setFormData, setProdu
                                         variant="contained"
                                         color="secondary"
                                     >
-                                        Delete
+                                        Xóa
                                     </Button>
-                                    <Button
+                                    <Button className="ml-1s"
                                         onClick={(event) => {
                                             onUpdateHandle(event, value, index);
                                         }}
                                         variant="contained"
                                         color="primary"
                                     >
-                                        Update
+                                        Cập nhật
                                     </Button>
                                 </td>
                             </tr>
