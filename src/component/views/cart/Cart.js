@@ -11,6 +11,7 @@ import axios from "axios";
 import {useAuth} from "../../../context";
 
 
+
 function Cart() {
     const checkout = useHistory()
     const [cart, setCart] = useState([])
@@ -21,7 +22,7 @@ function Cart() {
     const listCart = useGetListCart({
         id: userInfo?.id
     })
-    console.log('listCart',listCart)
+    console.log('listCart',cartAccount)
     const delProductCart = useDeleteCartProduct({
         idAcount: userInfo?.id,
         idProduct: idProDel
@@ -69,18 +70,22 @@ function Cart() {
     }
     useEffect(() => {
         if (userInfo) {
-            listCart.refetch()
+            listCart.refetch().then((res)=>{
+                if(res?.data){
+                    setCartAccount(res?.data)
+
+                }
+            })
         }
     }, [userInfo])
 
 
-    useEffect(() => {
-        if (userInfo) {
-            if (listCart?.data) {
-                setCartAccount(listCart?.data)
-            }
-        }
-    }, [listCart?.data])
+    // useEffect(() => {
+    //     if (userInfo) {
+    //         if (listCart?.data) {
+    //         }
+    //     }
+    // }, [listCart?.data])
 
     const onChangeHandler = (event) => {
         // if (event.target.value < 1) {
@@ -148,20 +153,7 @@ useEffect(() => {
 },[idProDel])
     return (
         <div>
-            <div className="slider-area ">
-                <div className="single-slider slider-height2 d-flex align-items-center">
-                    <div className="container">
-                        <div className="row">
-                            <div className="col-xl-12">
-                                <div className="hero-cap text-center">
-                                    <h2>Cart List</h2>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="cart_area section_padding">
+            <div className="cart_area">
                 <div className="container">
                     <div className="cart_inner">
                         <div className="table-responsive">
@@ -178,7 +170,7 @@ useEffect(() => {
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    {cartAccount?.map((value, index) => {
+                                    {cartAccount&&cartAccount?.map((value, index) => {
                                         return (
                                             <tr key={index}>
                                                 <td>
@@ -267,7 +259,7 @@ useEffect(() => {
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <h5>${value.price}</h5>
+                                                    <h5>{value.price}đ</h5>
                                                 </td>
                                                 <td>
                                                     <h5>{value.color}</h5>
@@ -289,7 +281,7 @@ useEffect(() => {
                                                 <td>
                                                     <h5 style={{display: "inline-block", marginRight: 10}}>
                                                         {/*${Number(value.quantity) * 20}*/}
-                                                        ${Number(value.quantity) * Number(value.price)}
+                                                        {Number(value.quantity) * Number(value.price)}đ
                                                     </h5>
                                                     <Button onClick={() => {
                                                         onHandleDelete(value.productId)
@@ -303,20 +295,20 @@ useEffect(() => {
                                         <td></td>
                                         <td></td>
                                         <td>
-                                            <h5>Subtotal</h5>
+                                            <h5>Tổng</h5>
                                         </td>
                                         <td>
-                                            <h5>${cart.reduce((total, cart) => {
+                                            <h5>{cart.reduce((total, cart) => {
                                                 return total += Number(cart.quantity) * Number(cart.price);
-                                            }, 0)}</h5>
+                                            }, 0)}đ</h5>
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             }
                             <div className="checkout_btn_inner float-right">
-                                <Link className="btn_1 mr-2" to="/shop">Continue Shopping</Link>
-                                <button onClick={toCheckout} className="btn_1 checkout_btn_1">Proceed to checkout
+                                <Link className="btn_1 mr-2" to="/shop">Tiếp tục mua hàng</Link>
+                                <button onClick={toCheckout} className="btn_1 checkout_btn_1">Thanh toán
                                 </button>
                             </div>
                         </div>

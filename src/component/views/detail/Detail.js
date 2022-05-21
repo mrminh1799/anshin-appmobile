@@ -1,5 +1,5 @@
-import { TextField } from "@material-ui/core";
-import { useEffect, useState } from "react";
+import {TextField} from "@material-ui/core";
+import {useEffect, useState} from "react";
 import styles from '../../../style/productStyle.module.css'
 
 import {
@@ -14,11 +14,12 @@ import {
 } from "../../../service/product";
 import Storage from "../../../utils/Storage";
 import axios from "axios";
-import { useAuth } from "../../../context";
-import { Button, InputNumber } from "antd";
+import {useAuth} from "../../../context";
+import {Button, InputNumber} from "antd";
 import {useConfirm} from "material-ui-confirm";
 import {useDispatch, useSelector} from "react-redux";
 import {useGetProductId} from "../../../service/productService2";
+import {toast} from "react-toastify";
 
 
 const Detail = () => {
@@ -34,6 +35,7 @@ const Detail = () => {
     const [checkImage, setCheckImage] = useState(true)
     const [product, setProduct] = useState({
         productId: item?.id,
+        productIdDetail: "",
         colorId: "",
         sizeId: "",
         color: "",
@@ -46,8 +48,8 @@ const Detail = () => {
     });
     const addToCartApi = useAddCart({
         id: userInfo?.id,
-        idProduct: item?.id,
-        quantity: product?.quantity
+        idProduct: product?.productIdDetail,
+        quantity: product?.quantity,
     })
     const checkProduct = useGetCheckProduct({
         idColor: product?.colorId,
@@ -94,43 +96,42 @@ const Detail = () => {
             ...prev,
             colorId: item?.id,
             color: item?.color_name,
-            imageDetail:  item?.image
+            imageDetail: item?.image
         }))
     }
 
     const toCheckout = () => {
         if (product?.sizeId === '') {
-            alert("Vui lòng chọn size");
+            toast.warn("Vui lòng chọn size")
             return;
         }
         if (product?.colorId === '') {
-            alert("Vui lòng chọn màu sắc");
+            toast.warn("Vui lòng chọn màu sắc")
             return;
         }
-                setCart([{
-                        quantity: product?.quantity,
-                        productName: product?.name,
-                        image: product?.image,
-                        price: product?.price ? product?.price : 0,
-                        productId: product?.productId,
-                        color: product?.color,
-                        size: product?.size,
-                        colorName: product?.color,
-                        sizeName: product?.size
-                    }]
-                )
-
+        setCart([{
+                quantity: product?.quantity,
+                productName: product?.name,
+                image: product?.image,
+                price: product?.price ? product?.price : 0,
+                productId: product?.productId,
+                color: product?.color,
+                size: product?.size,
+                colorName: product?.color,
+                sizeName: product?.size
+            }]
+        )
 
     }
     useEffect(() => {
         if (cart !== null) {
             checkProduct.refetch().then(res => {
                 if (res?.data) {
-                    checkout.push('/checkout', {
-                        item: cart
-                    })
+                    // checkout.push('/checkout', {
+                    //     item: cart
+                    // })
                 } else {
-                    alert("Sản phầm này đã hết");
+                    toast.error("Sản phẩm này đã hết")
                 }
             })
 
@@ -140,29 +141,28 @@ const Detail = () => {
 
     const addToCart = () => {
         if (product?.colorId === '') {
-            alert("Vui lòng chọn màu sắc");
+            toast.warn("Vui lòng chọn màu sắc")
             return;
         }
         if (product?.sizeId === '') {
-            alert("Vui lòng chọn size");
+            toast.warn("Vui lòng chọn size")
             return;
         }
         checkProduct.refetch().then((res) => {
-            console.log('re',res)
-            if(res.data){
+            if (res?.data) {
                 // setIdProduct(res?.id)
                 if (userInfo) {
-                    addToCartApi.refetch((res) => {
-                        console.log('res', res)
-                        if(res){
-                            alert('ok')
-                        }
-                    })
+                    setProduct((prev)=>({
+                        ...prev,
+                        productIdDetail: res?.data?.id,
+                        })
+                    )
+
                 } else {
                     if (!!Storage.get('cart')) {
                         let check = true
                         let cart = Storage.get('cart')?.map((item, i) => {
-                            if (item.id == product.productId) {
+                            if (item.id == res?.data?.id) {
                                 check = false
                                 item.quantity = Number(item.quantity) + Number(product.quantity)
                             }
@@ -178,16 +178,30 @@ const Detail = () => {
                         Storage.save('cart', [product])
                     }
                     // Storage.delete('cart')
-                    alert("Sản phầm đã thêm vào giỏ hàng");
+                    toast.success("Thêm vào giỏ hàng thành công")
                 }
-            }else {
-                alert("Sản phầm này đã hết");
+            } else {
+                toast.error("Sản phẩm này đã hết")
+
             }
         })
 
 
-
     }
+    useEffect(() => {
+        if (product?.productIdDetail) {
+
+            addToCartApi.refetch().then(
+                (res) => {
+                    if (res?.data) {
+
+                        toast.success("Thêm vào giỏ hàng thành công")
+
+                    }
+                }
+            )
+        }
+    }, [product])
 
     return (
         <div>
@@ -199,7 +213,7 @@ const Detail = () => {
                             <div className="preview col-md-7">
                                 <div className="preview-pic tab-content">
                                     <div id="pic-1">
-                                        <img width={'500px'} src={checkImage?item?.image:product?.imageDetail} />
+                                        <img width={'500px'} src={checkImage ? item?.image : product?.imageDetail}/>
                                     </div>
                                 </div>
 
@@ -212,7 +226,8 @@ const Detail = () => {
                                     {
                                         size?.data?.map((item, index) => {
                                             return (
-                                                <Button onClick={() => handleClickSizes(item)} type="button">{item?.size_name}</Button>
+                                                <Button onClick={() => handleClickSizes(item)}
+                                                        type="button">{item?.size_name}</Button>
 
                                             )
                                         })
@@ -224,9 +239,9 @@ const Detail = () => {
                                         <br></br>
                                         {
                                             color?.data?.map((item, index) => {
-                                                // console.log('color',color)
                                                 return (
-                                                    <Button className="btn btn-dark" onClick={() => handleClickColors(item)}
+                                                    <Button className="btn btn-dark"
+                                                            onClick={() => handleClickColors(item)}
                                                     >{item?.color_name}</Button>
                                                 )
                                             })
@@ -241,37 +256,37 @@ const Detail = () => {
 
                                         <h5 className={styles.colors}>Màu sắc: <span>{product?.color}</span></h5>
                                         <h5 className={styles.sizes}>Số lượng:
-                                        <input
+                                            <input
                                                 onChange={onChangeHandler}
-                                                InputProps={{ inputProps: { min: 0, max: 10 } }}
+                                                InputProps={{inputProps: {min: 0, max: 10}}}
                                                 name="quantity"
                                                 value={product?.quantity}
                                                 label="Số lượng"
                                                 className="mb-2"
                                                 type="number"
-                                           /> </h5>
-                                        
+                                            /></h5>
+
                                         <div className="product_count_area">
-                                        
-                                            
-                                             {/* <InputNumber  name="quantity" onChange={onChangeHandler} value={product?.quantity} ></InputNumber> */}
+
+
+                                            {/* <InputNumber  name="quantity" onChange={onChangeHandler} value={product?.quantity} ></InputNumber> */}
                                         </div>
 
 
                                     </div>
-                                    <br />
+                                    <br/>
                                     <div>
                                         <Button type="primary" className="btn btn-primary ml-1" onClick={toCheckout}>Mua
                                             ngay
                                         </Button>
-                                        <Button type="primary" onClick={addToCart} className="btn btn-primary ml-1" >Thêm
+                                        <Button type="primary" onClick={addToCart} className="btn btn-primary ml-1">Thêm
                                             vào giỏ hàng
                                         </Button>
                                         {/*<button className='btn btn-primary ml-1' type="button">Thích</button>*/}
                                     </div>
                                 </div>
 
-                                <br />
+                                <br/>
                                 <h2>Mô tả</h2>
                                 <p className={styles.productDescription}>{item?.description}
                                 </p>

@@ -44,7 +44,7 @@ function Home() {
                     <img style={{
                         maxWidth: '100%'
                     }}
-                        src="https://firebasestorage.googleapis.com/v0/b/anshin-b910b.appspot.com/o/sale50%25.jpg?alt=media&token=e5503710-23f7-472c-b530-5b017bd0f93f"/>
+                        src="https://firebasestorage.googleapis.com/v0/b/anshin-b910b.appspot.com/o/images%2F1900x632_copy_min.jpg?alt=media&token=30930929-3074-466b-a58f-edb56a15283f "/>
                 </div>
                 <div className="popular-items pt-5">
                     <div className="container">
