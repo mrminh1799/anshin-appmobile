@@ -17,19 +17,21 @@ import axios from "axios";
 import { useAuth } from "../../../context";
 import { Button, InputNumber } from "antd";
 import {useConfirm} from "material-ui-confirm";
+import {useDispatch, useSelector} from "react-redux";
+import {useGetProductId} from "../../../service/productService2";
 
 
 const Detail = () => {
     const location = useLocation()
     const { userInfo, setUserInfo } = useAuth()
     const  confirm = useConfirm();
-
+    const dispatch = useDispatch()
     const { item } = location.state
     const checkout = useHistory()
+    const curProduct = useSelector(state => state.globalReducer.product_by_id)
     const [cart, setCart] = useState(null)
     const [idProduct, setIdProduct] = useState('')
     const [checkImage, setCheckImage] = useState(true)
-
     const [product, setProduct] = useState({
         productId: item?.id,
         colorId: "",
@@ -52,6 +54,13 @@ const Detail = () => {
         idSize: product?.sizeId,
         idProduct: product?.productId,
     })
+
+    useEffect(()=>{
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        dispatch(useGetProductId({
+            id: item.id
+        }))
+    },[])
 
     const onChangeHandler = (event) => {
         if (event.target.value < 1) {
@@ -197,11 +206,6 @@ const Detail = () => {
                             </div>
                             <div className="details col-md-5">
                                 <h3 className={styles.productTitle}>{item?.name}</h3>
-                                {/*<div className={styles.rating}>*/}
-
-                                {/*    <span className="review-no">41 reviews</span>*/}
-                                {/*</div>*/}
-
                                 <h4 className={styles.price}>Giá: <span>{item?.price} đ</span></h4>
                                 <h4 className={styles.sizes}>Size
                                     <br></br>

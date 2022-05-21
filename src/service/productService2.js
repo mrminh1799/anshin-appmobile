@@ -2,6 +2,7 @@
 ////// Tất cả API Trưởng dùng
 
 import axiosHelper from "../common/axiosHelper";
+import {createGet} from "./utils";
 
 
 export const findAllSize = ()=>{
@@ -92,4 +93,8 @@ export const paymentOrder = (idOrder)=>{
 
 export const deleteSoftProduct = (idProduct)=>{
     return axiosHelper.delete(`http://localhost:8080/admin/product/delete/${idProduct}`)
+}
+
+export const useGetProductId = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'product_by_id', 'product/findById/' + params?.id, params, _callback);
 }

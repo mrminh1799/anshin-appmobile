@@ -27,7 +27,7 @@ const Order = () => {
             })
 
         }
-    }, [])
+    }, [userInfo])
 
     useEffect(() => {
         setOrder(getListOrder?.data)

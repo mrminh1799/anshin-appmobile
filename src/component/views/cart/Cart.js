@@ -71,7 +71,7 @@ function Cart() {
         if (userInfo) {
             listCart.refetch()
         }
-    }, [])
+    }, [userInfo])
 
 
     useEffect(() => {
