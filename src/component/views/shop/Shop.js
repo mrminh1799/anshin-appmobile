@@ -1,17 +1,19 @@
-import {FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
+import {FormControl, InputLabel, MenuItem, Select} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
 import React, {useEffect, useState} from "react";
-import {Link as RouterLink, Link, useHistory} from "react-router-dom";
+import {useHistory} from "react-router-dom";
 import {
     useGetAllProducts,
-    useGetDetailProduct, useGetFilterProduct,
+    useGetDetailProduct,
+    useGetFilterProduct,
     useGetListColor,
     useGetListSize
 } from "../../../service/product";
 import './style.css'
 
-import { styled } from '@mui/material/styles';
-import {Card, Grid, Typography,Box,Stack} from "@mui/material";
+import {styled} from '@mui/material/styles';
+import Image from "../../../utils/Image";
+
 const ProductImgStyle = styled('img')({
     top: 0,
     width: '100%',
@@ -19,6 +21,7 @@ const ProductImgStyle = styled('img')({
     objectFit: 'cover',
     position: 'absolute'
 });
+
 function Shop() {
     let detail = useHistory();
     const [page, setPage] = useState(1);
@@ -28,7 +31,7 @@ function Shop() {
     const [allColor, setAllColor] = useState()
     const listColor = useGetListColor({})
     const listSize = useGetListSize({})
-    const [checkFilter,setCheckFilter] = useState(true)
+    const [checkFilter, setCheckFilter] = useState(true)
     const [pagination, setPagination] = useState({
         index: 0,
         size: 8
@@ -76,9 +79,9 @@ function Shop() {
         id: idProduct
     })
 
-    const filterSP= useGetFilterProduct({
-        idColor:filterProduct?.color,
-        idSize:filterProduct?.size,
+    const filterSP = useGetFilterProduct({
+        idColor: filterProduct?.color,
+        idSize: filterProduct?.size,
         priceFrom: filterProduct?.priceFrom,
         priceTo: filterProduct?.priceTo
     })
@@ -86,27 +89,29 @@ function Shop() {
         setIdProduct(item?.id)
     }
 
-    const handleFilter = () =>{
+    const handleFilter = () => {
 
     }
-    useEffect(() => {allProducts.refetch()},[])
     useEffect(() => {
-        if(allProducts?.data){
-                setTotalPage(Math.ceil(allProducts?.data?.length / pagination.size))
-                setPagination({
-                    ...pagination,
-                    index: 0
-                })
-                setListOrder(allProducts?.data)
-                setOrder(allProducts?.data.slice(0, pagination.size))
+        allProducts.refetch()
+    }, [])
+    useEffect(() => {
+        if (allProducts?.data) {
+            setTotalPage(Math.ceil(allProducts?.data?.length / pagination.size))
+            setPagination({
+                ...pagination,
+                index: 0
+            })
+            setListOrder(allProducts?.data)
+            setOrder(allProducts?.data.slice(0, pagination.size))
 
         }
-    },[allProducts.data])
+    }, [allProducts.data])
 
 
     useEffect(() => {
         filterSP.refetch()
-    },[checkFilter])
+    }, [checkFilter])
 
     useEffect(() => {
         listColor.refetch()
@@ -164,8 +169,8 @@ function Shop() {
     };
     return (
         <div>
-            <section >
-                <div className="container" style={{maxWidth: '95%'}}>
+            <section className="popular-items">
+                <div className="container">
                     <FormControl style={{width: 200}}>
                         <InputLabel id="demo-simple-select-label">Màu sắc</InputLabel>
                         <Select
@@ -256,22 +261,24 @@ function Shop() {
                     </FormControl>
 
                     {
-                        checkFilter?
+                        checkFilter ?
                             <div className="tab-content" id="nav-tabContent" style={{marginTop: 50}}>
                                 <div className="tab-pane fade show active" id="nav-home" role="tabpanel"
                                      aria-labelledby="nav-home-tab">
-                                    <div className="row justify-content-around">
+                                    <div className="row">
                                         {order?.map((value, index) => {
                                             return (
-                                                <div  onClick={() => toDetailProduct(value)} key={index} className="col-xl-3 popular-img">
+                                                <div onClick={() => toDetailProduct(value)} key={index}
+                                                     className="col-xl-3 popular-img">
                                                     <div className="single-popular-items mb-25">
                                                         <div className="popular-img" style={{
-                                                            width: '100%',
-                                                            height: '100%',
+                                                            minWidth: 260,
+                                                            minHeight: 260 / 212 * 319,
                                                             overFlow: "hidden",
                                                             borderWidth: 0
                                                         }}>
-                                                            <img src={value.image} style={{height:400, width:300}}/>
+                                                            <Image src={value.image}
+                                                                 style={{height: '100%', width: '100%'}}/>
                                                         </div>
                                                         <button style={{
                                                             borderWidth: 0,
@@ -280,12 +287,16 @@ function Shop() {
                                                             fontWeight: 'bold'
                                                         }} onClick={() => toDetailProduct(value)}>
                                                             <h5>
-                                                                <span className={'threeDot'} color={'white'}>{value.name}</span>
+                                                                <span className={'threeDot'}
+                                                                      color={'white'}>{value.name}</span>
                                                             </h5>
                                                             <span style={{
                                                                 color: 'darkRed',
                                                                 fontSize: 18
-                                                            }} >{value.price}<span style={{textDecoration: 'underline', fontSize: 14}}>đ</span></span>
+                                                            }}>{value.price}<span style={{
+                                                                textDecoration: 'underline',
+                                                                fontSize: 14
+                                                            }}>đ</span></span>
                                                         </button>
                                                         <div className="popular-img" style={{
                                                             width: '100%',
@@ -293,10 +304,10 @@ function Shop() {
                                                             overflow: 'unset',
                                                             borderBottom: 0
                                                         }}>
-                                                            
+
                                                         </div>
                                                     </div>
-                                                    
+
                                                 </div>
                                             )
                                         })}
@@ -317,15 +328,17 @@ function Shop() {
                                     <div className="row justify-content-around">
                                         {filterSP?.data && filterSP?.data.map((value, index) => {
                                             return (
-                                                <div onClick={() => toDetailProduct(value)}  key={index} className="col-xl-3 popular-img">
+                                                <div onClick={() => toDetailProduct(value)} key={index}
+                                                     className="col-xl-3 popular-img">
                                                     <div className="single-popular-items mb-25">
                                                         <div className="popular-img" style={{
-                                                            width: '100%',
-                                                            height: '100%',
+                                                            minWidth: 260,
+                                                            minHeight: 260 / 212 * 319,
                                                             overFlow: "hidden",
                                                             borderWidth: 0
                                                         }}>
-                                                            <img src={value.image} style={{height:400, width:300}}/>
+                                                            <img src={value.image}
+                                                                 style={{height: '100%', width: '100%'}}/>
                                                         </div>
                                                         <button style={{
                                                             borderWidth: 0,
@@ -334,12 +347,16 @@ function Shop() {
                                                             fontWeight: 'bold'
                                                         }} onClick={() => toDetailProduct(value)}>
                                                             <h5>
-                                                                <span className={'threeDot'} color={'white'}>{value.name}</span>
+                                                                <span className={'threeDot'}
+                                                                      color={'white'}>{value.name}</span>
                                                             </h5>
                                                             <span style={{
                                                                 color: 'darkRed',
                                                                 fontSize: 18
-                                                            }} >{value.price}<span style={{textDecoration: 'underline', fontSize: 14}}>đ</span></span>
+                                                            }}>{value.price}<span style={{
+                                                                textDecoration: 'underline',
+                                                                fontSize: 14
+                                                            }}>đ</span></span>
                                                         </button>
                                                         <div className="popular-img" style={{
                                                             width: '100%',
@@ -347,7 +364,7 @@ function Shop() {
                                                             overflow: 'unset',
                                                             borderBottom: 0
                                                         }}>
-                                                        
+
                                                         </div>
                                                     </div>
                                                 </div>

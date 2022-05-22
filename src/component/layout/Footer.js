@@ -1,6 +1,7 @@
 import {Link, useHistory} from "react-router-dom";
-import {useEffect, useState} from "react";
-import {useGetParentCate, useGetProductParentCate} from "../../service/product";
+import React, {useEffect, useState} from "react";
+import {GetProductParentCate, useGetParentCate, useGetProductParentCate} from "../../service/product";
+import {useDispatch} from "react-redux";
 
 
 function Footer() {
@@ -8,9 +9,7 @@ function Footer() {
     const list = useHistory()
     const [idCateParent,setIdCateParent] = useState()
 
-    const productParentCate=useGetProductParentCate({
-        id: idCateParent
-    })
+    const dispatch = useDispatch()
     const categoryNav = useGetParentCate({})
 
     useEffect(()=>{
@@ -18,20 +17,16 @@ function Footer() {
     },[])
 
     const detailListParent=(value)=>{
-        setIdCateParent(value?.idCategory)
+        dispatch(GetProductParentCate({
+            id: value.idCategory
+        },res=>{
+            if (res){
+                list.push(`/findProduct`,{
+                    item: res
+                })
+            }
+        }))
     }
-
-    useEffect(() => {
-        if(idCateParent){
-            productParentCate.refetch().then(res=>{
-                if (res){
-                    list.push(`/findProduct`,{
-                        item: res?.data
-                    })
-                }
-            })
-        }
-    },[idCateParent])
 
     return (
         <div className="footer-area footer-padding pb-2">
@@ -42,9 +37,7 @@ function Footer() {
                             <div className="single-footer-caption">
                                 <div className="footer-logo">
                                     <Link to="/">
-                                        <span style={{ fontSize: 28, fontWeight: "bold", color: "black" }} >
-                                            Anshin <span style={{ color: "red" }}>Zone</span>
-                                        </span>
+                                        <img width="200px" height={'80px'} style={{objectFit: 'cover'}} src="https://firebasestorage.googleapis.com/v0/b/anshin-b910b.appspot.com/o/images%2F1-removebg-preview.png?alt=media&token=5b68e872-12d6-4096-a655-4f3fe40fd9ca"/>
                                     </Link>
                                 </div>
                             </div>

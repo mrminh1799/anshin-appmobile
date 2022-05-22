@@ -124,12 +124,30 @@ function SideBar() {
                                     </ListItemButton>
                                 </List>
                             </Collapse>
-                            <ListItem onClick={() => history.push('/admin/products')} button className="pl-3">
+                            <ListItem button className="pl-3" onClick={() => setOpenCate(!openCate)}>
                                 <ListItemIcon className="pl-1" style={{minWidth: 45}}>
-                                    <AllInboxIcon style={{color: 'white'}}/>
+                                    <CategoryOutlinedIcon style={{color: 'white'}}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Sản phẩm"/>
+                                {openCate ? <ExpandLess/> : <ExpandMoreIcon/>}
                             </ListItem>
+                            <Collapse in={openCate} timeout="auto" unmountOnExit>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/products')} sx={{pl: 9}}>
+                                        <ListItemText primary="Sản phẩm"/>
+                                    </ListItemButton>
+                                </List>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/colors')} sx={{pl: 9}}>
+                                        <ListItemText primary="Màu"/>
+                                    </ListItemButton>
+                                </List>
+                                <List component="div" disablePadding>
+                                    <ListItemButton onClick={() => history.push('/admin/sizes')} sx={{pl: 9}}>
+                                        <ListItemText primary="Size"/>
+                                    </ListItemButton>
+                                </List>
+                            </Collapse>
                             <ListItem onClick={() => history.push('/admin/event')} button className="pl-3">
                                 <ListItemIcon className="pl-1" style={{minWidth: 45}}>
                                     <AllInboxIcon style={{color: 'white'}}/>
@@ -141,18 +159,6 @@ function SideBar() {
                                     <AllInboxIcon style={{color: 'white'}}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Tài khoản"/>
-                            </ListItem>
-                            <ListItem onClick={() => history.push('/admin/sizes')} button className="pl-3">
-                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
-                                    <AllInboxIcon style={{color: 'white'}}/>
-                                </ListItemIcon>
-                                <ListItemText primary="Size"/>
-                            </ListItem>
-                            <ListItem onClick={() => history.push('/admin/colors')} button className="pl-3">
-                                <ListItemIcon className="pl-1" style={{minWidth: 45}}>
-                                    <AllInboxIcon style={{color: 'white'}}/>
-                                </ListItemIcon>
-                                <ListItemText primary="Color"/>
                             </ListItem>
                         </div>
                     </List>

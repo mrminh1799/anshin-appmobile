@@ -2,6 +2,7 @@
 ////// Tất cả API Trưởng dùng
 
 import axiosHelper from "../common/axiosHelper";
+import {createGet} from "./utils";
 
 
 export const findAllSize = ()=>{
@@ -85,7 +86,7 @@ export const deleteOrderTransaction=(idOrder)=>{
 
 
 export const paymentOrder = (idOrder)=>{
-    return axiosHelper.get(`http://localhost:8080/Order/updateStatus/${idOrder}/2`)
+    return axiosHelper.get(`http://localhost:8080/Order/updateStatus/${idOrder}/3`)
 }
 
 
@@ -111,3 +112,6 @@ export const updateProductDetail =(dto)=>{
     return axiosHelper.post("http://localhost:8080/product/upateProductDetail", dto);
 }
 
+export const useGetProductId = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'product_by_id', 'product/findById/' + params?.id, params, _callback);
+}

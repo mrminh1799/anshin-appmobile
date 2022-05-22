@@ -61,9 +61,6 @@ function Home() {
                                             <div className="single-popular-items mb-50 text-center">
                                                 <div className="popular-img">
                                                     <img src={item?.image} style={{height:400, width:300}}/>
-                                                    <div className="favorit-items">
-                                                        <span className="flaticon-heart"></span>
-                                                    </div>
                                                 </div>
                                                 <button style={{
                                                     borderWidth: 0,
@@ -107,9 +104,6 @@ function Home() {
                                             <div className="single-popular-items mb-50 text-center">
                                                 <div className="popular-img">
                                                     <img src={item?.image}  style={{height:400, width:300}}/>
-                                                    <div className="favorit-items">
-                                                        <span className="flaticon-heart"></span>
-                                                    </div>
                                                 </div>
                                                 <button style={{
                                                     borderWidth: 0,

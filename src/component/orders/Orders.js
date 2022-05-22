@@ -47,7 +47,10 @@ function Orders() {
         update: false
     })
 
-    const [openRefund, setOpenRefund] = useState(false)
+    const [openRefund, setOpenRefund] = useState({
+        open: false,
+        update: false
+    })
 
     const [detailOrder, setDetailOrder] = useState([])
 
@@ -426,7 +429,10 @@ function Orders() {
                                                                         orderId: value.id
                                                                     }, (res) => {
                                                                         setDetailOrder(res)
-                                                                        setOpenRefund(true);
+                                                                        setOpenRefund({
+                                                                            open: true,
+                                                                            update: true
+                                                                        });
                                                                     }))
                                                                 }}>Đổi
                                                                     trả</Dropdown.Item>
