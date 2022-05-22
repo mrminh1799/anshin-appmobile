@@ -46,7 +46,7 @@ function Register() {
                         <div className="row">
                             <div className="col-xl-12">
                                 <div className="hero-cap text-center">
-                                    <h2>Register</h2>
+                                    <h2>ĐĂNG KÝ</h2>
                                 </div>
                             </div>
                         </div>
@@ -59,31 +59,30 @@ function Register() {
                         <div className="col-lg-6 col-md-6">
                             <div className="login_part_text text-center">
                                 <div className="login_part_text_iner">
-                                    <h2>New to our Shop?</h2>
-                                    <p>There are advances being made in science and technology
-                                        everyday, and a good example of this is the</p>
-                                    <Link to={'/login'} className="btn_3">Login an Account</Link>
+                                    <h2>Bạn đã có tài khoản chưa?</h2>
+                                    <p>Ashin Store có rất nhiều sản phẩm phong phú, đa dạng, mẫu mã đẹp mà bạn có thể tham khảo và mua ngay</p>
+                                    <Link to={'/login'} className="btn_3">Đăng nhập</Link>
                                 </div>
                             </div>
                         </div>
                         <div className="col-lg-6 col-md-6">
                             <div className="login_part_form">
                                 <div className="login_part_form_iner">
-                                    <h3>Welcome Friend ! <br />
-                                        Please Register now</h3>
+                                    <h3>Xin chào bạn ! <br />
+                                        Hãy đăng ký ngay thôi</h3>
                                     <form className="row contact_form" action="#" method="post" novalidate="novalidate" onSubmit={onSubmitHandler} >
                                         <div className="col-md-12 form-group p_star">
-                                            <input onChange={onChangeHandler} value={formData.username} type="text" className="form-control" id="name" name="username" placeholder="Username" />
+                                            <input onChange={onChangeHandler} value={formData.username} type="text" className="form-control" id="name" name="username" placeholder="Tài khoản" />
                                         </div>
                                         <div className="col-md-12 form-group p_star">
-                                            <input onChange={onChangeHandler} value={formData.password} type="password" className="form-control" id="password" name="password" placeholder="Password" />
+                                            <input onChange={onChangeHandler} value={formData.password} type="password" className="form-control" id="password" name="password" placeholder="Mật khẩu" />
                                         </div>
                                         <div className="col-md-12 form-group p_star">
-                                            <input onChange={onChangeHandler} value={formData.confirmPassword} type="password" className="form-control" id="password" name="password" placeholder="Confirm password" />
+                                            <input onChange={onChangeHandler} value={formData.confirmPassword} type="password" className="form-control" id="password" name="password" placeholder="Nhập lại mật khẩu" />
                                         </div>
                                         <div className="col-md-12 form-group">
                                             <button type="submit" value="submit" className="btn_3">
-                                                Register
+                                                Đăng ký
                                             </button>
                                         </div>
                                     </form>

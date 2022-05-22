@@ -284,17 +284,22 @@ export const useGetInforUser = (params) => {
 }
 
 //lay danh sach sp theo danh mục cha
-export const useGetProductParentCate = (params) => {
-    const {
-        status,
-        data,
-        error,
-        refetch
-    } = useQuery(['get_product_parent_cate', params], () => _get('/product/findByCategoryParentId/'+params?.id),{enabled:false});
-    return {
-        status, error, data, refetch
-    }
+// export const useGetProductParentCate = (params) => {
+//     const {
+//         status,
+//         data,
+//         error,
+//         refetch
+//     } = useQuery(['get_product_parent_cate', params], () => _get('/product/findByCategoryParentId/'+params?.id),{enabled:false});
+//     return {
+//         status, error, data, refetch
+//     }
+// }
+
+export const GetProductParentCate = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'useGetProductParentCate', '/product/findByCategoryParentId/'+params?.id, params, _callback);
 }
+
 //lay danh sach sp theo danh mục cha
 export const useAddCart = (params) => {
     const {

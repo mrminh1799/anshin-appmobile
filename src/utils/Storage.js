@@ -19,7 +19,7 @@ class Storage {
     /**
      * Save a key value pair or a series of key value pairs to localStorage.
      * @param  {String|Array} key The key or an array of key/value pairs
-     * @param  {Any} value The value to save
+     * @param  {[{idProductDetail: *, sizeId?: string, image?: *, imageDetail?: string, productIdDetail?: string, quantity?: number, productId?: *, color?: string, size?: string, colorId?: string, price?: *, name?: *}]} value The value to save
      * @return {Promise}
      */
     save(key, value) {

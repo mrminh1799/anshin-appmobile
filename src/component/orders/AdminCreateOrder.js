@@ -248,17 +248,16 @@ function AdminCreateOrder() {
 
 
     const onEditChange = (key) => {
-
-
         confirm({
-            description: "Bạn có chắc xóa sản phẩm khỏi hóa đơn?",
+            description: "Bạn có chắc muốn xoá hóa đơn này?",
             title: 'Xác nhận xóa'
         }).then(() => {
             console.log(listOrder)
             console.log(key)
 
 
-            const newList  = listOrder.filter(x => x.id !== key) 
+            const newList  = listOrder.filter(x => String(x.id) !== String(key))
+
             setListOrder(newList)
             productService.deleteOrderTransaction(key).then(() => {
                 toast.toastSuccess("xóa thành công")  
@@ -295,13 +294,17 @@ function AdminCreateOrder() {
 
 
     const paymantHandler =()=>{
-        productService.paymentOrder(idOrder).then(res=>{
-            toast.toastSuccess("Thanh toán thành công")
-            const newList = listOrder.filter(x=>x.id!==idOrder)
-            setListOrder(newList)
-        })   .catch(err=>{
-            toast.toastError("Có lỗi xảy ra")
-        })
+        if(listOrderDetail?.length>0){
+            productService.paymentOrder(idOrder).then(res=>{
+                toast.toastSuccess("Thanh toán thành công")
+                const newList = listOrder.filter(x=>x.id!==idOrder)
+                setListOrder(newList)
+            })   .catch(err=>{
+                toast.toastError("Có lỗi xảy ra")
+            })
+        }else{
+            toast.toastError("Chưa chọn sản phẩm nào để thanh toán")
+        }
     }
 
     return (
@@ -433,7 +436,7 @@ function AdminCreateOrder() {
                                 key: 'size',
                             },
                             {
-                                title: 'Action',
+                                title: 'Hành động',
                                 dataIndex: 'action',
                                 key: 'action',
                             },
@@ -447,9 +450,6 @@ function AdminCreateOrder() {
                                             <Button type="primary" onClick={() => showModal(x.id)}>
                                                 Thêm vào hóa đơn
                                             </Button>
-                                            <Modal title="Thêm sản phẩm vào hóa đơn" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-                                                <Input type="number" name='quantityProdcutDetail' onChange={onChangeQuantityProductDetail} value={quantityProdcutDetail} placeholder='Số lượng' ></Input>
-                                            </Modal>
                                         </>
                                     })
 
@@ -460,8 +460,9 @@ function AdminCreateOrder() {
 
                     </Col>
                 </Row>
-
-
+                <Modal title="Thêm sản phẩm vào hóa đơn" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+                    <Input type="number" name='quantityProdcutDetail' onChange={onChangeQuantityProductDetail} value={quantityProdcutDetail} placeholder='Số lượng' ></Input>
+                </Modal>
             </div>
         </>
 

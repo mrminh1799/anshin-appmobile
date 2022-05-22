@@ -18,6 +18,7 @@ import DanhMuc from "./DanhMuc";
 import Select, {components, DropdownIndicatorProps} from "react-select";
 import './style.css'
 import {useConfirm} from "material-ui-confirm";
+import {toast} from "react-toastify";
 
 function Logout(props) {
     return null;
@@ -149,7 +150,7 @@ function Header() {
     }
     const toOrder = () => {
         if (userInfo === null) {
-            alert('Vui lòng đăng nhập')
+            toast.warn("Vui lòng đăng nhập")
         } else {
             navigateOrder.push(`/order`)
         }
@@ -234,16 +235,12 @@ function Header() {
                     </div>
                 </div>
             </div>
-            <div className="main-header header-sticky">
-
+            <div className="main-header header-sticky z-depth-1-half">
                 <div style={{padding: '10px 0'}} className="container-fluid">
                     <div className="menu-wrapper">
                         <div className="logo" style={{flex: 1}}>
                             <Link to="/">
-                                {/* <span style={{fontSize: 28, fontWeight: "bold", color: "black"}}>
-                                    Anshin <span style={{color: "red"}}>Zone</span>
-                                </span> */}
-                                <img width="200px" src="https://firebasestorage.googleapis.com/v0/b/anshin-b910b.appspot.com/o/images%2F1-removebg-preview.png?alt=media&token=5b68e872-12d6-4096-a655-4f3fe40fd9ca"></img>
+                                <img width="200px" height={'80px'} style={{objectFit: 'cover'}} src="https://firebasestorage.googleapis.com/v0/b/anshin-b910b.appspot.com/o/images%2F1-removebg-preview.png?alt=media&token=5b68e872-12d6-4096-a655-4f3fe40fd9ca"/>
                             </Link>
                         </div>
                         <div className="main-menu d-none d-lg-block" style={{flex: 2}}>

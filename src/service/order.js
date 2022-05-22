@@ -67,3 +67,13 @@ export const changeOrder = (params, _callback) => async dispatch => {
 export const changeReturn = (params, _callback) => async dispatch => {
     await createPut(dispatch, 'change_return','Order/changeReturn/' + params.id ,params, _callback);
 }
+
+export const updateCart = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'updateCart', 'cart/updateQuantity/' + params.idAccount + "/" + params.idProductDetail + '/' + params.quantity, params, _callback);
+}
+export const getCart = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'cart', 'cart/findByIdAcount2/' + params.id, params, _callback);
+}
+export const getOrder = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'order', 'Order/findByAcountId/' + params.id, params, _callback);
+}
