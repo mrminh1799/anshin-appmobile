@@ -1,17 +1,37 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {IconButton, Modal} from "@mui/material";
 import {Button, TextField} from "@material-ui/core";
 import SearchProduct from "./SearchProduct";
-import {changeQuantityDetailOrder, changeReturn} from "../../service/order";
+import {changeReturn} from "../../service/order";
 import {FaTrash} from "react-icons/fa";
 import {useDispatch} from "react-redux";
+import {useAuth} from "../../context";
 
 
 const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
 
     const dispatch = useDispatch()
 
+    const {userInfo} = useAuth()
+
     const [data, setData] = useState([])
+
+    const [prevForm, setPrevForm] = useState()
+
+    const [count, setCount] = useState(0)
+
+    useEffect(() => {
+        if (formData) {
+            setCount(1)
+            if (count < 1) {
+                setPrevForm({...formData})
+            }
+        }
+    }, [formData])
+
+    useEffect(() => {
+        setData(detailOrder)
+    }, [detailOrder])
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -24,6 +44,7 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
             listOrderProductDetailDTO: data,
         }))
     }
+    console.log(userInfo)
 
     return open && (
         <Modal
@@ -31,8 +52,11 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                 overflow: 'scroll'
             }}
             keepMounted
-            open={open} onClose={() => {
-            setOpen(false)
+            open={open.open} onClose={() => {
+            setOpen({
+                open: false,
+                update: false
+            })
         }} className="px-5 pt-4">
             <form style={{
                 backgroundColor: 'white',
@@ -44,44 +68,99 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                 }}>
                     <div style={{flex: 1}}>
                         <TextField
+                            disabled
                             name="name"
-                            value={formData.fullName}
+                            value={prevForm?.fullName}
                             fullWidth
                             label="Tên khách hàng"
                             className="my-2 mb-4"
                         />
                         <TextField
+                            disabled
                             name="name"
-                            value={formData.phoneNumber}
+                            value={prevForm?.phoneNumber}
                             fullWidth
                             label="Số điện thoại"
                             className="my-2 mb-4"
                         />
                         <TextField
+                            disabled
                             name="name"
-                            value={formData.address}
+                            value={prevForm?.address}
                             fullWidth
                             label="Địa chỉ"
                             className="my-2 mb-4"
                         />
                         <TextField
+                            disabled
                             name="name"
-                            value={formData.detailAddress}
+                            value={prevForm?.detailAddress}
                             fullWidth
                             label="Địa chỉ chi tiết"
                             className="my-2 mb-4"
                         />
                     </div>
                     <div className={'ml-5 form-group'} style={{flex: 1}}>
+
+                        <div style={{flex: 1}}>
+                            <TextField onChange={(e) => {
+                                setFormData({
+                                    ...formData,
+                                    fullName: e.target.value
+                                })
+                            }}
+                                       name="name"
+                                       value={formData.fullName}
+                                       fullWidth
+                                       label="Tên khách hàng"
+                                       className="my-2 mb-4"
+                            />
+                            <TextField onChange={(e) => {
+                                setFormData({
+                                    ...formData,
+                                    phoneNumber: e.target.value
+                                })
+                            }}
+                                       name="name"
+                                       value={formData.phoneNumber}
+                                       fullWidth
+                                       label="Số điện thoại"
+                                       className="my-2 mb-4"
+                            />
+                            <TextField onChange={(e) => {
+                                setFormData({
+                                    ...formData,
+                                    address: e.target.value
+                                })
+                            }}
+                                       name="name"
+                                       value={formData.address}
+                                       fullWidth
+                                       label="Địa chỉ"
+                                       className="my-2 mb-4"
+                            />
+                            <TextField onChange={(e) => {
+                                setFormData({
+                                    ...formData,
+                                    detailAddress: e.target.value
+                                })
+                            }}
+                                       name="name"
+                                       value={formData.detailAddress}
+                                       fullWidth
+                                       label="Địa chỉ chi tiết"
+                                       className="my-2 mb-4"
+                            />
+                        </div>
                         <label htmlFor="exampleFormControlTextarea1">Lý do đổi trả</label>
-                        <textarea value={formData.reason} onChange={(e)=>{
+                        <textarea value={formData.reason} onChange={(e) => {
                             setFormData({
                                 ...formData,
                                 reason: e.target.value
                             })
                         }} className="form-control"
                                   id="exampleFormControlTextarea1"
-                                  rows="6"/>
+                                  rows="4"/>
                     </div>
                 </div>
                 <div className={'d-flex'}>
@@ -111,11 +190,6 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                             <th>số lượng</th>
                             <th>Giá</th>
                             <th>Tổng tiền</th>
-                            {
-                                open.update
-                                &&
-                                <th>Action</th>
-                            }
                         </tr>
                         </thead>
                         <tbody>
@@ -129,15 +203,6 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                                         <td>{item.quantity}</td>
                                         <td>{item.price}</td>
                                         <td>{item.quantity * item.price}</td>
-                                        {
-                                            open.update
-                                            &&
-                                            <td>
-                                                <IconButton>
-                                                    <FaTrash color={'red'} size={14}/>
-                                                </IconButton>
-                                            </td>
-                                        }
                                     </tr>
                                 )
                             })
@@ -156,7 +221,7 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                             {
                                 open.update
                                 &&
-                                <th>Action</th>
+                                <th>Hành động</th>
                             }
                         </tr>
                         </thead>
@@ -172,12 +237,16 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                                             {
                                                 open.update
                                                     ?
-                                                    <TextField type={'number'} onBlur={() =>
-                                                        dispatch(changeQuantityDetailOrder({
-                                                            orderDetailId: item.idOrderDetail,
-                                                            quantity: item.quantity
-                                                        }))}
-                                                        // onChange={(value) => onChangeQuantity(item.idOrderDetail, value)}
+                                                    <TextField type={'number'}
+                                                               onChange={(e) => {
+                                                                   let arr = data.map(item => ({...item}))
+                                                                   setData(arr.map(value => {
+                                                                       if (item.idOrderDetail === value.idOrderDetail && e.target.value > 0) {
+                                                                           value.quantity = e.target.value
+                                                                       }
+                                                                       return value
+                                                                   }))
+                                                               }}
                                                                value={item.quantity}/>
                                                     :
                                                     item.quantity
@@ -190,7 +259,9 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                                             open.update
                                             &&
                                             <td>
-                                                <IconButton>
+                                                <IconButton onClick={() => {
+                                                    setData(data.filter(value => value.idOrderDetail !== item.idOrderDetail))
+                                                }}>
                                                     <FaTrash color={'red'} size={14}/>
                                                 </IconButton>
                                             </td>

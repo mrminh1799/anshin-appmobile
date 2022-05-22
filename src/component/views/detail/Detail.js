@@ -1,36 +1,26 @@
-import {TextField} from "@material-ui/core";
 import {useEffect, useState} from "react";
 import styles from '../../../style/productStyle.module.css'
 
-import {
-    useLocation, useHistory
-} from "react-router-dom";
-import {
-    useAddCart,
-    useGetCheckProduct,
-    useGetColorProduct,
-    useGetImageProduct,
-    useGetSizeProduct
-} from "../../../service/product";
+import {useHistory, useLocation} from "react-router-dom";
+import {useAddCart, useGetCheckProduct, useGetColorProduct, useGetSizeProduct} from "../../../service/product";
 import Storage from "../../../utils/Storage";
-import axios from "axios";
 import {useAuth} from "../../../context";
-import {Button, InputNumber} from "antd";
-import {useConfirm} from "material-ui-confirm";
+import {Button} from "antd";
+import {useDispatch, useSelector} from "react-redux";
+import {useGetProductId} from "../../../service/productService2";
 import {toast} from "react-toastify";
+import _ from "lodash";
 
 
 const Detail = () => {
     const location = useLocation()
     const {userInfo, setUserInfo} = useAuth()
-    const confirm = useConfirm();
-
+    const dispatch = useDispatch()
     const {item} = location.state
     const checkout = useHistory()
+    const curProduct = useSelector(state => state.globalReducer.product_by_id)
     const [cart, setCart] = useState(null)
-    const [idProduct, setIdProduct] = useState('')
     const [checkImage, setCheckImage] = useState(true)
-
     const [product, setProduct] = useState({
         productId: item?.id,
         productIdDetail: "",
@@ -54,6 +44,13 @@ const Detail = () => {
         idSize: product?.sizeId,
         idProduct: product?.productId,
     })
+
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/rules-of-hooks
+        dispatch(useGetProductId({
+            id: item.id
+        }))
+    }, [])
 
     const onChangeHandler = (event) => {
         if (event.target.value < 1) {
@@ -100,27 +97,35 @@ const Detail = () => {
             toast.warn("Vui lòng chọn màu sắc")
             return;
         }
-        setCart([{
-                quantity: product?.quantity,
-                productName: product?.name,
-                image: product?.image,
-                price: product?.price ? product?.price : 0,
-                productId: product?.productId,
-                color: product?.color,
-                size: product?.size,
-                colorName: product?.color,
-                sizeName: product?.size
-            }]
-        )
+        checkProduct.refetch().then((res) => {
+            if (res?.data) {
+                setCart([{
+                        quantity: product?.quantity,
+                        productName: product?.name,
+                        image: product?.image,
+                        price: product?.price ? product?.price : 0,
+                        productId: product?.productId,
+                        color: product?.color,
+                        size: product?.size,
+                        colorName: product?.color,
+                        sizeName: product?.size,
+                        [!_.isEmpty(userInfo) ? 'idProduct' : 'productId']: res?.data?.id,
+                        isKeep: true
+                    }]
+                )
+            } else {
+                toast.error("Sản phẩm này đã hết")
+            }
+        })
 
     }
     useEffect(() => {
         if (cart !== null) {
             checkProduct.refetch().then(res => {
                 if (res?.data) {
-                    // checkout.push('/checkout', {
-                    //     item: cart
-                    // })
+                    checkout.push('/checkout', {
+                        item: cart
+                    })
                 } else {
                     toast.error("Sản phẩm này đã hết")
                 }
@@ -141,19 +146,17 @@ const Detail = () => {
         }
         checkProduct.refetch().then((res) => {
             if (res?.data) {
-                // setIdProduct(res?.id)
                 if (userInfo) {
-                    setProduct((prev)=>({
-                        ...prev,
-                        productIdDetail: res?.data?.id,
+                    setProduct((prev) => ({
+                            ...prev,
+                            productIdDetail: res?.data?.id,
                         })
                     )
-
                 } else {
-                    if (!!Storage.get('cart')) {
+                    if (!_.isEmpty(Storage.get('cart'))) {
                         let check = true
                         let cart = Storage.get('cart')?.map((item, i) => {
-                            if (item.id == res?.data?.id) {
+                            if (item?.productIdDetail == res?.data?.id) {
                                 check = false
                                 item.quantity = Number(item.quantity) + Number(product.quantity)
                             }
@@ -161,31 +164,26 @@ const Detail = () => {
                         })
 
                         if (check) {
-                            Storage.save('cart', [...Storage.get('cart'), product])
+                            Storage.save('cart', [...Storage.get('cart'), {...product, productIdDetail: res?.data?.id}])
                         } else {
                             Storage.save('cart', cart)
                         }
                     } else {
-                        Storage.save('cart', [product])
+                        let data = [{...product, productIdDetail: res?.data?.id}]
+                        Storage.save('cart', data)
                     }
-                    // Storage.delete('cart')
                     toast.success("Thêm vào giỏ hàng thành công")
                 }
             } else {
                 toast.error("Sản phẩm này đã hết")
-
             }
         })
-
-
     }
     useEffect(() => {
         if (product?.productIdDetail) {
-
             addToCartApi.refetch().then(
                 (res) => {
                     if (res?.data) {
-
                         toast.success("Thêm vào giỏ hàng thành công")
 
                     }
@@ -193,6 +191,8 @@ const Detail = () => {
             )
         }
     }, [product])
+
+    console.log(curProduct)
 
     return (
         <div>
@@ -211,11 +211,6 @@ const Detail = () => {
                             </div>
                             <div className="details col-md-5">
                                 <h3 className={styles.productTitle}>{item?.name}</h3>
-                                {/*<div className={styles.rating}>*/}
-
-                                {/*    <span className="review-no">41 reviews</span>*/}
-                                {/*</div>*/}
-
                                 <h4 className={styles.price}>Giá: <span>{item?.price} đ</span></h4>
                                 <h4 className={styles.sizes}>Size
                                     <br></br>
@@ -261,14 +256,8 @@ const Detail = () => {
                                                 className="mb-2"
                                                 type="number"
                                             /></h5>
-
                                         <div className="product_count_area">
-
-
-                                            {/* <InputNumber  name="quantity" onChange={onChangeHandler} value={product?.quantity} ></InputNumber> */}
                                         </div>
-
-
                                     </div>
                                     <br/>
                                     <div>
@@ -278,19 +267,15 @@ const Detail = () => {
                                         <Button type="primary" onClick={addToCart} className="btn btn-primary ml-1">Thêm
                                             vào giỏ hàng
                                         </Button>
-                                        {/*<button className='btn btn-primary ml-1' type="button">Thích</button>*/}
                                     </div>
                                 </div>
-
                                 <br/>
                                 <h2>Mô tả</h2>
-                                <p className={styles.productDescription}>{item?.description}
-                                </p>
+                                <p dangerouslySetInnerHTML={{__html: curProduct?.description}}/>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
 
         </div>

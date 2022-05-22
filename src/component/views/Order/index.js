@@ -4,13 +4,24 @@ import {useGetListOrder, useUpdateStatusOrder} from "../../../service/product";
 import {useAuth} from "../../../context";
 import moment from "moment";
 import {useConfirm} from 'material-ui-confirm'
+import {useHistory} from "react-router-dom";
+import {Box, Tab, Tabs} from "@mui/material";
+import {useDispatch} from "react-redux";
+import {getOrder} from "../../../service/order";
+import {toast} from "react-toastify";
 
 const Order = () => {
     const {userInfo} = useAuth()
     const [order, setOrder] = useState([])
     const [orderId, setOrderId] = useState()
+    const [tab, setTab] = useState(1)
     const confirm = useConfirm();
+    const history = useHistory()
+    const dispatch = useDispatch()
 
+    useEffect(() => {
+        if (!userInfo) history.push('/')
+    }, [userInfo])
     const getListOrder = useGetListOrder({
         id: userInfo?.id
     })
@@ -27,7 +38,29 @@ const Order = () => {
             })
 
         }
-    }, [])
+    }, [userInfo])
+
+    useEffect(() => {
+        if (userInfo) {
+            let temp = {
+                0: [],
+                1: [],
+                2: [],
+                3: [],
+                4: [],
+                5: [],
+                6: [],
+            }
+            dispatch(getOrder({
+                id: userInfo.id
+            }, (res) => {
+                res.map(item => {
+                    temp?.[item?.status]?.push(item)
+                })
+                setOrder(temp)
+            }))
+        }
+    }, [userInfo])
 
     useEffect(() => {
         setOrder(getListOrder?.data)
@@ -50,7 +83,11 @@ const Order = () => {
                 title: 'Xác nhận huỷ'
             }).then(() => {
                 updateStatus.refetch()
-
+                setOrder(prevState => ({
+                    ...prevState,
+                    [tab]: prevState[tab].filter(value => item.orderId !== value.orderId)
+                }))
+                toast.success('Huỷ đơn thành công')
             })
         } else {
             confirm({
@@ -58,129 +95,173 @@ const Order = () => {
                 description: "Bạn không thể huỷ đơn hàng",
             })
         }
-
     }
 
-
-    useEffect(() => {
-        if (orderId) {
-            const a = order?.filter((item, id) => item?.orderId === orderId)
-            return a[0].status = 4
-        }
-    }, [orderId])
-
     return (
-        <div>
-            <div >
-                <div className="container">
+        <div style={{backgroundColor: '#efefef', paddingTop: '30px', paddingBottom: '100px'}}>
+            <div className="container"
+                 style={{
+                     maxWidth: '80%',
+                     padding: '30px 30px',
+                     backgroundColor: 'white',
+                     borderRadius: 10,
+                     minHeight: '600px'
+                 }}>
+                <h2 style={{textAlign: "center"}} className={'py-2'}>Chi tiết đơn hàng</h2>
+                <div style={{borderTop: '1px solid black',}}>
+                    <Box sx={{borderBottom: 1, borderColor: 'divider', backgroundColor: 'white'}}>
+                        <Tabs
+                            indicatorColor="primary"
+                            textColor="inherit"
+                            variant="fullWidth" value={tab} onChange={(e, newTab) => setTab(newTab)}
+                            aria-label="basic tabs example">
+                            <Tab value={1} label="Chờ xác nhận"/>
+                            <Tab value={2} label="Đã xử lý"/>
+                            <Tab value={3} label="Hoàn thành"/>
+                            <Tab value={6} label="Đã đổi trả"/>
+                            <Tab value={4} label="Đã huỷ"/>
+                            <Tab value={0} label="Đã bị hủy"/>
+                        </Tabs>
+                    </Box>
                     <div className="cart_inner">
-                        <div className="table-responsive">
-                            <table className="table">
-                                <thead>
-                                <tr>
-                                    <th scope="col">Ngày mua</th>
-                                    <th scope="col">Tên sản phẩm</th>
-                                    <th scope="col">Màu</th>
-                                    <th scope="col">Size</th>
-                                    <th scope="col">Số lượng</th>
-                                    <th scope="col">Giá</th>
-                                    <th scope="col">Tổng</th>
-                                    <th scope="col">Trạng thái</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {order?.map((value, index) => {
-
-                                    return (
-                                        <tr key={index}>
-                                            <td>
-                                                <div className="product_count">
-
-                                                    <p>{moment(value?.createDate).format('DD/MM/YYYY, h:mm:ss a')}</p>
-
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="product_count">
-                                                    {value?.listOrderDetailDTO?.map((item, index) => {
-                                                        return (
-                                                            <p>{item?.nameProduct}</p>
-                                                        )
-                                                    })}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="product_count">
-                                                    {value?.listOrderDetailDTO?.map((item, index) => {
-                                                        return (
-                                                            <p>{item?.colorName}</p>
-                                                        )
-                                                    })}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="product_count">
-                                                    {value?.listOrderDetailDTO?.map((item, index) => {
-                                                        return (
-                                                            <p>{item?.sizeName}</p>
-                                                        )
-                                                    })}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div className="product_count">
-                                                    {value?.listOrderDetailDTO?.map((item, index) => {
-                                                        return (
-                                                            <p>{item?.quantity}</p>
-                                                        )
-                                                    })}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <h5>
-                                                    {value?.listOrderDetailDTO?.map((item, index) => {
-                                                        return (
-                                                            <p>{item?.price * item?.quantity}đ</p>
-                                                        )
-                                                    })}
-                                                </h5>
-                                            </td>
-
-                                            <td>
-                                                <p style={{display: "inline-block", marginRight: 10}}>{total(value?.listOrderDetailDTO)}đ
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <p style={{display: "inline-block", marginRight: 10}}>
-                                                    {
-                                                        value?.status == 1 ?
-                                                            <p>Chờ xác nhận</p> :
-                                                            (value?.status == 2 ?
-                                                                    <p>Đã xác nhận</p> :
-                                                                    (value?.status == 3 ?
-                                                                            <p>Đã nhận</p> :
-                                                                            (value?.status == 4) ?
-                                                                                <p>Huỷ</p>
-                                                                                : (value?.status == 0) ?
-                                                                                    <p>Bị huỷ</p> :
-                                                                                    <></>
-                                                                    )
-                                                            )
-                                                    }
-                                                </p>
-                                            </td>
-                                            <td>
-                                                <Button onClick={() => changeStatus(value)}
-                                                        style={{float: "right"}}>X</Button>
-                                            </td>
+                        {
+                            order?.[tab]?.length > 0 ?
+                                <div className="table-responsive">
+                                    <table className="table">
+                                        <thead>
+                                        <tr>
+                                            <th style={{
+                                                fontWeight: 600,
+                                                fontSize: 14,
+                                                color: 'black',
+                                                whiteSpace: 'noWrap'
+                                            }} scope="col">Ngày mua
+                                            </th>
+                                            <th style={{
+                                                fontWeight: 600,
+                                                fontSize: 14,
+                                                color: 'black',
+                                                whiteSpace: 'noWrap'
+                                            }} scope="col">Tên sản phẩm
+                                            </th>
+                                            <th style={{
+                                                fontWeight: 600,
+                                                fontSize: 14,
+                                                color: 'black',
+                                                whiteSpace: 'noWrap'
+                                            }} scope="col">Màu
+                                            </th>
+                                            <th style={{
+                                                fontWeight: 600,
+                                                fontSize: 14,
+                                                color: 'black',
+                                                whiteSpace: 'noWrap'
+                                            }} scope="col">Size
+                                            </th>
+                                            <th style={{
+                                                fontWeight: 600,
+                                                fontSize: 14,
+                                                color: 'black',
+                                                whiteSpace: 'noWrap'
+                                            }} scope="col">Số lượng
+                                            </th>
+                                            <th style={{
+                                                fontWeight: 600,
+                                                fontSize: 14,
+                                                color: 'black',
+                                                whiteSpace: 'noWrap'
+                                            }} scope="col">Giá
+                                            </th>
+                                            <th style={{
+                                                fontWeight: 600,
+                                                fontSize: 14,
+                                                color: 'black',
+                                                whiteSpace: 'noWrap'
+                                            }} scope="col">Tổng
+                                            </th>
                                         </tr>
-                                    )
-                                })}
+                                        </thead>
+                                        <tbody>
+                                        {order?.[tab]?.map((value, index) => {
+                                            return (
+                                                <tr key={index}>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            <p style={{fontFamily: "Playfair Display"}}>{moment(value?.createDate).format('DD/MM/YYYY, h:mm:ss a')}</p>
 
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.nameProduct}</p>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.colorName}</p>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.sizeName}</p>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.quantity}</p>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <h5>
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.price * item?.quantity}đ</p>
+                                                                )
+                                                            })}
+                                                        </h5>
+                                                    </td>
 
-                                </tbody>
-                            </table>
-                        </div>
+                                                    <td>
+                                                        <p style={{
+                                                            display: "inline-block",
+                                                            marginRight: 10
+                                                        }}>{total(value?.listOrderDetailDTO)}đ
+                                                        </p>
+                                                    </td>
+                                                    {
+                                                        tab === 1 &&
+                                                        <td>
+                                                            <Button onClick={() => changeStatus(value)}
+                                                                    style={{float: "right"}}>X</Button>
+                                                        </td>
+                                                    }
+                                                </tr>
+                                            )
+                                        })}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                :
+                                <div className={'p-5 d-flex justify-content-center'}>
+                                    <p style={{fontFamily: "Playfair Display"}}>Chưa có đơn nào!</p>
+                                </div>
+                        }
                     </div>
                 </div>
             </div>
