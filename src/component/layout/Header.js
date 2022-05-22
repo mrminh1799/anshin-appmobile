@@ -312,9 +312,8 @@ function Header() {
                         Storage.delete('userData')
                         Storage.delete('cart')
                         setUserInfo(null)
-
+                        toast.success('Đăng xuất thành công')
                     })
-
                 }}>
                     Đăng xuất
 

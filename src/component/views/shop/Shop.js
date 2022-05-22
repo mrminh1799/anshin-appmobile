@@ -38,6 +38,8 @@ function Shop() {
     });
     const [order, setOrder] = useState([])
     const [listOrder, setListOrder] = useState([])
+    const [currentSize, setcurrentSize] = useState(null)
+    const [currentColor, setcurrentColor] = useState(null)
     const [filterProduct, setFilterProduct] = useState({
         size: 0,
         priceFrom: 0,
@@ -89,9 +91,6 @@ function Shop() {
         setIdProduct(item?.id)
     }
 
-    const handleFilter = () => {
-
-    }
     useEffect(() => {
         allProducts.refetch()
     }, [])
@@ -171,94 +170,94 @@ function Shop() {
         <div>
             <section className="popular-items">
                 <div className="container">
-                    <FormControl style={{width: 200}}>
-                        <InputLabel id="demo-simple-select-label">Màu sắc</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={filterProduct.labelColor}
-                            label={filterProduct.labelColor}
-                            defaultValue={filterProduct.labelColor}
-                            onChange={(event) => {
-                                setCheckFilter(false)
-                                setFilterProduct(prev => ({
-                                    ...prev,
-                                    color: event.target.value.id,
-                                    labelColor: event.target.value.colorName
-                                }))
+                    {/*<FormControl style={{width: 200}}>*/}
+                    {/*    <InputLabel id="demo-simple-select-label">Màu sắc</InputLabel>*/}
+                    {/*    <Select*/}
+                    {/*        labelId="demo-simple-select-label"*/}
+                    {/*        id="demo-simple-select"*/}
+                    {/*        value={currentColor}*/}
+                    {/*        defaultValue={filterProduct.labelColor}*/}
+                    {/*        onChange={(event) => {*/}
+                    {/*            setcurrentColor(event.target.value)*/}
+                    {/*            setCheckFilter(false)*/}
+                    {/*            setFilterProduct(prev => ({*/}
+                    {/*                ...prev,*/}
+                    {/*                color: event.target.value.id,*/}
+                    {/*                labelColor: event.target.value.colorName*/}
+                    {/*            }))*/}
 
-                            }}
+                    {/*        }}*/}
 
-                        >
-                            {
-                                allColor?.map((item, index) => {
-                                    return (
-                                        <MenuItem value={item}>{item.colorName}</MenuItem>
-                                    )
-                                })
-                            }
+                    {/*    >*/}
+                    {/*        {*/}
+                    {/*            allColor?.map((item, index) => {*/}
+                    {/*                return (*/}
+                    {/*                    <MenuItem value={item}>{item.colorName}</MenuItem>*/}
+                    {/*                )*/}
+                    {/*            })*/}
+                    {/*        }*/}
 
-                        </Select>
-                    </FormControl>
-                    <FormControl style={{width: 200}}>
-                        <InputLabel id="demo-simple-select-label">Kích cỡ</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={filterProduct.labelSize}
-                            label={filterProduct.labelSize}
-                            defaultValue={filterProduct.labelSize}
-                            onChange={(event) => {
-                                setCheckFilter(false)
-                                setFilterProduct(prev => ({
-                                    ...prev,
-                                    size: event.target.value.id,
-                                    labelSize: event.target.value.size_name
-                                }))
+                    {/*    </Select>*/}
+                    {/*</FormControl>*/}
+                    {/*<FormControl style={{width: 200}}>*/}
+                    {/*    <InputLabel id="demo-simple-select-label">Kích cỡ</InputLabel>*/}
+                    {/*    <Select*/}
+                    {/*        labelId="demo-simple-select-label"*/}
+                    {/*        id="demo-simple-select"*/}
+                    {/*        value={currentSize}*/}
+                    {/*        defaultValue={filterProduct.labelSize}*/}
+                    {/*        onChange={(event) => {*/}
+                    {/*            setcurrentSize(event.target.value)*/}
+                    {/*            setCheckFilter(false)*/}
+                    {/*            setFilterProduct(prev => ({*/}
+                    {/*                ...prev,*/}
+                    {/*                size: event.target.value.id,*/}
+                    {/*                labelSize: event.target.value.size_name*/}
+                    {/*            }))*/}
 
-                            }}
+                    {/*        }}*/}
 
-                        >
-                            {
-                                allSize?.map((item, index) => {
-                                    return (
-                                        <MenuItem value={item}>{item.size_name}</MenuItem>
-                                    )
-                                })
-                            }
+                    {/*    >*/}
+                    {/*        {*/}
+                    {/*            allSize?.map((item, index) => {*/}
+                    {/*                return (*/}
+                    {/*                    <MenuItem value={item}>{item.size_name}</MenuItem>*/}
+                    {/*                )*/}
+                    {/*            })*/}
+                    {/*        }*/}
 
-                        </Select>
-                    </FormControl>
-                    <FormControl style={{width: 200}}>
-                        <InputLabel id="demo-simple-select-label">Giá</InputLabel>
-                        <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={filterProduct.labelPrice}
-                            label={filterProduct.labelPrice}
-                            defaultValue={filterProduct.labelPrice}
-                            onChange={(event) => {
-                                setCheckFilter(false)
-                                setFilterProduct(prev => ({
-                                    ...prev,
-                                    priceFrom: event.target.value.priceFrom,
-                                    priceTo: event.target.value.priceTo,
-                                    labelPrice: event.target.value.label
-                                }))
+                    {/*    </Select>*/}
+                    {/*</FormControl>*/}
+                    {/*<FormControl style={{width: 200}}>*/}
+                    {/*    <InputLabel id="demo-simple-select-label">Giá</InputLabel>*/}
+                    {/*    <Select*/}
+                    {/*        labelId="demo-simple-select-label"*/}
+                    {/*        id="demo-simple-select"*/}
+                    {/*        value={filterProduct.labelPrice}*/}
+                    {/*        label={filterProduct.labelPrice}*/}
+                    {/*        defaultValue={filterProduct.labelPrice}*/}
+                    {/*        onChange={(event) => {*/}
+                    {/*            setCheckFilter(false)*/}
+                    {/*            setFilterProduct(prev => ({*/}
+                    {/*                ...prev,*/}
+                    {/*                priceFrom: event.target.value.priceFrom,*/}
+                    {/*                priceTo: event.target.value.priceTo,*/}
+                    {/*                labelPrice: event.target.value.label*/}
+                    {/*            }))*/}
 
-                            }}
+                    {/*        }}*/}
 
-                        >
-                            {
-                                priceFilter?.map((item, index) => {
-                                    return (
-                                        <MenuItem value={item}>{item.label}</MenuItem>
-                                    )
-                                })
-                            }
+                    {/*    >*/}
+                    {/*        {*/}
+                    {/*            priceFilter?.map((item, index) => {*/}
+                    {/*                return (*/}
+                    {/*                    <MenuItem value={item}>{item.label}</MenuItem>*/}
+                    {/*                )*/}
+                    {/*            })*/}
+                    {/*        }*/}
 
-                        </Select>
-                    </FormControl>
+                    {/*    </Select>*/}
+                    {/*</FormControl>*/}
 
                     {
                         checkFilter ?

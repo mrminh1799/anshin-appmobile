@@ -3,6 +3,7 @@ import callApi from "../../callAPI/apiCaller";
 import Storage from '../../../utils/Storage'
 import {useAuth} from "../../../context";
 import {Link} from "react-router-dom";
+import {toast} from "react-toastify";
 
 
 function Login() {
@@ -32,16 +33,23 @@ function Login() {
         callApi('authenticate','POST',formData)
         .then(res => {
             if(res?.data){
-                Storage.save('userData', res?.data)
-                Storage.delete('cart')
-                setUserInfo(res.data)
+                if(res?.data?.isActive){
+                    Storage.save('userData', res?.data)
+                    Storage.delete('cart')
+                    setUserInfo(res.data)
+                    toast.success('Đăng nhập thành công!')
+                }else{
+                    toast.error('Tài khoản của bạn đã bị khoá!')
+                }
+            }else{
+                toast.warn('Tài khoản hoặc mật khẩu không chính xác!')
             }
         })
     }
 
     return (
         <div>
-            <section className="login_part section_padding ">
+            <section className="login_part mt-5 pt-5">
                 <div className="container">
                     <div className="row align-items-center">
                         <div className="col-lg-6 col-md-6">

@@ -1,13 +1,12 @@
 import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
-import React, {useState, useEffect, useMemo} from "react";
-import {FormControlLabel, IconButton, Modal, Switch} from "@mui/material";
-import {FaEllipsisV, FaTrash} from 'react-icons/fa';
+import React, {useEffect, useMemo, useState} from "react";
+import {Modal, Switch} from "@mui/material";
 import {useDispatch} from "react-redux";
-import {Dropdown} from "semantic-ui-react";
 import {createUser, getAllUser, updateUser} from "../../service/user";
 import {storage} from "../firebase/firebase";
-import _ from "lodash";
+import {useConfirm} from "material-ui-confirm";
+import {toast} from "react-toastify";
 
 const formDataInItValue = {
     fullName: "",
@@ -31,7 +30,7 @@ function Users() {
         index: 0,
         size: 10
     });
-
+    const confirm = useConfirm()
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
@@ -142,8 +141,10 @@ function Users() {
     }
 
     const onChangeActive = (value, e) => {
-        let a = window.confirm('Bạn có chắc muốn đổi trạng thái')
-        if (a) {
+        confirm({
+            title: 'Đổi trạng thái',
+            description: "Bạn có chắc muốn đổi trạng thái?",
+        }).then(() => {
             dispatch(updateUser({
                 ...value,
                 status: e.target.checked,
@@ -156,7 +157,8 @@ function Users() {
                     return item
                 }))
             }))
-        }
+            toast.success('Đổi trạng thái thành công')
+        })
     }
 
     const formUser = useMemo(() => {
@@ -303,18 +305,6 @@ function Users() {
                                     {value.isActive ? "Hoạt động" : "Ngừng hoạt động"}
                                 </td>
                                 <td>{value.roles?.[0]}</td>
-                                {/*<td>*/}
-                                {/*    <Dropdown icon={<IconButton>*/}
-                                {/*        <FaEllipsisV size={15}/>*/}
-                                {/*    </IconButton>}>*/}
-                                {/*        <Dropdown.Menu>*/}
-                                {/*            <Dropdown.Item>Cập*/}
-                                {/*                nhật</Dropdown.Item>*/}
-                                {/*            <Dropdown.Item>Huỷ*/}
-                                {/*                đơn</Dropdown.Item>*/}
-                                {/*        </Dropdown.Menu>*/}
-                                {/*    </Dropdown>*/}
-                                {/*</td>*/}
                             </tr>
                         );
                     })}

@@ -1,6 +1,6 @@
 import {Button} from "@material-ui/core";
 import React, {useEffect, useState} from "react";
-import {useGetListOrder, useUpdateStatusOrder} from "../../../service/product";
+import {updateStatusOrder, useGetListOrder, useUpdateStatusOrder} from "../../../service/product";
 import {useAuth} from "../../../context";
 import moment from "moment";
 import {useConfirm} from 'material-ui-confirm'
@@ -12,8 +12,7 @@ import {toast} from "react-toastify";
 
 const Order = () => {
     const {userInfo} = useAuth()
-    const [order, setOrder] = useState([])
-    const [orderId, setOrderId] = useState()
+    const [order, setOrder] = useState({})
     const [tab, setTab] = useState(1)
     const confirm = useConfirm();
     const history = useHistory()
@@ -21,23 +20,6 @@ const Order = () => {
 
     useEffect(() => {
         if (!userInfo) history.push('/')
-    }, [userInfo])
-    const getListOrder = useGetListOrder({
-        id: userInfo?.id
-    })
-    const updateStatus = useUpdateStatusOrder({
-        idOrder: orderId,
-        status: 4
-    })
-    useEffect(() => {
-        if (userInfo) {
-            getListOrder.refetch().then((res) => {
-                if (res?.data) {
-                    updateStatus.remove()
-                }
-            })
-
-        }
     }, [userInfo])
 
     useEffect(() => {
@@ -62,10 +44,6 @@ const Order = () => {
         }
     }, [userInfo])
 
-    useEffect(() => {
-        setOrder(getListOrder?.data)
-    }, [getListOrder?.data])
-
     const total = (value) => {
         let a = 0
         value?.map((item, index) => {
@@ -77,12 +55,14 @@ const Order = () => {
 
     const changeStatus = (item) => {
         if (item?.status === 1) {
-            setOrderId(item?.orderId)
             confirm({
                 description: "Bạn có chắc huỷ đơn hàng?",
                 title: 'Xác nhận huỷ'
             }).then(() => {
-                updateStatus.refetch()
+                dispatch(updateStatusOrder({
+                    idOrder: item?.orderId,
+                    status: 4
+                }))
                 setOrder(prevState => ({
                     ...prevState,
                     [tab]: prevState[tab].filter(value => item.orderId !== value.orderId)
@@ -107,7 +87,7 @@ const Order = () => {
                      borderRadius: 10,
                      minHeight: '600px'
                  }}>
-                <h2 style={{textAlign: "center"}} className={'py-2'}>Chi tiết đơn hàng</h2>
+                <h2 style={{textAlign: "center"}} className={'py-2'}>Đơn hàng của bạn</h2>
                 <div style={{borderTop: '1px solid black',}}>
                     <Box sx={{borderBottom: 1, borderColor: 'divider', backgroundColor: 'white'}}>
                         <Tabs
@@ -187,62 +167,56 @@ const Order = () => {
                                                 <tr key={index}>
                                                     <td>
                                                         <div className="product_count">
-                                                            <p style={{fontFamily: "Playfair Display"}}>{moment(value?.createDate).format('DD/MM/YYYY, h:mm:ss a')}</p>
+                                                            <p style={{fontFamily: "Playfair Display", lineHeight: 2.3, fontSize: 15, whiteSpace: 'noWrap'}}>{moment(value?.createDate).format('DD/MM/YYYY, h:mm:ss')}</p>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <tr style={{fontFamily: "Playfair Display", lineHeight: 2.3, fontSize: 15, whiteSpace: 'noWrap'}}>{item?.nameProduct}</tr>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <tr style={{fontFamily: "Playfair Display", lineHeight: 2.3, fontSize: 15, whiteSpace: 'noWrap'}}>{item?.colorName}</tr>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <tr style={{fontFamily: "Playfair Display", lineHeight: 2.3, fontSize: 15, whiteSpace: 'noWrap'}}>{item?.sizeName}</tr>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <tr style={{fontFamily: "Playfair Display", lineHeight: 2.3, fontSize: 15, whiteSpace: 'noWrap'}}>{item?.quantity}</tr>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div className="product_count">
+                                                            {value?.listOrderDetailDTO?.map((item, index) => {
+                                                                return (
+                                                                    <tr style={{fontFamily: "Playfair Display", lineHeight: 2.3, fontSize: 15, whiteSpace: 'noWrap'}}>{item?.price * item?.quantity}đ</tr>
+                                                                )
+                                                            })}
+                                                        </div>
+                                                    </td>
 
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="product_count">
-                                                            {value?.listOrderDetailDTO?.map((item, index) => {
-                                                                return (
-                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.nameProduct}</p>
-                                                                )
-                                                            })}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="product_count">
-                                                            {value?.listOrderDetailDTO?.map((item, index) => {
-                                                                return (
-                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.colorName}</p>
-                                                                )
-                                                            })}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="product_count">
-                                                            {value?.listOrderDetailDTO?.map((item, index) => {
-                                                                return (
-                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.sizeName}</p>
-                                                                )
-                                                            })}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <div className="product_count">
-                                                            {value?.listOrderDetailDTO?.map((item, index) => {
-                                                                return (
-                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.quantity}</p>
-                                                                )
-                                                            })}
-                                                        </div>
-                                                    </td>
-                                                    <td>
-                                                        <h5>
-                                                            {value?.listOrderDetailDTO?.map((item, index) => {
-                                                                return (
-                                                                    <p style={{fontFamily: "Playfair Display"}}>{item?.price * item?.quantity}đ</p>
-                                                                )
-                                                            })}
-                                                        </h5>
-                                                    </td>
-
-                                                    <td>
-                                                        <p style={{
-                                                            display: "inline-block",
-                                                            marginRight: 10
-                                                        }}>{total(value?.listOrderDetailDTO)}đ
-                                                        </p>
+                                                    <td>{total(value?.listOrderDetailDTO)}đ
                                                     </td>
                                                     {
                                                         tab === 1 &&
@@ -259,7 +233,7 @@ const Order = () => {
                                 </div>
                                 :
                                 <div className={'p-5 d-flex justify-content-center'}>
-                                    <p style={{fontFamily: "Playfair Display"}}>Chưa có đơn nào!</p>
+                                    <p style={{fontFamily: "Playfair Display", lineHeight: 2.3, fontSize: 15, whiteSpace: 'noWrap'}}>Chưa có đơn nào!</p>
                                 </div>
                         }
                     </div>

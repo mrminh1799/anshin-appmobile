@@ -6,9 +6,10 @@ import {changeReturn} from "../../service/order";
 import {FaTrash} from "react-icons/fa";
 import {useDispatch} from "react-redux";
 import {useAuth} from "../../context";
+import {toast} from "react-toastify";
 
 
-const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
+const Refund = ({open, setOpen, formData, detailOrder, setFormData, setOrder, order}) => {
 
     const dispatch = useDispatch()
 
@@ -16,18 +17,18 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
 
     const [data, setData] = useState([])
 
-    const [prevForm, setPrevForm] = useState()
-
-    const [count, setCount] = useState(0)
+    const [prevForm, setPrevForm] = useState({
+        fullName: "",
+        address: "",
+        detailAddress: "",
+        phoneNumber: "",
+        sumPrice: 500000,
+        timeCreate: "2022-03-04T16:42:49.000+00:00",
+    })
 
     useEffect(() => {
-        if (formData) {
-            setCount(1)
-            if (count < 1) {
-                setPrevForm({...formData})
-            }
-        }
-    }, [formData])
+        open.open && setPrevForm(formData)
+    }, [open])
 
     useEffect(() => {
         setData(detailOrder)
@@ -35,16 +36,29 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log({
-            ...formData,
-            listOrderProductDetailDTO: data,
-        })
+        if(!formData.fullName){
+            toast.warn('Không được bỏ trống tên khách hàng')
+            return
+        }
+        if(!formData.reason){
+            toast.warn('Không được bỏ trống lý do đổi trả')
+            return;
+        }
+        if(!data){
+            toast.warn('Không được bỏ trống bảng sản phẩm đổi trả')
+            return;
+        }
         dispatch(changeReturn({
             ...formData,
             listOrderProductDetailDTO: data,
         }))
+        setOpen({
+            open: false,
+            update: false
+        })
+        setOrder(prev => prev.filter(item=>item.id !== formData.id))
+        toast.success('Đổi hàng thành công')
     }
-    console.log(userInfo)
 
     return open && (
         <Modal
@@ -63,10 +77,21 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                 marginLeft: 100,
                 marginRight: 100,
             }} className="border rounded p-4 shadow" autoComplete="off">
+                <div className={'py-2 d-flex justify-content-between align-items-center'}
+                     style={{borderBottom: '1px solid black'}}>
+                    <h4 className={'mb-0'}>Đổi trả đơn hàng</h4>
+                    <Button style={{fontSize: 15}} onClick={() => {
+                        setOpen({
+                            open: false,
+                            update: false
+                        })
+                    }}>X</Button>
+                </div>
                 <div style={{
                     display: 'flex',
                 }}>
-                    <div style={{flex: 1}}>
+                    <div className={'mt-2 p-2 px-4 mr-3'} style={{flex: 1, backgroundColor: '#eeeeee', borderRadius: '10px 10px 0 0'}}>
+                        <h5 className={'m-0 mt-3'}>Thông tin cũ</h5>
                         <TextField
                             disabled
                             name="name"
@@ -100,9 +125,9 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                             className="my-2 mb-4"
                         />
                     </div>
-                    <div className={'ml-5 form-group'} style={{flex: 1}}>
-
+                    <div className={'mt-2 p-2 px-4 ml-3'} style={{flex: 1, backgroundColor: '#eeeeee', borderRadius: '10px 10px 0 0'}}>
                         <div style={{flex: 1}}>
+                            <h5 className={'m-0 mt-3'}>Thông tin mới</h5>
                             <TextField onChange={(e) => {
                                 setFormData({
                                     ...formData,
@@ -114,6 +139,7 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                                        fullWidth
                                        label="Tên khách hàng"
                                        className="my-2 mb-4"
+                                       required
                             />
                             <TextField onChange={(e) => {
                                 setFormData({
@@ -152,7 +178,7 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                                        className="my-2 mb-4"
                             />
                         </div>
-                        <label htmlFor="exampleFormControlTextarea1">Lý do đổi trả</label>
+                        <label htmlFor="exampleFormControlTextarea1">Lý do đổi trả<span style={{color: 'red'}}>*</span></label>
                         <textarea value={formData.reason} onChange={(e) => {
                             setFormData({
                                 ...formData,
@@ -228,6 +254,7 @@ const Refund = ({open, setOpen, formData, detailOrder, setFormData}) => {
                         <tbody>
                         {
                             data?.map((item, index) => {
+                                console.log('item', item)
                                 return (
                                     <tr>
                                         <td>{item.nameProduct}</td>

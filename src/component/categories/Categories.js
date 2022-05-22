@@ -1,15 +1,13 @@
-import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
+import {Button, TextField} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
-import React, {useState, useEffect, useMemo} from "react";
+import React, {useEffect, useState} from "react";
 import {IconButton, Modal} from "@mui/material";
-import {FaEllipsisV, FaTrash} from 'react-icons/fa';
+import {FaEllipsisV} from 'react-icons/fa';
 import {useDispatch} from "react-redux";
 import {Dropdown} from "semantic-ui-react";
 import {createCategory, deleteCategory, getAllCategory, updateCategory} from "../../service/category";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import {storage} from "../firebase/firebase";
-import {getAllChildCategory} from "../../service/category";
-import {changeQuantityDetailOrder} from "../../service/order";
+import {toast} from "react-toastify";
+import {useConfirm} from "material-ui-confirm";
 
 const formDataInItValue = {
     name: "",
@@ -18,7 +16,7 @@ const formDataInItValue = {
 function Categories() {
 
     const dispatch = useDispatch()
-
+    const confirm = useConfirm();
     const [category, setCategory] = useState([])
     const [dadCategory, setDadCategory] = useState([])
     const [listCategory, setListCategory] = useState([])
@@ -84,18 +82,23 @@ function Categories() {
     };
 
     const handleDeleteCategory = (id) => {
-        let a = window.confirm('Bạn có chắc muốn xoá danh mục này?')
-        if (a) {
+        confirm({
+            title: 'Xoá danh mục',
+            description: "Bạn có chắc muốn xoá danh mục này?",
+        }).then(() => {
             dispatch(deleteCategory({
                 id: id,
             }))
             setListCategory(listCategory.filter(item => item.id !== id))
-        }
+        })
     }
 
     const handleSave = (event) => {
         event.preventDefault()
-        if (!formData.name) return
+        if (!formData.name) {
+            toast.warn('Không được bỏ trống tên')
+            return
+        }
         if (formData?.update) {
             dispatch(updateCategory({
                 "id": formData.id,
@@ -112,6 +115,7 @@ function Categories() {
                     })
                 ])
                 setOpen(false)
+                toast.success('Cập nhật thành công')
             }))
         } else {
             dispatch(createCategory({
@@ -127,6 +131,7 @@ function Categories() {
                     }
                 ])
                 setOpen(false)
+                toast.success('Thêm mới thành công')
             }))
         }
     }
@@ -140,9 +145,16 @@ function Categories() {
             }} className="px-5 pt-4">
                 <form style={{
                     backgroundColor: 'white',
-                    marginLeft: 300,
-                    marginRight: 300,
+                    marginLeft: 400,
+                    marginRight: 400,
                 }} className="border rounded p-4 shadow" autoComplete="off" onSubmit={handleSave}>
+                    <div className={'py-2 d-flex justify-content-between align-items-center'}
+                         style={{borderBottom: '1px solid black'}}>
+                        <h4 className={'mb-0'}>{formData?.update? 'Cập nhật' : "Thêm mới" } danh mục</h4>
+                        <Button style={{fontSize: 15}} onClick={() => {
+                            setOpen(false)
+                        }}>X</Button>
+                    </div>
                     <div>
                         <TextField
                             required
@@ -155,7 +167,7 @@ function Categories() {
                                 })
                             }}
                             fullWidth
-                            label="Tên danh mục con"
+                            label="Tên danh mục"
                             className="my-2 mb-4"
                         />
                     </div>
