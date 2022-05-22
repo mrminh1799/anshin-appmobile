@@ -86,13 +86,30 @@ export const deleteOrderTransaction=(idOrder)=>{
 
 
 export const paymentOrder = (idOrder)=>{
-    return axiosHelper.get(`http://localhost:8080/Order/updateStatus/${idOrder}/2`)
+    return axiosHelper.get(`http://localhost:8080/Order/updateStatus/${idOrder}/3`)
 }
 
 
 
 export const deleteSoftProduct = (idProduct)=>{
     return axiosHelper.delete(`http://localhost:8080/admin/product/delete/${idProduct}`)
+}
+
+export const updateProduct = ( productDTO)=>{
+    return axiosHelper.post("http://localhost:8080/product/udpateProduct", productDTO);
+}
+
+export const checkInsertProductDetail=(idColor, idSize, idProduct)=>{
+    return axiosHelper.get(`http://localhost:8080/productDetail/finByColorSizeProduct/${idColor}/${idSize}/${idProduct}`);
+}
+
+export const insertProductDetail =(dto)=>{
+    return axiosHelper.post("http://localhost:8080/product/insertProductDetail", dto);
+}
+
+
+export const updateProductDetail =(dto)=>{
+    return axiosHelper.post("http://localhost:8080/product/upateProductDetail", dto);
 }
 
 export const useGetProductId = (params, _callback) => async dispatch => {
