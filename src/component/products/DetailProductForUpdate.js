@@ -215,7 +215,7 @@ function DetailProductForUpdate() {
     }
 
 
-    
+
     const handleUploadProductInsert = (image) => {
         const uploadTask = storage.ref(`images/${image.name}`).put(image);
         uploadTask.on(
@@ -259,22 +259,28 @@ function DetailProductForUpdate() {
 
     const onChangeColorProductInsert = (e) => {
         setProductDetailInsert(
-            {...productDetailInsert,
-                idColor: e}
+            {
+                ...productDetailInsert,
+                idColor: e
+            }
         )
     }
 
     const onChangeSizeProductInsert = (e) => {
         setProductDetailInsert(
-            {...productDetailInsert,
-                idSize: e}
+            {
+                ...productDetailInsert,
+                idSize: e
+            }
         )
     }
 
-    const onChangeQuantiyProductInsert =(e)=>{
+    const onChangeQuantiyProductInsert = (e) => {
         setProductDetailInsert(
-            {...productDetailInsert,
-                quantity: e}
+            {
+                ...productDetailInsert,
+                quantity: e
+            }
         )
     }
 
@@ -285,104 +291,133 @@ function DetailProductForUpdate() {
 
     const handleCancel = () => {
         setIsModalVisible(false);
-
-    };
-
-    const handleOk = () => {
-        let check=true;
-
-        if(productDetailInsert.idColor==="lucy"||!productDetailInsert.idColor||productDetailInsert.idSize==="lucy"||!productDetailInsert.idSize||!productDetailInsert.quantity){
-        if(productDetailInsert.idColor==="lucy"||!productDetailInsert.idColor){
-            toast.toastError("Xin chọn màu")
-            check =false;
-        }
-        if(productDetailInsert.idSize==="lucy"||!productDetailInsert.idSize){
-            toast.toastError("Xin chọn size")
-            check =false;
-        }
-        if(!productDetailInsert.quantity){
-            toast.toastError("Xin mời mời nhập số lượng")
-            check =false;
-        }}else{
-            productService.checkInsertProductDetail(productDetailInsert.idColor,productDetailInsert.idSize,id).then((res)=>{
-                if(res.data){
-                    toast.toastError("Màu và size này đã tồn tại!")
-                    check = false
-                }else{
-                    productService.insertProductDetail(productDetailInsert).then(res=>{
-                        toast.toastSuccess("Thêm mới thành công!")
-                        listProductDetail.push(res.data)
-                        handleCancel();
-                    }).catch(err=>{
-                        toast.toastError("Có lỗi xảy ra")
-                    })
-                    
-                }
-            }).catch(err=>{
-                toast.toastError("Có lỗi xảy ra")
-                check = false
-            })
-
-        }
-
-
-
-        const [productDetailUpdate ,setProductDetailUpdate ]  = useState({})
-        const handleUploadProductUpdate = (image) => {
-            const uploadTask = storage.ref(`images/${image.name}`).put(image);
-            uploadTask.on(
-                "state_changed",
-                snapshot => {
-                },
-                error => {
-    
-                },
-                () => {
-                    storage
-                        .ref("images")
-                        .child(image.name)
-                        .getDownloadURL()
-                        .then(url => {
-                            setProductDetailUpdate({
-                                ...productDetailUpdate,
-                                image: url
-                            })
-                        })
-    
-                }
-            )
-        }
-    
-        const onChangeUploadFileUpdateProductDetail = (event) => {
-            if (event?.target?.files[0]) {
-                const image = event.target.files[0];
-                handleUploadProductUpdate(image);
-            }
-            toast.toastPromise("Up ảnh thành công")
-        }
-
-        const [isModalVisible2, setIsModalVisible2] = useState(false);
-
-        const handleOk2=()=>{
-
-        }
-
-        const showModal2 = () => {
-
-        setIsModalVisible2(true);
-        };
-
-    const handleCancel = () => {
         setIsModalVisible2(false);
 
     };
 
-        
+    const handleOk = () => {
 
+
+        if (productDetailInsert.idColor === "lucy" || !productDetailInsert.idColor || productDetailInsert.idSize === "lucy" || !productDetailInsert.idSize || !productDetailInsert.quantity) {
+            if (productDetailInsert.idColor === "lucy" || !productDetailInsert.idColor) {
+                toast.toastError("Xin chọn màu")
+            }
+            if (productDetailInsert.idSize === "lucy" || !productDetailInsert.idSize) {
+                toast.toastError("Xin chọn size")
+            }
+            if (!productDetailInsert.quantity) {
+                toast.toastError("Xin mời mời nhập số lượng")
+            }
+        } else {
+            productService.checkInsertProductDetail(productDetailInsert.idColor, productDetailInsert.idSize, id).then((res) => {
+                if (res.data) {
+                    toast.toastError("Màu và size này đã tồn tại!")
+                } else {
+                    productService.insertProductDetail(productDetailInsert).then(res => {
+                        toast.toastSuccess("Thêm mới thành công!")
+                        listProductDetail.push(res.data)
+                        handleCancel();
+                    }).catch(err => {
+                        toast.toastError("Có lỗi xảy ra")
+                    })
+                }
+            }).catch(err => {
+                toast.toastError("Có lỗi xảy ra")
+            })
+
+        }
+    }
+
+
+
+    const [productDetailUpdate, setProductDetailUpdate] = useState({})
+    const handleUploadProductUpdate = (image) => {
+        const uploadTask = storage.ref(`images/${image.name}`).put(image);
+        uploadTask.on(
+            "state_changed",
+            snapshot => {
+            },
+            error => {
+            },
+            () => {
+                storage
+                    .ref("images")
+                    .child(image.name)
+                    .getDownloadURL()
+                    .then(url => {
+                        setProductDetailUpdate({
+                            ...productDetailUpdate,
+                            image: url
+                        })
+                    })
+
+            }
+        )
+    }
+    const onChangeUploadFileUpdateProductDetail = (event) => {
+        if (event?.target?.files[0]) {
+            const image = event.target.files[0];
+            handleUploadProductUpdate(image);
+        }
+        toast.toastPromise("Up ảnh thành công")
+    }
+
+
+
+    const [isModalVisible2, setIsModalVisible2] = useState(false);
+
+    const handleOk2 = (id) => {
+       if(productDetailUpdate.quantity<0){
+           toast.toastError("Số lượng không hợp lệ!")
+       }else{
+           productService.updateProductDetail(productDetailUpdate).then(response=>{
+               toast.toastSuccess("Update thành công")
+                const newList =listProductDetail.map(x=>{
+                    if(x.id==response.data.id){
+                        const updatedItem ={
+                            ... x,
+                            quantity:response.data.quantity,
+                            image: response.data.image
+                        }
+                        return updatedItem
+                    }
+                    return x;
+
+               })
+
+               setListProductDetail(newList);
+           }).catch(error=>{
+               toast.toastError("Có lỗi xảy ra")
+           })
+       }
+       setIsModalVisible2(false);
 
     }
 
-    console.log(productDetailInsert)
+    const showModal2 = (id, quantity, image) => {
+        setProductDetailUpdate({
+            ...productDetailUpdate,
+            id: id,
+            quantity: quantity,
+            image: image
+        })
+
+
+        setIsModalVisible2(true);
+    };
+
+    const onChangeQuantiyProductUpdate =(e)=>{
+        setProductDetailUpdate({
+            ...productDetailUpdate,
+            quantity: e
+        })
+
+        console.log(productDetailUpdate)
+    }
+
+    
+
+
 
 
 
@@ -392,10 +427,6 @@ function DetailProductForUpdate() {
 
     return (
         <div>
-
-
-
-
             <div className="container ml-200 mt-5">
                 <h1>{formData.name}</h1>
                 <form autoComplete="off" style={{ flex: 1 }}>
@@ -470,9 +501,9 @@ function DetailProductForUpdate() {
                             <Label>Size: &ensp;</Label>
                             <Select onChange={(e) => onChangeSizeProductInsert(e)} defaultValue="lucy" style={{ width: 120 }} >
                                 <Option value="lucy">--chọn size--</Option>
-                                {listSize.map((value=>{
-                                    return(
-                                        <Option key={value.idSize} value={value.idSize}>{}</Option>
+                                {listSize.map((value => {
+                                    return (
+                                        <Option key={value.idSize} value={value.idSize}>{ }</Option>
                                     )
                                 }))}
                             </Select>
@@ -509,11 +540,16 @@ function DetailProductForUpdate() {
                                     <td>{value.nameSize}</td>
                                     <td>{value.quantity}</td>
                                     <td>
-                                        <Button onClick={() => onDeleteProductDetail(value.index, value.id)} type="button" className="btn btn-primary">Cập nhật</Button>
-                                        <Modal  visible={isModalVisible2} onOk={handleOk2} onCancel={handleCancel2}>
-Helo
+                                        <Modal visible={isModalVisible2} onOk={()=>handleOk2()} onCancel={handleCancel}>
+                                            <Label>Số lượng: &ensp;</Label> <InputNumber value={productDetailUpdate.quantity} onChange={onChangeQuantiyProductUpdate} type="number" placeholder="Số lượng" />
+                                            
+                                            <Label>Ảnh: &ensp; &ensp; &ensp; &ensp;</Label><input type="file" onChange={onChangeUploadFileUpdateProductDetail}></input>
+                                            <img height="200" src={productDetailUpdate.image} />
                                         </Modal>
-                                        <Button onClick={() => showModal2()} type="button" className="btn btn-danger">Xóa</Button></td>
+                                        <Button onClick={() => showModal2(value.id, value.quantity, value.image)} type="button" className="btn btn-danger">Cập nhật</Button>
+                                        <Button onClick={() => onDeleteProductDetail(value.index, value.id)} type="button" className="btn btn-primary">Xóa</Button>
+
+                                    </td>
 
                                     <td><label style={{ display: "block", width: 0 }} className="mb-3" htmlFor="contained-button-file">
                                         {/* <input name={value.nameColor} type="file" onChange={onChangeUploadFileProductDetail}></input> */}
@@ -522,11 +558,12 @@ Helo
                                 </tr>
                             );
                         })}
+                        {console.log(listProductDetail)}
 
 
                     </tbody>
                 </table>
-              
+
 
 
                 <div>

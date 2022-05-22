@@ -106,3 +106,8 @@ export const insertProductDetail =(dto)=>{
     return axiosHelper.post("http://localhost:8080/product/insertProductDetail", dto);
 }
 
+
+export const updateProductDetail =(dto)=>{
+    return axiosHelper.post("http://localhost:8080/product/upateProductDetail", dto);
+}
+
