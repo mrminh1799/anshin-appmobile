@@ -1,10 +1,7 @@
-import {useQuery, useQueryClient, useMutation, useQueries} from 'react-query';
-import {_custom, _get, _put, _post, _delete} from '../../src/component/callAPI/index';
-import {useEffect, useState} from "react";
+import {useQuery} from 'react-query';
+import {_delete, _get, _post} from '../../src/component/callAPI/index';
 import axiosHelper from "../common/axiosHelper";
-
-import axios from "axios";
-import {createGet} from "./utils";
+import {createGet, createPost} from "./utils";
 
 //getallproduct
 export const useGetProducts = (params) => {
@@ -25,7 +22,7 @@ export const useGetAllProducts = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_all_product', params], () => _get('product/findAll'),{enabled:false});
+    } = useQuery(['get_all_product', params], () => _get('product/findAll'), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -49,7 +46,7 @@ export const useGetDetailProduct = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_detail_product', params], () => _get('product/findById/' + params?.id),{enabled:false});
+    } = useQuery(['get_detail_product', params], () => _get('product/findById/' + params?.id), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -88,7 +85,7 @@ export const useGetCheckProduct = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_check_product', params], () => _get('productDetail/finByColorSizeProduct/' + params?.idColor +'/'+ params?.idSize + '/' +params?.idProduct),{enabled:false});
+    } = useQuery(['get_check_product', params], () => _get('productDetail/finByColorSizeProduct/' + params?.idColor + '/' + params?.idSize + '/' + params?.idProduct), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -101,7 +98,7 @@ export const useOrder = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_order_product', params], () => _post('Order/newOrder' ,params),{enabled:false});
+    } = useQuery(['get_order_product', params], () => _post('Order/newOrder', params), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -114,7 +111,7 @@ export const useGetTop10 = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_top10_product', params], () => _get('product/findByTop', params),{enabled:false});
+    } = useQuery(['get_top10_product', params], () => _get('product/findByTop', params), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -126,7 +123,7 @@ export const useGetTop10Sell = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_top10_product_sell', params], () => _get('product/findBySumTop' ,params),{enabled:false});
+    } = useQuery(['get_top10_product_sell', params], () => _get('product/findBySumTop', params), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -138,7 +135,7 @@ export const useGetListOrder = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_list_order', params], () => _get('Order/findByAcountId/'+ params?.id),{enabled:false});
+    } = useQuery(['get_list_order', params], () => _get('Order/findByAcountId/' + params?.id), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -151,7 +148,7 @@ export const useGetListCart = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_list_cart', params], () => _get('cart/findByIdAcount2/'+ params?.id),{enabled:false});
+    } = useQuery(['get_list_cart', params], () => _get('cart/findByIdAcount2/' + params?.id), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -164,7 +161,7 @@ export const useGetListColor = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_list_color', params], () => _get('color/findAll', params),{enabled:false});
+    } = useQuery(['get_list_color', params], () => _get('color/findAll', params), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -177,7 +174,7 @@ export const useGetListSize = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_list_size', params], () => _get('size/findAll', params),{enabled:false});
+    } = useQuery(['get_list_size', params], () => _get('size/findAll', params), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -190,7 +187,7 @@ export const useGetProductDiscount = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_list_product_discount', params], () => _get('discount/findAll', params),{enabled:false});
+    } = useQuery(['get_list_product_discount', params], () => _get('discount/findAll', params), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -202,7 +199,7 @@ export const useGetFilterProduct = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_filter_product', params], () => _get('product/findByColorSizePrice/' + params?.idColor +'/'+ params?.idSize + '/' +params?.priceFrom + '/' + params?.priceTo),{enabled:false});
+    } = useQuery(['get_filter_product', params], () => _get('product/findByColorSizePrice/' + params?.idColor + '/' + params?.idSize + '/' + params?.priceFrom + '/' + params?.priceTo), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -214,10 +211,10 @@ export const useConfirmPass = (params) => {
         status,
         data,
         error,
-        refetch,remove
-    } = useQuery(['get_confirm_pass', params], () => _get('test/confirmPassword/' + params?.id +'/'+ params?.password),{enabled:false});
+        refetch, remove
+    } = useQuery(['get_confirm_pass', params], () => _get('test/confirmPassword/' + params?.id + '/' + params?.password), {enabled: false});
     return {
-        status, error, data, refetch,remove
+        status, error, data, refetch, remove
     }
 }
 //doi pass
@@ -227,7 +224,7 @@ export const useChangePass = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_confirm_pass', params], () => _get('test/changePassword/' + params?.id +'/'+ params?.password),{enabled:false});
+    } = useQuery(['get_confirm_pass', params], () => _get('test/changePassword/' + params?.id + '/' + params?.password), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -239,7 +236,7 @@ export const useUpdateInfor = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_update_infor', params], () => _post('test/updateAcount',params),{enabled:false});
+    } = useQuery(['get_update_infor', params], () => _post('test/updateAcount', params), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -252,7 +249,7 @@ export const useGetParentCate = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_parent_cate', params], () => _get('Category/getNavBar'),{enabled:false});
+    } = useQuery(['get_parent_cate', params], () => _get('Category/getNavBar'), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -264,7 +261,7 @@ export const useGetProductChildCate = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_product_child_cate', params], () => _get('product/findAllByIdCategory/'+params?.id),{enabled:false});
+    } = useQuery(['get_product_child_cate', params], () => _get('product/findAllByIdCategory/' + params?.id), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -277,7 +274,7 @@ export const useGetInforUser = (params) => {
         data,
         error,
         refetch
-    } = useQuery(['get_info_user', params], () => _get('test/findBy/'+params?.id),{enabled:false});
+    } = useQuery(['get_info_user', params], () => _get('test/findBy/' + params?.id), {enabled: false});
     return {
         status, error, data, refetch
     }
@@ -297,37 +294,40 @@ export const useGetInforUser = (params) => {
 // }
 
 export const GetProductParentCate = (params, _callback) => async dispatch => {
-    await createGet(dispatch, 'useGetProductParentCate', '/product/findByCategoryParentId/'+params?.id, params, _callback);
+    await createGet(dispatch, 'useGetProductParentCate', '/product/findByCategoryParentId/' + params?.id, params, _callback);
 }
 
 //lay danh sach sp theo danh mục cha
-export const useAddCart = (params) => {
+// export const useAddCart = (params) => {
+//     const {
+//         status,
+//         data,
+//         error,
+//         refetch
+//     } = useQuery(['add_cart', params], () => _post('/cart/createForAcount/'+params?.id+'/'+params?.idProduct+'/'+params?.quantity),{enabled:false});
+//     return {
+//         status, error, data, refetch
+//     }
+// }
+
+export const addCart = (params, _callback) => async dispatch => {
+    await createPost(dispatch, 'useAddCart', 'cart/createForAcount/' + params?.id + '/' + params?.idProduct + '/' + params?.quantity, params, _callback);
+}
+//lấy ảnh theo product
+
+export const useGetImageProduct = (params) => {
     const {
         status,
         data,
         error,
         refetch
-    } = useQuery(['add_cart', params], () => _post('/cart/createForAcount/'+params?.id+'/'+params?.idProduct+'/'+params?.quantity),{enabled:false});
+    } = useQuery(['get_image_product', params], () => _get('/productDetail/findImage/' + params?.idProduct + "/" + params?.idColor), {enabled: false});
     return {
         status, error, data, refetch
     }
 }
 
-//lấy ảnh theo product
-
-    export const useGetImageProduct = (params) => {
-        const {
-            status,
-            data,
-            error,
-            refetch
-        } = useQuery(['get_image_product', params], () => _get('/productDetail/findImage/'+params?.idProduct+"/"+params?.idColor),{enabled:false});
-        return {
-            status, error, data, refetch
-        }
-    }
-
-    //xoa sp trong cart theo acc
+//xoa sp trong cart theo acc
 export const useDeleteCartProduct = (params) => {
     const {
         status,
@@ -335,7 +335,7 @@ export const useDeleteCartProduct = (params) => {
         error,
         refetch,
         remove
-    } = useQuery(['delete_cart_product', params], () => _delete('/cart/deleteByidProduct/'+params?.idAcount+"/"+params?.idProduct),{enabled:false});
+    } = useQuery(['delete_cart_product', params], () => _delete('/cart/deleteByidProduct/' + params?.idAcount + "/" + params?.idProduct), {enabled: false});
     return {
         status, error, data, refetch, remove
     }
@@ -348,9 +348,9 @@ export const useUpdateStatusOrder = (params) => {
         error,
         refetch,
         remove
-    } = useQuery(['update_status_order', params], () => _get('Order/updateStatus/'+params?.idOrder+"/"+params?.status),{enabled:false});
+    } = useQuery(['update_status_order', params], () => _get('Order/updateStatus/' + params?.idOrder + "/" + params?.status), {enabled: false});
     return {
-        status, error, data, refetch,remove
+        status, error, data, refetch, remove
     }
 }
 //xoa tat ca sp trong gio hang
@@ -361,12 +361,24 @@ export const useDeleteProductAllCart = (params) => {
         error,
         refetch,
         remove
-    } = useQuery(['delete_all_product_cart', params], () => _delete('cart/deleteAllByIdAccount/'+params?.id),{enabled:false});
+    } = useQuery(['delete_all_product_cart', params], () => _delete('cart/deleteAllByIdAccount/' + params?.id), {enabled: false});
     return {
-        status, error, data, refetch,remove
+        status, error, data, refetch, remove
     }
 }
 //lay tinh thanh phố
-export const findCity = ()=>{
+export const findCity = () => {
     return axiosHelper.get("https://provinces.open-api.vn/api/?depth=3");
+}
+
+export const getFilterProduct = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'getFilterProduct', 'product/findByColorSizePrice/' + params?.idColor + '/' + params?.idSize + '/' + params?.priceFrom + '/' + params?.priceTo, params, _callback);
+}
+
+export const updateStatusOrder = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'updateStatusOrder', 'Order/updateStatus/' + params?.idOrder + "/" + params?.status, params, _callback);
+}
+
+export const getHistoryOrder = (params, _callback) => async dispatch => {
+    await createGet(dispatch, 'getHistoryOrder', 'Order/getHistoryOrder/' + params?.idOrder, params, _callback);
 }

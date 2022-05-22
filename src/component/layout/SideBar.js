@@ -46,6 +46,8 @@ function SideBar() {
 
     const [openCate, setOpenCate] = useState(true);
 
+    const [openPro, setOpenPro] = useState(true);
+
     const handleClick = () => {
         setOpen(!open);
     };
@@ -56,7 +58,7 @@ function SideBar() {
                 <div className={classes.bg}>
                     <List style={{width: '250px'}} component="nav" className="h-100" aria-label="main mailbox folders">
                         <div className="border border-light" style={{margin: 30}}>
-                            <h1 onClick={()=>history.push('/')} className={"text-center m-4 text-white"}>SHOP</h1>
+                            <h1 onClick={()=>history.push('/')} className={"text-center m-4 text-white"}>STORE</h1>
                         </div>
                         <div className={classes.bgList}>
                             <ListItem onClick={() => history.push('/admin/dashboard')} button className="pl-3">
@@ -124,14 +126,14 @@ function SideBar() {
                                     </ListItemButton>
                                 </List>
                             </Collapse>
-                            <ListItem button className="pl-3" onClick={() => setOpenCate(!openCate)}>
+                            <ListItem button className="pl-3" onClick={() => setOpenPro(!openPro)}>
                                 <ListItemIcon className="pl-1" style={{minWidth: 45}}>
                                     <CategoryOutlinedIcon style={{color: 'white'}}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Sản phẩm"/>
-                                {openCate ? <ExpandLess/> : <ExpandMoreIcon/>}
+                                {openPro ? <ExpandLess/> : <ExpandMoreIcon/>}
                             </ListItem>
-                            <Collapse in={openCate} timeout="auto" unmountOnExit>
+                            <Collapse in={openPro} timeout="auto" unmountOnExit>
                                 <List component="div" disablePadding>
                                     <ListItemButton onClick={() => history.push('/admin/products')} sx={{pl: 9}}>
                                         <ListItemText primary="Sản phẩm"/>

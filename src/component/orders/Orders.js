@@ -1,12 +1,12 @@
-import {Backdrop, Button, CircularProgress, TextField} from "@material-ui/core";
+import {Button, TextField} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
-import React, {useState, useEffect, useMemo} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {
-    getDetailOrder,
+    changeQuantityDetailOrder,
     changeStatus,
-    useGetAllOrderById,
     deleteOrderDetail,
-    changeQuantityDetailOrder
+    getDetailOrder,
+    useGetAllOrderById
 } from "../../service/order";
 import {useParams} from "react-router-dom";
 import moment from "moment";
@@ -16,6 +16,9 @@ import {useDispatch} from "react-redux";
 import {Dropdown} from "semantic-ui-react";
 import SearchProduct from "./SearchProduct";
 import Refund from "./Refund";
+import {useConfirm} from "material-ui-confirm";
+import {toast} from "react-toastify";
+import {getHistoryOrder} from "../../service/product";
 
 const formDataInItValue = {
     fullName: "",
@@ -31,9 +34,11 @@ function Orders() {
     const params = useParams()
 
     const dispatch = useDispatch()
+    const confirm = useConfirm()
 
     const [filter, setFilter] = useState({})
     const [order, setOrder] = useState([])
+    const [history, setHistory] = useState([])
     const [listOrder, setListOrder] = useState([])
     const [formData, setFormData] = useState(formDataInItValue);
     const [totalPage, setTotalPage] = useState(1);
@@ -66,14 +71,6 @@ function Orders() {
         }
     }, [listOrder])
 
-    // useEffect(()=>{
-    //     if(!!filter){
-    //         setListOrder(listOrder.filter(item=>{
-    //
-    //         }))
-    //     }
-    // },[filter])
-
     useEffect(() => {
         if (listOrder) {
             let lastIndex = (pagination.index + 1) * pagination.size
@@ -97,11 +94,21 @@ function Orders() {
         })
     }, [params.id])
 
+    useEffect(()=>{
+    },[params.id])
+
     const handleUpdate = (value, type = true) => {
         setFormData(value)
         dispatch(getDetailOrder({
             orderId: value.id
         }, (res) => {
+            if([6, '6'].includes(params.id) && !open.update){
+                dispatch(getHistoryOrder({
+                    idOrder: value.id
+                }, (res)=>{
+                    setHistory(res)
+                }))
+            }
             setDetailOrder(res)
             setOpen({
                 open: true,
@@ -111,8 +118,10 @@ function Orders() {
     }
 
     const handleCancelOrder = (id) => {
-        let a = window.confirm('Bạn có chắc muốn huỷ đơn?')
-        if (a) {
+        confirm({
+            title: 'Huỷ hoá đơn',
+            description: "Bạn có chắc muốn huỷ đơn này?",
+        }).then(() => {
             setOpen({
                 open: false,
                 update: false
@@ -122,7 +131,7 @@ function Orders() {
                 status: 0
             }))
             setListOrder(listOrder.filter(item => item.id !== id))
-        }
+        })
     }
 
     const onChangePage = (event, newPage) => {
@@ -133,13 +142,15 @@ function Orders() {
     };
 
     const handleDeleteOrderDetail = (id) => {
-        let a = window.confirm('Bạn có chắc muốn xoá đơn này?')
-        if (a) {
+        confirm({
+            title: 'Xoá sản phẩm trong đơn hàng',
+            description: "Bạn có chắc muốn xoá?",
+        }).then(() => {
             dispatch(deleteOrderDetail({
                 orderDetailId: id,
             }))
             setDetailOrder(detailOrder.filter(item => item.idOrderDetail !== id))
-        }
+        })
     }
 
     const onChangeQuantity = (id, quantity) => {
@@ -154,8 +165,10 @@ function Orders() {
     }
 
     const handleConfirmOrder = (id) => {
-        let a = window.confirm('Bạn có chắc muốn xác nhận đơn?')
-        if (a) {
+        confirm({
+            title: 'Xác nhận đơn hàng',
+            description: "Bạn có chắc muốn xác nhận đơn?",
+        }).then(() => {
             setOpen({
                 open: false,
                 update: false
@@ -165,7 +178,8 @@ function Orders() {
                 status: 2
             }))
             setListOrder(listOrder.filter(item => item.id !== id))
-        }
+            toast.success('Xác nhận thành công')
+        })
     }
 
     const handleSuccess = (id) => {
@@ -174,6 +188,7 @@ function Orders() {
             status: 3
         }))
         setListOrder(listOrder.filter(item => item.id !== id))
+        toast.success('Xác nhận thành công')
     }
 
     const handleFail = (id) => {
@@ -182,6 +197,7 @@ function Orders() {
             status: 0
         }))
         setListOrder(listOrder.filter(item => item.id !== id))
+        toast.success('Huỷ đơn thành công')
     }
 
     const onchangeFilter = (e) => {
@@ -209,10 +225,22 @@ function Orders() {
                     marginLeft: 100,
                     marginRight: 100,
                 }} className="border rounded p-4 shadow" autoComplete="off">
+                    <div className={'py-2 d-flex justify-content-between align-items-center'}
+                         style={{borderBottom: '1px solid black'}}>
+                        <h4 className={'mb-0'}>{open?.update ? 'Cập nhật' : "Chi tiết"} đơn hàng</h4>
+                        <Button style={{fontSize: 15}} onClick={() => {
+                            setOpen({
+                                open: false,
+                                update: false
+                            })
+                        }}>X</Button>
+                    </div>
                     <div style={{
                         display: 'flex',
                     }}>
-                        <div>
+                        <div className={'mt-4 p-4'}
+                             style={{flex: 3.5, backgroundColor: '#eeeeee', borderRadius: '10px 10px 0 0'}}>
+                            <h4>Thông tin khách hàng</h4>
                             <TextField
                                 disabled={!open.update}
                                 name="name"
@@ -246,106 +274,156 @@ function Orders() {
                                 className="my-2 mb-4"
                             />
                         </div>
-                        {
-                            open.update &&
-                            <div className={'ml-5'}>
-                                <Button onClick={() => handleConfirmOrder(formData.id)} className="mr-2 w-100 mb-1"
-                                        color={'primary'} variant="contained">
-                                    Xác nhận
-                                </Button>
-                                <Button onClick={() => handleCancelOrder(formData.id)} className={'w-100 mt-2'}
-                                        variant="contained" color="inherit">
-                                    Huỷ đơn hàng
-                                </Button>
-                            </div>
-                        }
-                    </div>
-                    {
-                        open.update
-                        &&
-                        <div className={'my-3'}>
-                            <h4>Sản phẩm</h4>
-                            <SearchProduct order={formData} onChange={(data) => {
-                                let a = {
-                                    ...data.orderDetail.detailProduct,
-                                    ...data.orderDetail.detailProduct.color,
-                                    ...data.orderDetail.detailProduct.size,
-                                    ...data.orderDetail,
-                                    ...data,
-                                    nameProduct: data.productName
-                                }
-                                setDetailOrder([
-                                    ...detailOrder,
-                                    {
-                                        ...a,
-                                        coloName: a.colorName,
-                                        sizeName: a.size_name
-                                    },
-                                ])
-                            }}/>
-                        </div>
-                    }
-                    <table className="table table-striped table-bordered table-hover shadow">
-                        <thead className="thead-dark">
-                        <tr>
-                            <th>Tên sản phẩm</th>
-                            <th>Màu</th>
-                            <th>Size</th>
-                            <th>số lượng</th>
-                            <th>Giá</th>
-                            <th>Tổng tiền</th>
+                        <div style={{flex: 6.5, marginLeft: 30}}>
+                            {
+                                !open.update && [6, '6'].includes(params?.id) &&
+                                    <>
+                                        <div className={'mt-4'}>
+                                            <h4>Danh sách sản phẩm cũ</h4>
+                                        </div>
+                                        <table
+                                            className={`table table-striped table-bordered table-hover shadow ${!open.update && 'mt-4'}`}>
+                                            <thead className="thead-dark">
+                                            <tr>
+                                                <th>Tên sản phẩm</th>
+                                                <th>Màu</th>
+                                                <th>Size</th>
+                                                <th>số lượng</th>
+                                                <th>Giá</th>
+                                                <th>Tổng tiền</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            { history?.length > 0 ?
+                                                history?.map((item, index) => {
+                                                    console.log('item',item)
+                                                    return (
+                                                        <tr>
+                                                            <td>{item.nameProduct}</td>
+                                                            <td>{item.coloName}</td>
+                                                            <td>{item.sizeName}</td>
+                                                            <td>{item.quantity}</td>
+                                                            <td>{item.price}</td>
+                                                            <td>{item.quantity * item.price}</td>
+                                                        </tr>
+                                                    )
+                                                })
+                                                :
+                                                <div className={'d-flex justify-content-center'}>
+                                                    <p>Không có sản phẩm nào</p>
+                                                </div>
+                                            }
+                                            </tbody>
+                                        </table>
+                                    </>
+                            }
                             {
                                 open.update
                                 &&
-                                <th>Action</th>
-                            }
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {
-                            detailOrder?.map((item, index) => {
-                                return (
-                                    <tr>
-                                        <td>{item.nameProduct}</td>
-                                        <td>{item.coloName}</td>
-                                        <td>{item.sizeName}</td>
-                                        <td>
-                                            {
-                                                open.update
-                                                    ?
-                                                    <TextField type={'number'} onBlur={() =>
-                                                        dispatch(changeQuantityDetailOrder({
-                                                            orderDetailId: item.idOrderDetail,
-                                                            quantity: item.quantity
-                                                        }))}
-                                                               onChange={(value) => onChangeQuantity(item.idOrderDetail, value)}
-                                                               value={item.quantity}/>
-                                                    :
-                                                    item.quantity
-                                            }
-                                        </td>
-                                        <td>{item.price}</td>
-                                        <td>{item.quantity * item.price}</td>
-
-                                        {
-                                            open.update
-                                            &&
-                                            <td>
-                                                <IconButton onClick={() => handleDeleteOrderDetail(item.idOrderDetail)}>
-                                                    <FaTrash color={'red'} size={14}/>
-                                                </IconButton>
-                                            </td>
+                                <div className={'my-3'}>
+                                    <SearchProduct order={formData} onChange={(data) => {
+                                        let a = {
+                                            ...data.orderDetail.detailProduct,
+                                            ...data.orderDetail.detailProduct.color,
+                                            ...data.orderDetail.detailProduct.size,
+                                            ...data.orderDetail,
+                                            ...data,
+                                            nameProduct: data.productName
                                         }
-                                    </tr>
-                                )
-                            })
-                        }
-                        </tbody>
-                    </table>
+                                        setDetailOrder([
+                                            ...detailOrder,
+                                            {
+                                                ...a,
+                                                coloName: a.colorName,
+                                                sizeName: a.size_name
+                                            },
+                                        ])
+                                    }}/>
+                                </div>
+                            }
+                            {
+                                !open.update && [6, '6'].includes(params?.id) && <div className={'mt-4'}>
+                                    <h4>Danh sách sản phẩm mới</h4>
+                                </div>
+                            }
+                            <table
+                                className={`table table-striped table-bordered table-hover shadow ${!open.update && 'mt-4'}`}>
+                                <thead className="thead-dark">
+                                <tr>
+                                    <th>Tên sản phẩm</th>
+                                    <th>Màu</th>
+                                    <th>Size</th>
+                                    <th>số lượng</th>
+                                    <th>Giá</th>
+                                    <th>Tổng tiền</th>
+                                    {
+                                        open.update
+                                        &&
+                                        <th>Hành động</th>
+                                    }
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {
+                                    detailOrder?.map((item, index) => {
+                                        return (
+                                            <tr>
+                                                <td>{item.nameProduct}</td>
+                                                <td>{item.coloName}</td>
+                                                <td>{item.sizeName}</td>
+                                                <td>
+                                                    {
+                                                        open.update
+                                                            ?
+                                                            <TextField type={'number'} onBlur={() =>
+                                                                dispatch(changeQuantityDetailOrder({
+                                                                    orderDetailId: item.idOrderDetail,
+                                                                    quantity: item.quantity
+                                                                }))}
+                                                                       onChange={(value) => onChangeQuantity(item.idOrderDetail, value)}
+                                                                       value={item.quantity}/>
+                                                            :
+                                                            item.quantity
+                                                    }
+                                                </td>
+                                                <td>{item.price}</td>
+                                                <td>{item.quantity * item.price}</td>
+
+                                                {
+                                                    open.update
+                                                    &&
+                                                    <td>
+                                                        <IconButton
+                                                            onClick={() => handleDeleteOrderDetail(item.idOrderDetail)}>
+                                                            <FaTrash color={'red'} size={14}/>
+                                                        </IconButton>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        )
+                                    })
+                                }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {
+                        open.update &&
+                        <div className={'mt-2 pt-4'}>
+                            <Button onClick={() => handleConfirmOrder(formData.id)} className="mr-2 w-100 mb-1"
+                                    color={'primary'} variant="contained">
+                                Xác nhận
+                            </Button>
+                            <Button onClick={() => handleCancelOrder(formData.id)} className={'w-100 mt-2'}
+                                    variant="contained" color="inherit">
+                                Huỷ đơn hàng
+                            </Button>
+                        </div>
+                    }
                 </form>
             </Modal>
         )
-    }, [open, detailOrder, formData])
+    }, [open, detailOrder, formData, history])
 
     return (
         <div className="justify-content-center flex-fill">
@@ -363,7 +441,9 @@ function Orders() {
                 </div>
             </div>
             {formOrder}
-            <Refund open={openRefund} setOpen={setOpenRefund} detailOrder={detailOrder} formData={formData} setFormData={setFormData}/>
+            <Refund open={openRefund} setOpen={setOpenRefund} detailOrder={detailOrder} formData={formData}
+                    setOrder={setOrder} order={order}
+                    setFormData={setFormData}/>
             <div className="pt-5 px-5 m-auto">
                 <table className="table table-striped table-bordered table-hover shadow">
                     <thead className="thead-dark">

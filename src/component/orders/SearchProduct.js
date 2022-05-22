@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {Modal} from "@mui/material";
 import Select from "react-select";
 import {Button, TextField} from "@material-ui/core";
+import {toast} from "react-toastify";
 
 const SearchProduct = ({order, onChange, cancelUpdate = false}) => {
     const productImage = "https://i.pinimg.com/originals/a0/86/47/a08647cec486718eaf66a38d6f6f8784.png";
@@ -63,7 +64,17 @@ const SearchProduct = ({order, onChange, cancelUpdate = false}) => {
             temp.idProductDetail = temp.id
             onChange(temp)
         } else {
-            dispatch(changeOrder(currentProduct, (res) => {
+            let temp = {}
+            currentProductDetail?.listDetailProduct?.map(item => {
+                if ((item.size.id === currentProduct?.idSize) && (item.color.id === currentProduct?.idColor)) {
+                    temp = {
+                        id: item.id,
+                        ...currentProduct
+                    }
+                }
+            })
+            temp.idProduct = temp.id
+            dispatch(changeOrder(temp, (res) => {
                 onChange(res)
             }))
         }

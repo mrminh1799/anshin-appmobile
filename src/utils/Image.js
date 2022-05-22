@@ -9,7 +9,7 @@ const Image = ({src, style, ...props}) => {
             {!load && <Skeleton style={{position: "absolute",...style}} {...props}/>}
             <img src={src} onLoad={()=>{
                 setLoad(true)
-            }} {...props}/>
+            }} style={style} {...props}/>
         </>
 
     )

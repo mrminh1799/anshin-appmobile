@@ -1,14 +1,13 @@
-import {Button, FormControl, InputLabel, MenuItem, Select, TextField} from "@material-ui/core";
+import {Button, TextField} from "@material-ui/core";
 import {Pagination} from "@material-ui/lab";
-import React, {useState, useEffect, useMemo} from "react";
+import React, {useEffect, useState} from "react";
 import {IconButton, Modal} from "@mui/material";
-import {FaEllipsisV, FaTrash} from 'react-icons/fa';
+import {FaEllipsisV} from 'react-icons/fa';
 import {useDispatch} from "react-redux";
 import {Dropdown} from "semantic-ui-react";
-import {  createSize, deleteSize, getAllSizes, updateSize } from "../../service/size";
-import CloudUploadIcon from "@material-ui/icons/CloudUpload";
-import {storage} from "../firebase/firebase";
-import { Label } from "@material-ui/icons";
+import {createSize, deleteSize, getAllSizes, updateSize} from "../../service/size";
+import {useConfirm} from "material-ui-confirm";
+import {toast} from "react-toastify";
 
 // import {changeQuantityDetailOrder} from "../../service/order";
 
@@ -21,7 +20,7 @@ function Sizes() {
     const dispatch = useDispatch()
 
     const [size, setSize] = useState([])
-   
+
     const [listSize, setListSize] = useState([])
     const [formData, setFormData] = useState(formDataInItValue);
     const [totalPage, setTotalPage] = useState(1);
@@ -29,7 +28,7 @@ function Sizes() {
         index: 0,
         size: 10
     });
-
+    const confirm = useConfirm()
     const [open, setOpen] = useState(false)
 
     useEffect(() => {
@@ -85,13 +84,16 @@ function Sizes() {
     };
 
     const handleDeleteSize = (id) => {
-        let a = window.confirm('Bạn có chắc muốn xoá danh mục này?')
-        if (a) {
+        confirm({
+            title: 'Xoá size',
+            description: "Bạn có chắc muốn xoá size này?",
+        }).then(() => {
             dispatch(deleteSize({
                 id: id,
             }))
             setListSize(listSize.filter(item => item.id !== id))
-        }
+            toast.success('Xoá thành công')
+        })
     }
 
     const handleSave = (event) => {
@@ -112,12 +114,13 @@ function Sizes() {
                     })
                 ])
                 setOpen(false)
+                toast.success('Cập nhật thành công')
             }))
         } else {
             dispatch(createSize({
                 "size_name": formData.size_name,
                 "isDelete": false,
-                
+
             }, (res) => {
                 setListSize([
                     ...listSize,
@@ -127,6 +130,7 @@ function Sizes() {
                     }
                 ])
                 setOpen(false)
+                toast.success('Thêm mới thành công')
             }))
         }
     }
@@ -211,7 +215,7 @@ function Sizes() {
                             >
                                 <td>{((pagination.index + 1) * pagination.size - pagination.size + 1) + index}</td>
                                 <td>{value.size_name}</td>
-                                <td>{!value.isDelete  ? "Đang hoạt động" : "Ngừng hoạt động"}</td>
+                                <td>{!value.isDelete ? "Đang hoạt động" : "Ngừng hoạt động"}</td>
                                 <td>
                                     <Dropdown icon={<IconButton>
                                         <FaEllipsisV size={15}/>
@@ -219,7 +223,8 @@ function Sizes() {
                                         <Dropdown.Menu>
                                             <Dropdown.Item onClick={() => handleUpdate(value)}>Cập
                                                 nhật</Dropdown.Item>
-                                            <Dropdown.Item onClick={() => handleDeleteSize(value.id)}>Xoá kích thước</Dropdown.Item>
+                                            <Dropdown.Item onClick={() => handleDeleteSize(value.id)}>Xoá kích
+                                                thước</Dropdown.Item>
                                         </Dropdown.Menu>
                                     </Dropdown>
                                 </td>

@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import styles from '../../../style/productStyle.module.css'
 
 import {useHistory, useLocation} from "react-router-dom";
-import {useAddCart, useGetCheckProduct, useGetColorProduct, useGetSizeProduct} from "../../../service/product";
+import {addCart, useGetCheckProduct, useGetColorProduct, useGetSizeProduct} from "../../../service/product";
 import Storage from "../../../utils/Storage";
 import {useAuth} from "../../../context";
 import {Button} from "antd";
@@ -10,6 +10,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useGetProductId} from "../../../service/productService2";
 import {toast} from "react-toastify";
 import _ from "lodash";
+import Image from "../../../utils/Image";
 
 
 const Detail = () => {
@@ -34,11 +35,12 @@ const Detail = () => {
         price: item?.price,
         imageDetail: ""
     });
-    const addToCartApi = useAddCart({
-        id: userInfo?.id,
-        idProduct: product?.productIdDetail,
-        quantity: product?.quantity,
-    })
+    const [selectColor, setSelectColor] = useState(null)
+    const [selectSize, setSelectSize] = useState(null)
+    const [listColor, setListColor] = useState([])
+    const [listSize, setListSize] = useState([])
+    const [currentImage, setCurrentImage] = useState({})
+
     const checkProduct = useGetCheckProduct({
         idColor: product?.colorId,
         idSize: product?.sizeId,
@@ -52,9 +54,27 @@ const Detail = () => {
         }))
     }, [])
 
-    const onChangeHandler = (event) => {
-        if (event.target.value < 1) {
+    useEffect(() => {
+        if (selectColor && selectSize) {
+            let cur = curProduct?.listDetailProduct.filter(item => item.color.id === selectColor.id && item.size.id === selectSize.id)
+            setCurrentImage(...cur)
+            setProduct(prev => ({
+                ...prev,
+                quantity: 1
+            }))
+        }else{
+            setCurrentImage({})
+        }
+    }, [selectColor, selectSize])
 
+    const onChangeHandler = (event) => {
+        if(selectColor && selectSize && event.target.value > currentImage.quantity){
+            toast.warn('Số lượng phải nhỏ hơn kho')
+            return
+        }
+        if (event.target.value < 1) {
+            toast.warn('Số lượng phải lớn hơn 0')
+            return
         } else {
             setProduct(prev => ({
                 ...prev,
@@ -72,20 +92,42 @@ const Detail = () => {
         id: item?.id
     })
     const handleClickSizes = (item) => {
-        setProduct(prev => ({
-            ...prev,
-            sizeId: item?.id,
-            size: item?.size_name
-        }))
+        if (item?.id === selectSize?.id) {
+            setSelectSize(null)
+            setProduct(prev => ({
+                ...prev,
+                sizeId: '',
+                size: ''
+            }))
+        } else {
+            setSelectSize(item)
+            setProduct(prev => ({
+                ...prev,
+                sizeId: item?.id,
+                size: item?.size_name
+            }))
+        }
     }
     const handleClickColors = (item) => {
-        setCheckImage(false)
-        setProduct(prev => ({
-            ...prev,
-            colorId: item?.id,
-            color: item?.color_name,
-            imageDetail: item?.image
-        }))
+        if (item?.id === selectColor?.id) {
+            setSelectColor(null)
+            setCheckImage(true)
+            setProduct(prev => ({
+                ...prev,
+                colorId: '',
+                color: '',
+                imageDetail: ''
+            }))
+        }else{
+            setSelectColor(item)
+            setCheckImage(false)
+            setProduct(prev => ({
+                ...prev,
+                colorId: item?.id,
+                color: item?.color_name,
+                imageDetail: item?.image
+            }))
+        }
     }
 
     const toCheckout = () => {
@@ -152,6 +194,13 @@ const Detail = () => {
                             productIdDetail: res?.data?.id,
                         })
                     )
+                    dispatch(addCart({
+                        id: userInfo?.id,
+                        idProduct: res?.data?.id,
+                        quantity: product?.quantity,
+                    }, () => {
+                        toast.success("Thêm vào giỏ hàng thành công")
+                    }))
                 } else {
                     if (!_.isEmpty(Storage.get('cart'))) {
                         let check = true
@@ -179,20 +228,6 @@ const Detail = () => {
             }
         })
     }
-    useEffect(() => {
-        if (product?.productIdDetail) {
-            addToCartApi.refetch().then(
-                (res) => {
-                    if (res?.data) {
-                        toast.success("Thêm vào giỏ hàng thành công")
-
-                    }
-                }
-            )
-        }
-    }, [product])
-
-    console.log(curProduct)
 
     return (
         <div>
@@ -204,7 +239,8 @@ const Detail = () => {
                             <div className="preview col-md-7">
                                 <div className="preview-pic tab-content">
                                     <div id="pic-1">
-                                        <img width={'500px'} src={checkImage ? item?.image : product?.imageDetail}/>
+                                        <Image width={'500px'} height={500 / 212 * 319}
+                                               src={selectColor && selectSize ? currentImage?.image : item?.image}/>
                                     </div>
                                 </div>
 
@@ -213,27 +249,42 @@ const Detail = () => {
                                 <h3 className={styles.productTitle}>{item?.name}</h3>
                                 <h4 className={styles.price}>Giá: <span>{item?.price} đ</span></h4>
                                 <h4 className={styles.sizes}>Size
-                                    <br></br>
+                                    <br className={'mb-2'}></br>
                                     {
                                         size?.data?.map((item, index) => {
                                             return (
-                                                <Button onClick={() => handleClickSizes(item)}
-                                                        type="button">{item?.size_name}</Button>
-
+                                                <button className={'pt-2 px-4 mr-2 mb-2'} style={{
+                                                    border: '1px solid',
+                                                    borderColor: item?.id === selectSize?.id ? '#3880ff' : '#d7d6d6',
+                                                    color: item?.id === selectSize?.id ? '#3880ff' : 'black',
+                                                    backgroundColor: 'white',
+                                                    textAlign: 'center',
+                                                    fontSize: 15,
+                                                    fontWeight: 400,
+                                                }} onClick={() => handleClickSizes(item)}>
+                                                    {item?.size_name}
+                                                </button>
                                             )
                                         })
                                     }
-
                                 </h4>
                                 <div className="boder">
                                     <h5 className={styles.colors}>Màu sắc
-                                        <br></br>
+                                        <br className={'mb-2'}></br>
                                         {
                                             color?.data?.map((item, index) => {
                                                 return (
-                                                    <Button className="btn btn-dark"
-                                                            onClick={() => handleClickColors(item)}
-                                                    >{item?.color_name}</Button>
+                                                    <button className={'pt-2 px-4 mr-2 mb-2'} style={{
+                                                        border: '1px solid',
+                                                        borderColor: item?.id === selectColor?.id ? '#3880ff' : '#d7d6d6',
+                                                        color: item?.id === selectColor?.id ? '#3880ff' : 'black',
+                                                        backgroundColor: 'white',
+                                                        textAlign: 'center',
+                                                        fontSize: 15,
+                                                        fontWeight: 400,
+                                                    }} onClick={() => handleClickColors(item)}>
+                                                        {item?.color_name}
+                                                    </button>
                                                 )
                                             })
                                         }
@@ -246,6 +297,7 @@ const Detail = () => {
                                         <h5 className={styles.sizes}>Size: <span>{product?.size}</span></h5>
 
                                         <h5 className={styles.colors}>Màu sắc: <span>{product?.color}</span></h5>
+                                        <h5 className={styles.colors}>Kho: <span>{currentImage?.quantity}</span></h5>
                                         <h5 className={styles.sizes}>Số lượng:
                                             <input
                                                 onChange={onChangeHandler}
