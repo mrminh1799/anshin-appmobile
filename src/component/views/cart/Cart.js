@@ -88,7 +88,7 @@ function Cart() {
         if (!_.isEmpty(cart) || !_.isEmpty(cartAccount)) {
             console.log(cartAccount, cart)
             let temp
-            if (!_.isEmpty(userInfo)) temp = cart.map(item => {
+            if (_.isEmpty(userInfo)) temp = cart.map(item => {
                 item.idProduct = item.productIdDetail
                 return item
             });

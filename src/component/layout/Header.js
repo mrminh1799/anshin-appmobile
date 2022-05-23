@@ -64,7 +64,8 @@ function Header() {
         updateInfo.refetch().then(
             (res)=>{
                 setUserInfo(res?.data)
-                alert('Cap nhat thanh cong')
+                toast.success('Cập nhật thành công!')
+                setOpenCNTT(false)
             }
         )
     }

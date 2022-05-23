@@ -92,16 +92,18 @@ const Checkout = () => {
                         ...prev,
                         {
                             quantity: vale?.quantity,
-                            idProductDetail: userInfo ? vale?.idProduct : vale?.productId
+                            idProductDetail: vale?.idProduct
                         }
                     ]
                 })
             })
         }
     }, [])
-    let total = state?.item.reduce((total, item) => {
-        return total += Number(item.quantity) * Number(item.price);
-    }, 0)
+
+    console.log(state)
+    // let total = state?.item?.reduce((total, item) => {
+    //     return total += Number(item.quantity) * Number(item.price);
+    // }, 0)
     const onSubmitHandler = (quantity, productId) => {
         if (!formData.fullname) {
             setCheck(prevState => ({
@@ -436,13 +438,13 @@ const Checkout = () => {
                                 </tr>
                                 </thead>
                                 <tbody style={{fontFamily: "Josefin Sans"}}>
-                                {state?.item.map((value, index) => {
+                                {state?.item?.map((value, index) => {
                                     return (
                                         <tr key={index}>
                                             <td className="middle" style={{
                                                 width: 100,
                                                 paddingRight: 10,
-                                            }}>{value.productName}</td>
+                                            }}>{value?.productName ? value.productName : value.name}</td>
                                             <td className="middle" style={{
                                                 marginLeft: 50,
                                                 width: 100,
@@ -472,7 +474,7 @@ const Checkout = () => {
                             <ul className="list list_2 mb-5">
                                 <li>
                                     <Link href="#">Tổng
-                                        <span>{total}đ</span>
+                                        {/*<span>{total}đ</span>*/}
                                     </Link>
                                 </li>
                             </ul>
