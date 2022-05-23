@@ -156,7 +156,7 @@ function Colors() {
                                 })
                             }}
                             fullWidth
-                            label="Tên danh mục con"
+                            label="Tên màu sắc"
                             className="my-2 mb-4"
                         />
                     </div>

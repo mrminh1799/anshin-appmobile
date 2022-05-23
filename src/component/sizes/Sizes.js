@@ -159,7 +159,7 @@ function Sizes() {
                                 })
                             }}
                             fullWidth
-                            label="Tên danh mục con"
+                            label="Tên size"
                             className="my-2 mb-4"
                         />
                     </div>
